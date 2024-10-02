@@ -1,16 +1,15 @@
+
 public class Main {
     public static void main(String[] args) {
-        Matriks M = new Matriks(3, 3);
-        int val = 1;
-        for (int i = 0; i < M.getRow(); i++) {
-            for (int j = 0; j < M.getCol(); j++) {
-                M.Mat[i][j] = val;
-                val++;
-            }
-        }
+        float[][] A = {
+            {1, 2, 3, 4},
+            {0, 1, 6, 7},
+            {0, 1, 0, 2}
+        };
+        Matriks M = new Matriks(A);
         M.printMatriks();
-        M = M.removeRowColMatriks(0, 0);
-        M.printMatriks();
-
+        SistemPersamaanLinier SPL = new SistemPersamaanLinier(M);
+        System.err.println(SPL.isEselonBaris());
+        // SPL.toEselonBaris().printMatriks();
     }
 }

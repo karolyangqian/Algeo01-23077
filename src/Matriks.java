@@ -1,5 +1,3 @@
-
-
 /**
  * Kelas Matriks
  */
@@ -9,6 +7,15 @@ public class Matriks{
      */
     float[][] Mat;
     private int row, col;
+
+    /**
+     * Constructor
+     */
+    public Matriks(){
+        this.row = 0;
+        this.col = 0;
+        this.Mat = new float[0][0];
+    }
 
     /**
      * Constructor
@@ -29,6 +36,21 @@ public class Matriks{
         this.row = M.row;
         this.col = M.col;
         this.Mat = M.Mat;
+    }
+
+    /**
+     * Constructor
+     * @param arrayOfArrayFloat array of array float yang akan dijadikan matriks
+     */
+    public Matriks(float[][] arrayOfArrayFloat){
+        this.row = arrayOfArrayFloat.length;
+        this.col = arrayOfArrayFloat[0].length;
+        this.Mat = new float[this.row][this.col];
+        for (int i = 0; i < this.row; i++){
+            for (int j = 0; j < this.col; j++){
+                this.Mat[i][j] = arrayOfArrayFloat[i][j];
+            }
+        }
     }
 
     /**
@@ -158,7 +180,6 @@ public class Matriks{
                 M.Mat[j][i] = this.Mat[i][j];
             }
         }
-
         return M;
     }
 
@@ -216,9 +237,6 @@ public class Matriks{
         M = this.adjointMatriks();
 
         M = M.kaliXMatriks(1/det);
-
-
-
         return M;
     }
 
@@ -232,6 +250,9 @@ public class Matriks{
      * @return matriks baru yang sudah ditukar barisnya
      */
     public Matriks tukarBaris(int row1, int row2) {
+        if (row1 == row2) {
+            return new Matriks(this);
+        }
         Matriks M = new Matriks(this);
         int col = M.getRow();
         for (int i = 0; i < col; i++) {
@@ -251,7 +272,7 @@ public class Matriks{
      */
     public Matriks kalikanBaris(int row, float x) {
         Matriks M = new Matriks(this);
-        int col = M.getRow();
+        int col = M.getCol();
         for (int i = 0; i < col; i++) {
             M.Mat[row][i] *= x;
         }
@@ -268,7 +289,7 @@ public class Matriks{
      */
     public Matriks jumlahKelipatanBaris(int row1, int row2, float x) {
         Matriks M = new Matriks(this);
-        int col = M.getRow();
+        int col = M.getCol();
         for (int i = 0; i < col; i++) {
             M.Mat[row1][i] += x * M.Mat[row2][i];
         }
