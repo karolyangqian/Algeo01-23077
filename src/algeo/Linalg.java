@@ -3,6 +3,9 @@ package algeo;
  * Kelas Matriks
  */
 public class Linalg{
+
+    // ------------------------------------------------------- Operasi Matriks -------------------------------------------------------
+
     /**
      * Mengalikan matriks dengan skalar x
      * @param x nilai skalar
@@ -126,8 +129,58 @@ public class Linalg{
         M = this.kaliXMatriks(M, (float)1/det);
         return M;
     }
+    // ------------------------------------------------------------------------------------------------------------------------------------
 
-    // Operasi Baris Elementer
+    // ------------------------------------------------------- Matriks Eselon Baris -------------------------------------------------------
+
+    public Matriks toEselonBaris(Matriks Mat){
+        Matriks M = new Matriks(Mat);
+        int i = 0;
+        for(int j = 0; j < M.getCol(); j++){
+            int notZeroIdx = -1;
+            for (int k = i; k < M.getRow(); k++){
+                if (M.Mat[k][j] != 0){
+                    notZeroIdx = k;
+                    break;
+                }
+            }
+            if (notZeroIdx == -1){
+                continue;
+            }
+            M = this.tukarBaris(M, i, notZeroIdx);
+            M = this.reduksiKolomKeBawah(M, i, j);
+            i++;
+
+        }
+        return M;
+    }
+
+    public Matriks toEselonBarisTereduksi(Matriks Mat){
+        Matriks M = this.toEselonBaris(Mat);
+        for (int i = 0; i < M.getRow(); i++){
+            for (int j = 0; j < M.getCol(); j++){
+                if (M.Mat[i][j] != 0){
+                    M = this.kalikanBaris(M, i, (float) 1 / M.Mat[i][j]);
+                    break;
+                }
+            }
+        }
+        return M;
+    }
+
+    private Matriks reduksiKolomKeBawah(Matriks Mat, int leadingOneRow, int leadingOneCol){
+        Matriks M = new Matriks(Mat);
+        for (int i = leadingOneRow + 1; i < M.getRow(); i++){
+            if (M.Mat[i][leadingOneCol] != 0){
+                M = this.jumlahKelipatanBaris(M, i, leadingOneRow, -M.Mat[i][leadingOneCol]);
+            }
+        }
+        return M;   
+    }
+
+    // ------------------------------------------------------------------------------------------------------------------------------------
+
+    // ------------------------------------------------------- Operasi Baris Elementer -------------------------------------------------------
 
     /**
      * Tukar baris pada matriks
@@ -236,6 +289,7 @@ public class Linalg{
         return det;
 
     }
+    // ------------------------------------------------------------------------------------------------------------------------------------
 
 
 }
