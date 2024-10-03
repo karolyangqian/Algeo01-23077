@@ -154,7 +154,22 @@ public class Matriks{
         }
         return M;
     }
+  
+    /**
+     * Membuat nilai -0.00 menjadi 0.00
+     */
+    public void makePositiveZero(){
+        for (int i = 0; i < this.row; i++){
+            for (int j = 0; j < this.col; j++){
+                if (this.Mat[i][j] == -0){
+                    this.Mat[i][j] = 0;
+                }
+            }
+        }
+    }
 
+    
+    
     /**
      * Menggabungkan dua matriks
      * @param M

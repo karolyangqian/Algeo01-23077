@@ -11,14 +11,16 @@ public class Main {
         //     {0, 1, 0, 2}
         // };
         float[][] B = {
-            {1, 2, 3},
-            {0, 1, 6},
-            {0, 1, 0}
+            {1, 3, -2, 0, 2, 0, 0},
+            {2, 6, -5, -2, 4, -3, -1},
+            {0, 0, 5, 10, 0, 15, 5},
+            {2, 6, 0, 8, 4, 18, 6}
         };
         Matriks M = new Matriks(B);
         // Matriks M2 = M.kalikanBaris(0, 0);
         // Matriks M3 = M2.kaliXMatriks(1/M.determinanMatriks("reduksi"));
-        M = linalg.inversMatriks(M);
+        M = linalg.toEselonBaris(M);
+        M.makePositiveZero();
         M.printMatriks();
         // M2.printMatriks();
         // M3.printMatriks();
