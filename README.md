@@ -9,7 +9,7 @@ Output: bytecode yang disimpan di folder bin
 javac -d bin src/algeo/*.java src/Main.java
 ```
 
-Menjalankan bytecode (di direktori /bin)
+Menjalankan bytecode 
 ```
 java -classpath bin <NAMA_BYTECODE>
 ```
