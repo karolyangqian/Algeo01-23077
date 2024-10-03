@@ -35,7 +35,12 @@ public class Matriks{
     public Matriks(Matriks M){
         this.row = M.row;
         this.col = M.col;
-        this.Mat = M.Mat;
+        this.Mat = new float[this.row][this.col];
+        for (int i = 0; i < this.row; i++){
+            for (int j = 0; j < this.col; j++){
+                this.Mat[i][j] = M.Mat[i][j];
+            }
+        }
     }
 
     /**
@@ -125,11 +130,10 @@ public class Matriks{
      * @return matriks baru yang sudah dikali dengan skalar x
      */
     public Matriks kaliXMatriks(float x){
-        Matriks M = new Matriks(this.row, this.col);
+        Matriks M = new Matriks(this.Mat);
         for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < this.col; j++){
-                M.Mat[i][j] = this.Mat[i][j] * x;
-            }
+            // M.printMatriks();
+            M = M.kalikanBaris(i, x);
         }
         return M;
     }
@@ -158,7 +162,7 @@ public class Matriks{
      * @param M2 Matriks yang akan dijumlahkan dengan instance
      * @return matriks baru hasil penjumlahan
      */
-    public Matriks penjumlahamMatriks(Matriks M2){
+    public Matriks penjumlahanMatriks(Matriks M2){
         Matriks M = new Matriks(this.row, this.col);
         for(int i = 0; i < this.row; i++){
             for(int j = 0; j < this.col; j++){
@@ -236,7 +240,7 @@ public class Matriks{
         float det = this.determinanMatriks("reduksi");
         M = this.adjointMatriks();
 
-        M = M.kaliXMatriks(1/det);
+        M = M.kaliXMatriks((float)1/det);
         return M;
     }
 
@@ -326,14 +330,14 @@ public class Matriks{
             }
         }
         
-        M = this.tukarBaris(0, barisAtas);
+        M = M.tukarBaris(0, barisAtas);
 
         for (int j = 0; j < M.col; j++){
-            M = this.kalikanBaris(j, (float) 1/ (float) M.Mat[j][j]);
+            // M = M.kalikanBaris(j, (float) 1/(float) M.Mat[j][j]);
             for (int i = 0; i < M.row; i++){
-                if (i != j){
+                if (i > j){
                     if (M.Mat[i][j] != 0){
-                        M = this.jumlahKelipatanBaris(i, j, -1 * M.Mat[i][j]);
+                        M = M.jumlahKelipatanBaris(i, j, -1 * M.Mat[i][j] / M.Mat[j][j]);
                     }
                 }
             }
