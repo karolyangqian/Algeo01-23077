@@ -83,6 +83,7 @@ public class SistemPersamaanLinier extends Matriks {
      * @return Matriks hasil reduksi
      */
     private SistemPersamaanLinier reduksiKolomKeBawah(int leadingOneRow, int leadingOneCol) {
+        Linalg linalg = new Linalg();
         Matriks M = new Matriks(this);
         int i = leadingOneRow;
         while (i < this.getRow() && this.Mat[i][leadingOneCol] == 0) {
@@ -91,12 +92,12 @@ public class SistemPersamaanLinier extends Matriks {
         if (i == this.getRow() && this.Mat[i][leadingOneCol] == 0) {
             return new SistemPersamaanLinier(M);
         }
-        M.tukarBaris(i, leadingOneRow);
-        M = M.kalikanBaris(leadingOneRow, 1 / M.Mat[leadingOneRow][leadingOneCol]);
+        M = linalg.tukarBaris(M, i, leadingOneRow);
+        M = linalg.kalikanBaris(M, leadingOneRow, 1 / M.Mat[leadingOneRow][leadingOneCol]);
         i = leadingOneRow + 1;
         while (i < this.getRow()) {
             if (M.Mat[i][leadingOneCol] != 0){
-                M = M.jumlahKelipatanBaris(i, leadingOneRow, -M.Mat[i][leadingOneCol]);
+                M = linalg.jumlahKelipatanBaris(M, i, leadingOneRow, -M.Mat[i][leadingOneCol]);
             }
             i++;
         }
@@ -111,6 +112,7 @@ public class SistemPersamaanLinier extends Matriks {
      * @return
      */
     private SistemPersamaanLinier reduksiKolomKeAtas(int leadingOneRow, int leadingOneCol) {
+        Linalg linalg = new Linalg();
         Matriks M = new Matriks(this);
         if (M.Mat[leadingOneRow][leadingOneCol] != 1) {
             System.err.println("Leading one bukan 1");
@@ -118,7 +120,7 @@ public class SistemPersamaanLinier extends Matriks {
         }
         for (int i = leadingOneRow - 1; i >= 0; i--) {
             if (M.Mat[i][leadingOneCol] != 0) {
-                M = M.jumlahKelipatanBaris(i, leadingOneRow, -M.Mat[i][leadingOneCol]);
+                M = linalg.jumlahKelipatanBaris(M, i, leadingOneRow, -M.Mat[i][leadingOneCol]);
             }
         }
         return new SistemPersamaanLinier(M);

@@ -92,9 +92,9 @@ public class Linalg{
      * Membuat matriks adjoint
      * @return matriks adjoint
      */
-    public Matriks adjointMatriks(){
-        Matriks M = this.kofaktorMatriks();
-        M = M.transposeMatriks();
+    public Matriks adjointMatriks(Matriks Mat){
+        Matriks M = this.kofaktorMatriks(Mat);
+        M = this.transposeMatriks(M);
         return M;
     }
 
@@ -119,12 +119,11 @@ public class Linalg{
      * Menghitung invers invers
      * @return invers matriks
      */
-    public Matriks inversMatriks(){
-        Matriks M = new Matriks(this.row, this.col);
-        float det = this.determinanMatriks("reduksi");
-        M = this.adjointMatriks();
+    public Matriks inversMatriks(Matriks Mat){
+        float det = this.determinanMatriks(Mat, "reduksi");
+        Matriks M = this.adjointMatriks(Mat);
 
-        M = M.kaliXMatriks((float)1/det);
+        M = this.kaliXMatriks(M, (float)1/det);
         return M;
     }
 
@@ -191,12 +190,12 @@ public class Linalg{
      * Menghitung determinan matriks dengan metode kofaktor
      * @return nilai determinan matriks
      */
-    private float detKofaktor(){
-        Matriks M = this.kofaktorMatriks();
+    private float detKofaktor(Matriks Mat){
+        Matriks M = this.kofaktorMatriks(Mat);
         
         float det = 0;
-        for (int i = 0; i < this.row; i++){
-            det += this.Mat[0][i] * M.Mat[0][i];
+        for (int i = 0; i < Mat.getRow(); i++){
+            det += Mat.Mat[0][i] * M.Mat[0][i];
         }
         return det;
     }
