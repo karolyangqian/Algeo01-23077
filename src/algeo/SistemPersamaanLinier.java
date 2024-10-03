@@ -1,3 +1,4 @@
+package algeo;
 public class SistemPersamaanLinier extends Matriks {
     /**
      * Konstruktor kelas SistemPersamaanLinier

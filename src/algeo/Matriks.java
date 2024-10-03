@@ -1,3 +1,4 @@
+package algeo;
 /**
  * Kelas Matriks
  */
@@ -296,6 +297,14 @@ public class Matriks{
         int col = M.getCol();
         for (int i = 0; i < col; i++) {
             M.Mat[row1][i] += x * M.Mat[row2][i];
+        }
+        return M;
+    }
+
+    public Matriks replaceColumn(int col, Matriks N) {
+        Matriks M = new Matriks(this);
+        for (int i = 0; i < this.row; i++) {
+            M.Mat[i][col] = N.Mat[i][0];
         }
         return M;
     }
