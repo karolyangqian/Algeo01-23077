@@ -148,6 +148,7 @@ public class Linalg{
                 continue;
             }
             M = this.tukarBaris(M, i, notZeroIdx);
+            M = this.kalikanBaris(M, i, (float) 1 / M.Mat[i][j]);
             M = this.reduksiKolomKeBawah(M, i, j);
             i++;
 
@@ -157,12 +158,11 @@ public class Linalg{
 
     public Matriks toEselonBarisTereduksi(Matriks Mat){
         Matriks M = this.toEselonBaris(Mat);
-        for (int i = 0; i < M.getRow(); i++){
-            for (int j = 0; j < M.getCol(); j++){
-                if (M.Mat[i][j] != 0){
-                    M = this.kalikanBaris(M, i, (float) 1 / M.Mat[i][j]);
-                    break;
-                }
+        int i = 0;
+        for (int j = 0; j < M.getCol(); j++){
+            if (M.Mat[i][j] == 1){
+                M = this.reduksiKolomKeAtas(M, i, j);
+                i++;
             }
         }
         return M;
@@ -171,6 +171,15 @@ public class Linalg{
     private Matriks reduksiKolomKeBawah(Matriks Mat, int leadingOneRow, int leadingOneCol){
         Matriks M = new Matriks(Mat);
         for (int i = leadingOneRow + 1; i < M.getRow(); i++){
+            if (M.Mat[i][leadingOneCol] != 0){
+                M = this.jumlahKelipatanBaris(M, i, leadingOneRow, -M.Mat[i][leadingOneCol]);
+            }
+        }
+        return M;   
+    }
+    private Matriks reduksiKolomKeAtas(Matriks Mat, int leadingOneRow, int leadingOneCol){
+        Matriks M = new Matriks(Mat);
+        for (int i = leadingOneRow - 1; i >= 0; i++){
             if (M.Mat[i][leadingOneCol] != 0){
                 M = this.jumlahKelipatanBaris(M, i, leadingOneRow, -M.Mat[i][leadingOneCol]);
             }
@@ -194,7 +203,7 @@ public class Linalg{
             return new Matriks(Mat);
         }
         Matriks M = new Matriks(Mat);
-        int col = M.getRow();
+        int col = M.getCol();
         for (int i = 0; i < col; i++) {
             float temp = M.Mat[row1][i];
             M.Mat[row1][i] = M.Mat[row2][i];
