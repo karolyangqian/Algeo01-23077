@@ -63,7 +63,7 @@ public class Matriks{
      * Getter baris
      * @return jumlah baris dari matriks
      */
-    public int getRow(){
+    public int getRows(){
         return this.row;
     }
 
@@ -71,7 +71,7 @@ public class Matriks{
      * Getter kolom
      * @return jumlah kolom dari matriks
      */
-    public int getCol(){
+    public int getCols(){
         return this.col;
     }
 
@@ -88,15 +88,46 @@ public class Matriks{
     }
 
     /**
-     * Mngisi setiap elemen matriks dengan nilai 0
+     * 
+     * @param col
+     * @param N
+     * @return
      */
-    public void fillMatriksZero(){
+    public Matriks replaceColumn(int col, Matriks N) {
+        Matriks M = new Matriks(this);
+        for (int i = 0; i < this.row; i++) {
+            M.Mat[i][col] = N.Mat[i][0];
+        }
+        return M;
+    }
+
+    /**
+     * 
+     * @param row
+     * @param N
+     * @return
+     */
+    public Matriks replaceRow(int row, Matriks N) {
+        Matriks M = new Matriks(this);
+        for (int i = 0; i < this.col; i++) {
+            M.Mat[row][i] = N.Mat[0][i];
+        }
+        return M;
+    }
+
+
+    /**
+     * Mngisi setiap elemen matriks dengan nilai x
+     */
+    public void fill(float x){
         for (int i = 0; i < this.row; i++){
             for (int j = 0; j < this.col; j++){
-                this.Mat[i][j] = 0;
+                this.Mat[i][j] = x;
             }
         }
     }
+
+
 
     /**
      * Menghapus baris dan kolom tertentu dari matriks
@@ -126,240 +157,102 @@ public class Matriks{
     }
 
     /**
-     * Mengalikan matriks dengan skalar x
-     * @param x nilai skalar
-     * @return matriks baru yang sudah dikali dengan skalar x
+     * Menggabungkan dua matriks
+     * @param M
+     * @param isRight jika true, matriks digabungkan ke kanan, jika false, matriks digabungkan ke bawah
+     * @return
      */
-    public Matriks kaliXMatriks(float x){
-        Matriks M = new Matriks(this.Mat);
-        for (int i = 0; i < this.row; i++){
-            // M.printMatriks();
-            M = M.kalikanBaris(i, x);
-        }
-        return M;
-    }
-
-    /**
-     * Melakukan operasi perkalian matriks (instance * M2)
-     * @param M2 Matriks yang akan dikalikan
-     * @return matriks baru hasil perkalian
-     */
-    public Matriks perkalianMatriks(Matriks M2){
-        Matriks M = new Matriks(this.row, M2.col);
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < M2.col; j++){
-                M.Mat[i][j] = 0;
-                for (int k = 0; k < this.col; k++){
-                    M.Mat[i][j] += this.Mat[i][k] * M2.Mat[k][j];
+    public Matriks concat(Matriks M, boolean isRight) {
+        Matriks N;
+        if (isRight) {
+            N = new Matriks(this.row, this.col + M.col);
+            for (int i = 0; i < this.row; i++) {
+                for (int j = 0; j < this.col; j++) {
+                    N.Mat[i][j] = this.Mat[i][j];
+                }
+                for (int j = 0; j < M.col; j++) {
+                    N.Mat[i][j + this.col] = M.Mat[i][j];
+                }
+            }
+        } else {
+            N = new Matriks(this.row + M.row, this.col);
+            for (int i = 0; i < this.row; i++) {
+                for (int j = 0; j < this.col; j++) {
+                    N.Mat[i][j] = this.Mat[i][j];
+                }
+            }
+            for (int i = 0; i < M.row; i++) {
+                for (int j = 0; j < M.col; j++) {
+                    N.Mat[i + this.row][j] = M.Mat[i][j];
                 }
             }
         }
-
-        return M;
+        return N;
     }
 
     /**
-     * Melakukan operasi penjumlahan matriks
-     * @param M2 Matriks yang akan dijumlahkan dengan instance
-     * @return matriks baru hasil penjumlahan
+     * Menghapus baris tertentu dari matriks
+     * @param row
+     * @return
      */
-    public Matriks penjumlahanMatriks(Matriks M2){
-        Matriks M = new Matriks(this.row, this.col);
-        for(int i = 0; i < this.row; i++){
-            for(int j = 0; j < this.col; j++){
-                M.Mat[i][j] = this.Mat[i][j] + M2.Mat[i][j];
-            }
-        }
-
-        return M;
-    }
-
-    /**
-     * Melakukan operasi transpose matriks
-     * @return matriks baru hasil transpose
-     */
-    public Matriks transposeMatriks(){
-        Matriks M = new Matriks(this.col, this.row);
-        for(int i = 0; i < this.row; i++){
-            for(int j = 0; j < this.col; j++){
-                M.Mat[j][i] = this.Mat[i][j];
-            }
-        }
-        return M;
-    }
-
-
-    /**
-     * Membuat matriks kofaktor
-     * @return matriks kofaktor
-     */
-    public Matriks kofaktorMatriks(){
-        Matriks M = new Matriks(this.row, this.col);
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < this.col; j++){
-                Matriks M2 = this.removeRowColMatriks(i, j);
-                M.Mat[i][j] = (float) Math.pow(-1, i + j) * M2.determinanMatriks("reduksi");
-                
-            }
-        }
-        return M;
-    }
-
-    /**
-     * Membuat matriks adjoint
-     * @return matriks adjoint
-     */
-    public Matriks adjointMatriks(){
-        Matriks M = this.kofaktorMatriks();
-        M = M.transposeMatriks();
-        return M;
-    }
-
-    /**
-     * Menghitung determinan matriks
-     * @param method metode yang digunakan untuk menghitung determinan
-     * @return nilai determinan matriks
-     */
-    public float determinanMatriks(String method){
-        
-        // ingat cek apakah this.n == this.m
-        if (method == "reduksi"){
-            return this.detReduksi();
-        }
-        else{
-            return this.detKofaktor();
-        }
-        
-    }
-
-    /**
-     * Menghitung invers invers
-     * @return invers matriks
-     */
-    public Matriks inversMatriks(){
-        Matriks M = new Matriks(this.row, this.col);
-        float det = this.determinanMatriks("reduksi");
-        M = this.adjointMatriks();
-
-        M = M.kaliXMatriks((float)1/det);
-        return M;
-    }
-
-    // Operasi Baris Elementer
-
-    /**
-     * Tukar baris pada matriks
-     * @category Operasi Baris Elementer
-     * @param row1 baris yang mau ditukar
-     * @param row2 baris yang mau ditukar
-     * @return matriks baru yang sudah ditukar barisnya
-     */
-    public Matriks tukarBaris(int row1, int row2) {
-        if (row1 == row2) {
-            return new Matriks(this);
-        }
-        Matriks M = new Matriks(this);
-        int col = M.getRow();
-        for (int i = 0; i < col; i++) {
-            float temp = M.Mat[row1][i];
-            M.Mat[row1][i] = M.Mat[row2][i];
-            M.Mat[row2][i] = temp;
-        }
-        return M;
-    }
-
-    /**
-     * Kalikan baris pada matriks dengan skalar x
-     * @category Operasi Baris Elementer
-     * @param row baris yang akan dikalikan
-     * @param x nilai kelipatan
-     * @return matriks baru yang sudah dikalikan barisnya
-     */
-    public Matriks kalikanBaris(int row, float x) {
-        Matriks M = new Matriks(this);
-        int col = M.getCol();
-        for (int i = 0; i < col; i++) {
-            M.Mat[row][i] *= x;
-        }
-        return M;
-    }
-
-    /**
-     * Jumlahkan kelipatan baris pada matriks
-     * @category Operasi Baris Elementer
-     * @param M matriks yang akan diubah
-     * @param row1 baris yang akan diubah
-     * @param row2 baris yang akan dijumlahkan ke row1
-     * @param x nilai kelipatan
-     */
-    public Matriks jumlahKelipatanBaris(int row1, int row2, float x) {
-        Matriks M = new Matriks(this);
-        int col = M.getCol();
-        for (int i = 0; i < col; i++) {
-            M.Mat[row1][i] += x * M.Mat[row2][i];
-        }
-        return M;
-    }
-
-    public Matriks replaceColumn(int col, Matriks N) {
-        Matriks M = new Matriks(this);
+    public Matriks popRow(int row) {
+        Matriks M = new Matriks(this.row - 1, this.col);
         for (int i = 0; i < this.row; i++) {
-            M.Mat[i][col] = N.Mat[i][0];
+            if (i < row) {
+                for (int j = 0; j < this.col; j++) {
+                    M.Mat[i][j] = this.Mat[i][j];
+                }
+            } else if (i > row) {
+                for (int j = 0; j < this.col; j++) {
+                    M.Mat[i - 1][j] = this.Mat[i][j];
+                }
+            }
         }
         return M;
     }
 
-    // Private
     /**
-     * Menghitung determinan matriks dengan metode kofaktor
-     * @return nilai determinan matriks
+     * Menghapus kolom tertentu dari matriks
+     * @param col
+     * @return
      */
-    private float detKofaktor(){
-        Matriks M = this.kofaktorMatriks();
-        
-        float det = 0;
-        for (int i = 0; i < this.row; i++){
-            det += this.Mat[0][i] * M.Mat[0][i];
-        }
-        return det;
-    }
-
-    /**
-     * Menghitung determinan matriks dengan metode reduksi baris
-     * @return nilai determinan matriks
-     */
-    private float detReduksi(){
-
-        Matriks M = new Matriks(this);
-        int barisAtas = 0;
-        for (int i = 0; i < M.row; i++){
-            if (M.Mat[i][0] != 0){
-                barisAtas = i;
-                break;
-            }
-        }
-        
-        M = M.tukarBaris(0, barisAtas);
-
-        for (int j = 0; j < M.col; j++){
-            // M = M.kalikanBaris(j, (float) 1/(float) M.Mat[j][j]);
-            for (int i = 0; i < M.row; i++){
-                if (i > j){
-                    if (M.Mat[i][j] != 0){
-                        M = M.jumlahKelipatanBaris(i, j, -1 * M.Mat[i][j] / M.Mat[j][j]);
-                    }
+    public Matriks popCol(int col) {
+        Matriks M = new Matriks(this.row, this.col - 1);
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
+                if (j < col) {
+                    M.Mat[i][j] = this.Mat[i][j];
+                } else if (j > col) {
+                    M.Mat[i][j - 1] = this.Mat[i][j];
                 }
             }
         }
-
-        float det = 1;
-        for (int i = 0; i < M.row; i++){
-            det *= M.Mat[i][i];
-        };
-
-        return det;
-
+        return M;
     }
-    
 
+    /**
+     * Mengambil baris tertentu dari matriks
+     * @param row
+     * @return
+     */
+    public Matriks getRow(int row) {
+        Matriks M = new Matriks(1, this.col);
+        for (int i = 0; i < this.col; i++) {
+            M.Mat[0][i] = this.Mat[row][i];
+        }
+        return M;
+    }
+
+    /**
+     * Mengambil kolom tertentu dari matriks
+     * @param col
+     * @return
+     */
+    public Matriks getCol(int col) {
+        Matriks M = new Matriks(this.row, 1);
+        for (int i = 0; i < this.row; i++) {
+            M.Mat[i][0] = this.Mat[i][col];
+        }
+        return M;
+    }
 }
