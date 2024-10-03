@@ -128,7 +128,6 @@ public class Matriks{
     }
 
 
-
     /**
      * Menghapus baris dan kolom tertentu dari matriks
      * @param row baris yang akan dihapus
