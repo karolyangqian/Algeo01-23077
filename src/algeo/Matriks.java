@@ -63,7 +63,7 @@ public class Matriks{
      * Getter baris
      * @return jumlah baris dari matriks
      */
-    public int getRows(){
+    public int getRow(){
         return this.row;
     }
 
@@ -71,7 +71,7 @@ public class Matriks{
      * Getter kolom
      * @return jumlah kolom dari matriks
      */
-    public int getCols(){
+    public int getCol(){
         return this.col;
     }
 
@@ -235,7 +235,7 @@ public class Matriks{
      * @param row
      * @return
      */
-    public Matriks getRow(int row) {
+    public Matriks getRowElements(int row) {
         Matriks M = new Matriks(1, this.col);
         for (int i = 0; i < this.col; i++) {
             M.Mat[0][i] = this.Mat[row][i];
@@ -248,7 +248,7 @@ public class Matriks{
      * @param col
      * @return
      */
-    public Matriks getCol(int col) {
+    public Matriks getColElements(int col) {
         Matriks M = new Matriks(this.row, 1);
         for (int i = 0; i < this.row; i++) {
             M.Mat[i][0] = this.Mat[i][col];
