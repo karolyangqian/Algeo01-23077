@@ -117,7 +117,7 @@ public class Matriks{
 
 
     /**
-     * Mngisi setiap elemen matriks dengan nilai x
+     * Mengisi setiap elemen matriks dengan nilai x
      */
     public void fill(float x){
         for (int i = 0; i < this.row; i++){
@@ -168,7 +168,41 @@ public class Matriks{
         }
     }
 
-    
+    /**
+     * Menambahkan baris sebanyak numRowAdded dan baris-baris baru diisi dengan 0
+    */
+    public Matriks addRowZero(int numRowAdded){
+        Matriks M = new Matriks(this.row + numRowAdded, this.col);
+        for (int i = 0; i < this.row; i++){
+            for (int j = 0; j < this.col; j++){
+                M.Mat[i][j] = this.Mat[i][j];
+            }
+        }
+        for (int i = this.row; i < M.getRow(); i++){
+            for (int j = 0; j < this.col; j++){
+                M.Mat[i][j] = 0;
+            }
+        }
+        return M;
+    }
+
+    /**
+     * Menambahkan kolom sebanyak numColAdded dan kolom-kolom baru diisi dengan 0
+    */
+    public Matriks addColZero(int numColAdded){
+        Matriks M = new Matriks(this.row, this.col + numColAdded);
+        for (int i = 0; i < this.row; i++){
+            for (int j = 0; j < this.col; j++){
+                M.Mat[i][j] = this.Mat[i][j];
+            }
+        }
+        for (int i = 0; i < this.row; i++){
+            for (int j = this.col; j < M.getCol(); j++){
+                M.Mat[i][j] = 0;
+            }
+        }
+        return M;
+    }
     
     /**
      * Menggabungkan dua matriks
@@ -249,10 +283,10 @@ public class Matriks{
      * @param row
      * @return
      */
-    public Matriks getRowElements(int row) {
-        Matriks M = new Matriks(1, this.col);
+    public float[] getRowElements(int row) {
+        float[] M = new float[this.col];
         for (int i = 0; i < this.col; i++) {
-            M.Mat[0][i] = this.Mat[row][i];
+            M[i] = this.Mat[row][i];
         }
         return M;
     }
@@ -262,10 +296,10 @@ public class Matriks{
      * @param col
      * @return
      */
-    public Matriks getColElements(int col) {
-        Matriks M = new Matriks(this.row, 1);
+    public float[] getColElements(int col) {
+        float[] M = new float[this.row];
         for (int i = 0; i < this.row; i++) {
-            M.Mat[i][0] = this.Mat[i][col];
+            M[i] = this.Mat[i][col];
         }
         return M;
     }
