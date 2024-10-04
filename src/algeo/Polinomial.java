@@ -70,7 +70,7 @@ public class Polinomial implements PolinomialInterface{
         points = linalg.transposeMatriks(points);
         Matriks Augmented = new Matriks(points.getCol(), points.getCol() + 1);
         for (int i = 0; i < points.getCol(); i++){
-            for (int j = 0; j < this.degree; j++){
+            for (int j = 0; j <= this.degree; j++){
                 Augmented.Mat[i][j] = (float) Math.pow(points.Mat[0][i], j);
             }
             Augmented.Mat[i][this.degree + 1] = points.Mat[1][i];
@@ -79,14 +79,25 @@ public class Polinomial implements PolinomialInterface{
         this.setCoefficients(Coefficients.getColElements(0));
     }
 
+    /**
+     * Mengembalikan derajat polinomial
+     */
     public int getDegree(){
         return this.degree;
     }
 
+    /**
+     * Mengembalikan koefisien polinomial
+     * Contoh: Polinomial([1, 2, 3]).getCoefficients() akan mengembalikan [1, 2, 3]
+     */
     public float[] getCoefficients(){
         return this.coefficients;
     }
 
+    /**
+     * Menghitung nilai polinomial pada titik x
+     * Contoh: Polinomial([1, 2, 3]).calculate(2) akan mengembalikan 17
+     */
     public float calculate(float x){
         float result = 0;
         for (int i = 0; i <= this.degree; i++){
