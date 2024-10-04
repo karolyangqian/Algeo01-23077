@@ -6,31 +6,56 @@ public class SistemPersamaanLinier {
      * @param Mat Matriks Augmented dari SPL
      * @return matriks solusi dari SPL, dengan baris ke-i adalah solusi untuk xi
     */
-    public Matriks MetodeGauss(Matriks Mat){
+    public Matriks metodeGauss(Matriks Mat){
+        Linalg linalg = new Linalg();
+        Matriks M = new Matriks(Mat);
+        M = M.addRowZero(Math.max(0, (M.getCol()-1) - M.getRow()));
+        M = linalg.toEselonBaris(M);
+        M = this.sesuaikanBarisLeadingOne(M);   
+
+        Matriks A = M.popCol(M.getCol() - 1);
+        float[] B = M.getColElements(M.getCol() - 1);
+        
+        if (!this.solutionExist(A, B)) return null;
+        
+        Matriks solution = this.generateSolution(A, B);
+        return solution;
+    }
+    
+    public Matriks metodeGaussJordan(Matriks Mat){
         Linalg linalg = new Linalg();
         Matriks M = new Matriks(Mat);
         M = M.addRowZero(Math.max(0, (M.getCol()-1) - M.getRow()));
         
-        M = linalg.toEselonBaris(M);
+        M = linalg.toEselonBarisTereduksi(M);
+        M = this.sesuaikanBarisLeadingOne(M);
 
+        Matriks A = M.popCol(M.getCol() - 1);
+        float[] B = M.getColElements(M.getCol() - 1);
+        
+        if (!this.solutionExist(A, B)) return null;
+        
+        Matriks solution = this.generateSolution(A, B);
+        return solution;
+    }
+
+    /**
+     * Menyusun matriks sesuai dengan baris leading one
+    */
+    private Matriks sesuaikanBarisLeadingOne(Matriks M){
+        Linalg linalg = new Linalg();
         for (int i = M.getRow()-1; i >= 0; i--){
             int idx = indexNotZero(M.Mat[i]);
             if (idx == -1) continue;
             M = linalg.tukarBaris(M, i, idx);
 
         }
-        
-        Matriks A = M.popCol(M.getCol() - 1);
-        float[] B = M.getColElements(M.getCol() - 1);
-        
-        if (!this.solutionExist(A, B)){
-            return null;
-        }
-        
-        Matriks solution = this.generateSolution(A, B);
-        return solution;
+        return M;
     }
-    
+
+    /**
+     * Mengecek apakah ada solusi dari SPL
+    */
     private boolean solutionExist(Matriks A, float[] B){
         boolean semuanol = true;
         for (int j = 0; j < A.getCol(); j++){
@@ -45,6 +70,9 @@ public class SistemPersamaanLinier {
         return true;
     }
     
+    /**
+     * Mencari index pertama yang bernilai tidak nol dari array
+    */
     private int indexNotZero(float[] arr){
         for (int i = 0; i < arr.length; i++){
             if (arr[i] != 0) return i; 
@@ -52,6 +80,9 @@ public class SistemPersamaanLinier {
         return -1;
     }
 
+    /**
+     * Menghasilkan matriks solusi dari SPL
+    */
     private Matriks generateSolution(Matriks A, float[] B){
         Matriks solution = new Matriks (A.getCol(), A.getCol()+1);
         Linalg linalg = new Linalg();
@@ -60,7 +91,7 @@ public class SistemPersamaanLinier {
             solution.Mat[i][0] = B[i];
         }
 
-        // nama variabel
+        // nama variabel7
         char [] var = new char[A.getCol()+1];
         for (int i = 1; i <= A.getCol(); i++){
             var[i] = (char) ('a' + i);

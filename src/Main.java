@@ -23,22 +23,9 @@ public class Main {
         //     {2, 6, 0, 8, 4, 18, 6}
         // };
         Matriks M = new Matriks(A);
-        Matriks S = SPL.MetodeGauss(M);
-        // if (S != null){
-        //     M2.printMatriks();
-        // }
-        // else{
-        //     System.out.println("Tidak ada solusi");
-        // }
-        // Matriks M2 = M.kalikanBaris(0, 0);
-        // Matriks M3 = M2.kaliXMatriks(1/M.determinanMatriks("reduksi"));
-        // M = linalg.toEselonBaris(M);
-        // M.makePositiveZero();
-        // M.printMatriks();
+        Matriks M2 = linalg.toEselonBarisTereduksi(M);
         // M2.printMatriks();
-        // M3.printMatriks();
-        // SistemPersamaanLinier SPL = new SistemPersamaanLinier(M);
-        // System.err.println(SPL.isEselonBaris());
-        // SPL.toEselonBaris().printMatriks();
+        Matriks S = SPL.metodeGaussJordan(M);
+        S.printMatriks();
     }
 }

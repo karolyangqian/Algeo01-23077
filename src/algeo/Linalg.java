@@ -137,6 +137,9 @@ public class Linalg{
         Matriks M = new Matriks(Mat);
         int i = 0;
         for(int j = 0; j < M.getCol(); j++){
+            if (i >= M.getRow()){
+                break;
+            }
             int notZeroIdx = -1;
             for (int k = i; k < M.getRow(); k++){
                 if (M.Mat[k][j] != 0){
@@ -160,6 +163,9 @@ public class Linalg{
         Matriks M = this.toEselonBaris(Mat);
         int i = 0;
         for (int j = 0; j < M.getCol(); j++){
+            if (i >= M.getRow()){
+                break;
+            }
             if (M.Mat[i][j] == 1){
                 M = this.reduksiKolomKeAtas(M, i, j);
                 i++;
@@ -179,7 +185,7 @@ public class Linalg{
     }
     private Matriks reduksiKolomKeAtas(Matriks Mat, int leadingOneRow, int leadingOneCol){
         Matriks M = new Matriks(Mat);
-        for (int i = leadingOneRow - 1; i >= 0; i++){
+        for (int i = leadingOneRow - 1; i >= 0; i--){
             if (M.Mat[i][leadingOneCol] != 0){
                 M = this.jumlahKelipatanBaris(M, i, leadingOneRow, -M.Mat[i][leadingOneCol]);
             }
