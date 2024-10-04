@@ -5,27 +5,27 @@ import algeo.Linalg;
 public class Main {
     public static void main(String[] args) {
         Linalg linalg = new Linalg();
+        SistemPersamaanLinier SPL = new SistemPersamaanLinier();
         // float[][] A = {
-        //     {1, 2, 3, 4},
-        //     {0, 1, 6, 7},
-        //     {0, 1, 0, 2}
+        //     {1, 1, 1, 0},
+        //     {2, 3, 1, 1},
+        //     {3, 1, 2, 1}
         // };
-        float[][] B = {
-            {1, 3, -2, 0, 2, 0, 0},
-            {2, 6, -5, -2, 4, -3, -1},
-            {0, 0, 5, 10, 0, 15, 5},
-            {2, 6, 0, 8, 4, 18, 6}
+        float[][] A = {
+            {1, 1, 2, 4},
+            {2, -1, 1, 2},
+            {1, 2, 3, 6}
         };
-        Matriks M = new Matriks(B);
-        // Matriks M2 = M.kalikanBaris(0, 0);
-        // Matriks M3 = M2.kaliXMatriks(1/M.determinanMatriks("reduksi"));
-        M = linalg.toEselonBaris(M);
-        M.makePositiveZero();
-        M.printMatriks();
+        // float[][] B = {
+        //     {1, 3, -2, 0, 2, 0, 0},              
+        //     {2, 6, -5, -2, 4, -3, -1},
+        //     {0, 0, 5, 10, 0, 15, 5},
+        //     {2, 6, 0, 8, 4, 18, 6}
+        // };
+        Matriks M = new Matriks(A);
+        Matriks M2 = linalg.toEselonBarisTereduksi(M);
         // M2.printMatriks();
-        // M3.printMatriks();
-        // SistemPersamaanLinier SPL = new SistemPersamaanLinier(M);
-        // System.err.println(SPL.isEselonBaris());
-        // SPL.toEselonBaris().printMatriks();
+        Matriks S = SPL.metodeGaussJordan(M);
+        S.printMatriks();
     }
 }
