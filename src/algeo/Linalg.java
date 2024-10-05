@@ -125,6 +125,7 @@ public class Linalg{
     public Matriks inversMatriks(Matriks Mat){
         float det = this.determinanMatriks(Mat, "reduksi");
         Matriks M = this.adjointMatriks(Mat);
+        if (det == 0) return null;
 
         M = this.kaliXMatriks(M, (float)1/det);
         return M;

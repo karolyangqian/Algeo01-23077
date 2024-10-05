@@ -93,10 +93,10 @@ public class Matriks{
      * @param N
      * @return
      */
-    public Matriks replaceColumn(int col, Matriks N) {
+    public Matriks replaceColumn(int col, float[] N) {
         Matriks M = new Matriks(this);
-        for (int i = 0; i < this.row; i++) {
-            M.Mat[i][col] = N.Mat[i][0];
+        for (int i = 0; i < M.getRow(); i++) {
+            M.Mat[i][col] = N[i];
         }
         return M;
     }
@@ -107,10 +107,10 @@ public class Matriks{
      * @param N
      * @return
      */
-    public Matriks replaceRow(int row, Matriks N) {
+    public Matriks replaceRow(int row, float[] N) {
         Matriks M = new Matriks(this);
         for (int i = 0; i < this.col; i++) {
-            M.Mat[row][i] = N.Mat[0][i];
+            M.Mat[row][i] = N[i];
         }
         return M;
     }
