@@ -12,20 +12,30 @@ public class Main {
         //     {3, 1, 2, 1}
         // };
         float[][] A = {
-            {1, 1, 2, 4},
-            {2, -1, 1, 2},
-            {1, 2, 3, 6}
+            {2, 3, -1, 5},
+            {4, 4, -3, 3}, 
+            {-2, 3, -1, 1}
         };
-        // float[][] B = {
-        //     {1, 3, -2, 0, 2, 0, 0},              
-        //     {2, 6, -5, -2, 4, -3, -1},
-        //     {0, 0, 5, 10, 0, 15, 5},
-        //     {2, 6, 0, 8, 4, 18, 6}
-        // };
+        float[][] B = {
+            {1, 3, -2, 0, 2, 0, 0},              
+            {2, 6, -5, -2, 4, -3, -1},
+            {0, 0, 5, 10, 0, 15, 5},
+            {2, 6, 0, 8, 4, 18, 6}
+        };
         Matriks M = new Matriks(A);
-        Matriks M2 = linalg.toEselonBarisTereduksi(M);
+        // Matriks M2 = linalg.toEselonBarisTereduksi(M);
         // M2.printMatriks();
-        Matriks S = SPL.metodeGaussJordan(M);
+        Matriks S = SPL.metodeGauss(M);
         S.printMatriks();
+        System.out.println();
+        Matriks S2 = SPL.metodeGaussJordan(M);
+        S2.printMatriks();
+        System.out.println();
+        Matriks S3 = SPL.metodeCramer(M);
+        S3.printMatriks();
+        System.out.println();
+        Matriks S4 = SPL.metodeInversMatriks(M);
+        S4.printMatriks();
     }
-}
+}    
+

@@ -21,7 +21,12 @@ public class SistemPersamaanLinier {
         Matriks solution = this.generateSolution(A, B);
         return solution;
     }
-    
+
+    /**
+     * Menyelesaikan SPL dengan Metode Gauss-Jordan
+     * @param Mat Matriks Augmented dari SPL
+     * @return matriks solusi dari SPL, dengan baris ke-i adalah solusi untuk xi
+    */
     public Matriks metodeGaussJordan(Matriks Mat){
         Linalg linalg = new Linalg();
         Matriks M = new Matriks(Mat);
@@ -38,6 +43,59 @@ public class SistemPersamaanLinier {
         Matriks solution = this.generateSolution(A, B);
         return solution;
     }
+
+    /**
+     * Menyelesaikan SPL dengan Metode Cramer
+     * @param Mat Matriks Augmented dari SPL
+     * @return matriks solusi dari SPL, dengan baris ke-i adalah solusi untuk xi
+    */
+    public Matriks metodeCramer(Matriks Mat){
+        Linalg linalg = new Linalg();
+
+        Matriks A = Mat.popCol(Mat.getCol() - 1);
+        float[] B = Mat.getColElements(Mat.getCol() - 1);
+        float det = linalg.determinanMatriks(A, "reduksi");
+        if (det == 0 || A.getRow() != A.getCol()){
+            return null;
+        }
+
+        Matriks solution = new Matriks(A.getCol(), A.getCol()+1);
+        solution.fill(0);
+
+        for (int i = 0; i < solution.getRow(); i++){
+            Matriks M = A.replaceColumn(i, B);
+            solution.Mat[i][0] = linalg.determinanMatriks(M, "reduksi")/det;
+        }
+
+        return solution;
+
+    }
+
+    /**
+     * Menyelesaikan SPL dengan Metode Invers
+     * @param Mat Matriks Augmented dari SPL
+     * @return matriks solusi dari SPL, dengan baris ke-i adalah solusi untuk xi
+    */
+    public Matriks metodeInversMatriks(Matriks Mat){
+        Linalg linalg = new Linalg();
+
+        Matriks A = Mat.popCol(Mat.getCol() - 1);
+        float[] B = Mat.getColElements(Mat.getCol() - 1);
+
+        Matriks inversA = linalg.inversMatriks(A);
+        
+        if (inversA == null) return null;
+
+        Matriks b = new Matriks(B.length, 1);
+        for (int i = 0; i < b.getRow(); i++){
+            b.Mat[i][0] = B[i];
+        }
+
+        Matriks solution = linalg.perkalianMatriks(inversA, b);
+
+        return solution;
+    }
+
 
     /**
      * Menyusun matriks sesuai dengan baris leading one
@@ -100,7 +158,7 @@ public class SistemPersamaanLinier {
         for (int i = A.getRow()-1; i >=0; i--){
             int idx = indexNotZero(A.Mat[i]);
             if (idx == -1){
-                solution.Mat[i][i] = 1;
+                solution.Mat[i][i+1] = 1;
                 continue;
             }
             for (int j = idx+1; j < A.getCol(); j++){
