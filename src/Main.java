@@ -24,8 +24,8 @@ public class Main {
             {0, 0, 5, 10, 0, 15, 5},
             {2, 6, 0, 8, 4, 18, 6}
         };
-        Matriks M = bsi.matriksX();
-        M.printMatriks();
+        // Matriks M = bsi.matriksX();
+        // M.printMatriks();
     }
 }    
 

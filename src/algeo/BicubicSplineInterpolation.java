@@ -1,7 +1,41 @@
 package algeo;
 
 public class BicubicSplineInterpolation {
-    public Matriks matriksX(){
+
+    public double BicubicSplineInterpolate(Matriks fValue, double x, double y){
+        double[] a = this.findAMatriks(fValue);
+        double res = 0;
+        int idx = 0;
+        for (int i = 0; i < 4; i++){
+            for (int j = 0; j < 4; j++){
+                res += a[idx]*Math.pow(x, i)*Math.pow(y, j);
+                idx++;
+            }
+        }
+        return res;
+    }
+
+    private double[] findAMatriks(Matriks fValue){
+        SistemPersamaanLinier spl = new SistemPersamaanLinier();
+        Matriks X = this.matriksX();
+        Matriks augmented = X.addColZero(1);
+        int row = 0;
+        for (int i = 0; i < 4; i++){
+            for (int j = 0; j < 4; j++){
+                augmented.Mat[row][augmented.getCol()-1] = fValue.Mat[i][j];
+                row++;
+            }
+        }
+        Matriks a = spl.metodeInversMatriks(augmented);
+        double []res = new double[16];
+        for (int i = 0; i < 16; i++){
+            res[i] = a.Mat[i][0];
+        }
+
+        return res;
+    }
+
+    private Matriks matriksX(){
         Matriks M = new Matriks(16, 16);
         int row = 0;
         for (int k = 0; k < 4; k++){
