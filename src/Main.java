@@ -11,10 +11,11 @@ public class Main {
         p1 = new Polinomial(3);
         System.out.println(p1.getDegree());
         p1.printCoefficients();
-        Matriks points = new Matriks(new float[][]{{1, 2}, {2, 3}, {3, 4}, {4, 6}}); 
+        Matriks points = new Matriks(new float[][]{{1, 2}, {2, 3}, {3, 4}, {4, 5}}); 
         float[] coefficients = {1, 2, 3, 0, 1, 0};
         p1.interpolate(points);
         System.out.println(p1.getDegree());
+        p1.printCoefficients();
         System.out.println(p1.calculate(1));
         Polinomial p2 = new Polinomial(coefficients);
         p2.printCoefficients();

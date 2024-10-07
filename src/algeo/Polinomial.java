@@ -126,5 +126,10 @@ public class Polinomial implements PolinomialInterface{
                 break;
             }
         }
+        float[] temp = new float[this.degree + 1];
+        for (int i = 0; i <= this.degree; i++){
+            temp[i] = this.coefficients[i];
+        }
+        this.coefficients = temp;
     }
 }
