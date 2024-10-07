@@ -1,41 +1,25 @@
 import algeo.Matriks;
 import algeo.SistemPersamaanLinier;
 import algeo.Linalg;
+import algeo.Polinomial;
 
 public class Main {
     public static void main(String[] args) {
-        Linalg linalg = new Linalg();
-        SistemPersamaanLinier SPL = new SistemPersamaanLinier();
-        // float[][] A = {
-        //     {1, 1, 1, 0},
-        //     {2, 3, 1, 1},
-        //     {3, 1, 2, 1}
-        // };
-        float[][] A = {
-            {2, 3, -1, 5},
-            {4, 4, -3, 3}, 
-            {-2, 3, -1, 1}
-        };
-        float[][] B = {
-            {1, 3, -2, 0, 2, 0, 0},              
-            {2, 6, -5, -2, 4, -3, -1},
-            {0, 0, 5, 10, 0, 15, 5},
-            {2, 6, 0, 8, 4, 18, 6}
-        };
-        Matriks M = new Matriks(A);
-        // Matriks M2 = linalg.toEselonBarisTereduksi(M);
-        // M2.printMatriks();
-        Matriks S = SPL.metodeGauss(M);
-        S.printMatriks();
-        System.out.println();
-        Matriks S2 = SPL.metodeGaussJordan(M);
-        S2.printMatriks();
-        System.out.println();
-        Matriks S3 = SPL.metodeCramer(M);
-        S3.printMatriks();
-        System.out.println();
-        Matriks S4 = SPL.metodeInversMatriks(M);
-        S4.printMatriks();
+        Polinomial p1 = new Polinomial();
+        System.out.println(p1.getDegree());
+        System.out.println(p1.calculate(1000));
+        p1 = new Polinomial(3);
+        System.out.println(p1.getDegree());
+        p1.printCoefficients();
+        Matriks points = new Matriks(new float[][]{{1, 2}, {2, 3}, {3, 4}, {4, 5}}); 
+        float[] coefficients = {1, 2, 3, 0, 1, 0};
+        p1.interpolate(points);
+        System.out.println(p1.getDegree());
+        p1.printCoefficients();
+        System.out.println(p1.calculate(1));
+        Polinomial p2 = new Polinomial(coefficients);
+        p2.printCoefficients();
+        System.out.println(p2.getDegree());
     }
 }    
 
