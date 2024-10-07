@@ -21,4 +21,5 @@ public class Main {
         p2.printCoefficients();
         System.out.println(p2.getDegree());
     }
-}
+}    
+
