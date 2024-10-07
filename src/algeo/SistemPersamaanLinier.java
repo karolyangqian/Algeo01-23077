@@ -14,7 +14,7 @@ public class SistemPersamaanLinier {
         M = this.sesuaikanBarisLeadingOne(M);   
 
         Matriks A = M.popCol(M.getCol() - 1);
-        float[] B = M.getColElements(M.getCol() - 1);
+        double[] B = M.getColElements(M.getCol() - 1);
         
         if (!this.solutionExist(A, B)) return null;
         
@@ -36,7 +36,7 @@ public class SistemPersamaanLinier {
         M = this.sesuaikanBarisLeadingOne(M);
 
         Matriks A = M.popCol(M.getCol() - 1);
-        float[] B = M.getColElements(M.getCol() - 1);
+        double[] B = M.getColElements(M.getCol() - 1);
         
         if (!this.solutionExist(A, B)) return null;
         
@@ -53,8 +53,8 @@ public class SistemPersamaanLinier {
         Linalg linalg = new Linalg();
 
         Matriks A = Mat.popCol(Mat.getCol() - 1);
-        float[] B = Mat.getColElements(Mat.getCol() - 1);
-        float det = linalg.determinanMatriks(A, "reduksi");
+        double[] B = Mat.getColElements(Mat.getCol() - 1);
+        double det = linalg.determinanMatriks(A, "reduksi");
         if (det == 0 || A.getRow() != A.getCol()){
             return null;
         }
@@ -80,7 +80,7 @@ public class SistemPersamaanLinier {
         Linalg linalg = new Linalg();
 
         Matriks A = Mat.popCol(Mat.getCol() - 1);
-        float[] B = Mat.getColElements(Mat.getCol() - 1);
+        double[] B = Mat.getColElements(Mat.getCol() - 1);
 
         Matriks inversA = linalg.inversMatriks(A);
         
@@ -114,7 +114,7 @@ public class SistemPersamaanLinier {
     /**
      * Mengecek apakah ada solusi dari SPL
     */
-    private boolean solutionExist(Matriks A, float[] B){
+    private boolean solutionExist(Matriks A, double[] B){
         boolean semuanol = true;
         for (int j = 0; j < A.getCol(); j++){
             if (A.Mat[A.getRow()-1][j] != 0){
@@ -131,7 +131,7 @@ public class SistemPersamaanLinier {
     /**
      * Mencari index pertama yang bernilai tidak nol dari array
     */
-    private int indexNotZero(float[] arr){
+    private int indexNotZero(double[] arr){
         for (int i = 0; i < arr.length; i++){
             if (arr[i] != 0) return i; 
         }
@@ -141,7 +141,7 @@ public class SistemPersamaanLinier {
     /**
      * Menghasilkan matriks solusi dari SPL
     */
-    private Matriks generateSolution(Matriks A, float[] B){
+    private Matriks generateSolution(Matriks A, double[] B){
         Matriks solution = new Matriks (A.getCol(), A.getCol()+1);
         Linalg linalg = new Linalg();
         // set nilai konstanta awal
