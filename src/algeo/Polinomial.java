@@ -21,18 +21,19 @@ public class Polinomial implements PolinomialInterface{
      */
     public Polinomial() {
         this.degree = 0;
-        this.coefficients = new float[0];
+        this.coefficients = new float[1];
+        this.coefficients[0] = 0;
     }
 
     /**
      * Constructor
      * Membentuk polinomial dari koefisien tertentu
      * Contoh: Polinomial([1, 2, 3]) akan membentuk polinomial 1 + 2x + 3x^2
-     * @param coefficients
+     * @param coefficients bukan array kosong
      */
     public Polinomial(float[] coefficients){
-        this.degree = coefficients.length - 1;
         this.coefficients = coefficients;
+        this.updateDegree();
     }
 
 
@@ -55,8 +56,8 @@ public class Polinomial implements PolinomialInterface{
      * Memperbarui koefisien polinomial
      */
     public void setCoefficients(float[] coefficients){
-        this.degree = coefficients.length - 1;
         this.coefficients = coefficients;
+        this.updateDegree();
     }
 
     /**
@@ -69,14 +70,15 @@ public class Polinomial implements PolinomialInterface{
         SistemPersamaanLinier SPL = new SistemPersamaanLinier();
         points = linalg.transposeMatriks(points);
         Matriks Augmented = new Matriks(points.getCol(), points.getCol() + 1);
-        for (int i = 0; i < points.getCol(); i++){
-            for (int j = 0; j <= this.degree; j++){
+        for (int i = 0; i < Augmented.getRow(); i++){
+            for (int j = 0; j < Augmented.getCol() - 1; j++){
                 Augmented.Mat[i][j] = (float) Math.pow(points.Mat[0][i], j);
             }
-            Augmented.Mat[i][this.degree + 1] = points.Mat[1][i];
+            Augmented.Mat[i][points.getCol()] = points.Mat[1][i];
         }
         Matriks Coefficients = SPL.metodeGaussJordan(Augmented);
         this.setCoefficients(Coefficients.getColElements(0));
+        this.updateDegree();
     }
 
     /**
@@ -106,5 +108,23 @@ public class Polinomial implements PolinomialInterface{
         return result;
     }
 
+    /**
+     * Menampilkan koefisien polinomial
+     * Format: menampilkan a0 a1 a2 ... an untuk polinomial a0 + a1x + a2x^2 + ... + anx^n
+     */
+    public void printCoefficients() {
+        for (int i = 0; i < this.coefficients.length; i++) {
+            System.out.print(this.coefficients[i] + " ");
+        }
+        System.out.println();
+    }
 
+    private void updateDegree(){
+        for (int i = this.coefficients.length - 1; i >= 0; i--) {
+            if (this.coefficients[i] != 0) {
+                this.degree = i;
+                break;
+            }
+        }
+    }
 }
