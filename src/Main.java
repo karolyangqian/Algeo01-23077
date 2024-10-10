@@ -20,6 +20,12 @@ public class Main {
         Polinomial p2 = new Polinomial(coefficients);
         p2.printCoefficients();
         System.out.println(p2.getDegree());
+
+        
+        Matriks m1 = new Matriks(new float[][]{
+                                            {1, 2, 3}, 
+                                            {4, 5, 6}, 
+                                            {7, 8, 9}});
     }
 }    
 
