@@ -6,7 +6,7 @@ public class Matriks{
     /**
      * Atribut
      */
-    float[][] Mat;
+    double[][] Mat;
     private int row, col;
 
     /**
@@ -15,7 +15,7 @@ public class Matriks{
     public Matriks(){
         this.row = 0;
         this.col = 0;
-        this.Mat = new float[0][0];
+        this.Mat = new double[0][0];
     }
 
     /**
@@ -26,7 +26,7 @@ public class Matriks{
     public Matriks(int row, int col){
         this.row = row;
         this.col = col;
-        this.Mat = new float[row][col];
+        this.Mat = new double[row][col];
     }
 
     /**
@@ -36,7 +36,7 @@ public class Matriks{
     public Matriks(Matriks M){
         this.row = M.row;
         this.col = M.col;
-        this.Mat = new float[this.row][this.col];
+        this.Mat = new double[this.row][this.col];
         for (int i = 0; i < this.row; i++){
             for (int j = 0; j < this.col; j++){
                 this.Mat[i][j] = M.Mat[i][j];
@@ -46,15 +46,15 @@ public class Matriks{
 
     /**
      * Constructor
-     * @param arrayOfArrayFloat array of array float yang akan dijadikan matriks
+     * @param arrayOfArrayDouble array of array double yang akan dijadikan matriks
      */
-    public Matriks(float[][] arrayOfArrayFloat){
-        this.row = arrayOfArrayFloat.length;
-        this.col = arrayOfArrayFloat[0].length;
-        this.Mat = new float[this.row][this.col];
+    public Matriks(double[][] arrayOfArrayDouble){
+        this.row = arrayOfArrayDouble.length;
+        this.col = arrayOfArrayDouble[0].length;
+        this.Mat = new double[this.row][this.col];
         for (int i = 0; i < this.row; i++){
             for (int j = 0; j < this.col; j++){
-                this.Mat[i][j] = arrayOfArrayFloat[i][j];
+                this.Mat[i][j] = arrayOfArrayDouble[i][j];
             }
         }
     }
@@ -93,7 +93,7 @@ public class Matriks{
      * @param N
      * @return
      */
-    public Matriks replaceColumn(int col, float[] N) {
+    public Matriks replaceColumn(int col, double[] N) {
         Matriks M = new Matriks(this);
         for (int i = 0; i < M.getRow(); i++) {
             M.Mat[i][col] = N[i];
@@ -107,7 +107,7 @@ public class Matriks{
      * @param N
      * @return
      */
-    public Matriks replaceRow(int row, float[] N) {
+    public Matriks replaceRow(int row, double[] N) {
         Matriks M = new Matriks(this);
         for (int i = 0; i < this.col; i++) {
             M.Mat[row][i] = N[i];
@@ -119,7 +119,7 @@ public class Matriks{
     /**
      * Mengisi setiap elemen matriks dengan nilai x
      */
-    public void fill(float x){
+    public void fill(double x){
         for (int i = 0; i < this.row; i++){
             for (int j = 0; j < this.col; j++){
                 this.Mat[i][j] = x;
@@ -283,8 +283,8 @@ public class Matriks{
      * @param row
      * @return
      */
-    public float[] getRowElements(int row) {
-        float[] M = new float[this.col];
+    public double[] getRowElements(int row) {
+        double[] M = new double[this.col];
         for (int i = 0; i < this.col; i++) {
             M[i] = this.Mat[row][i];
         }
@@ -296,8 +296,8 @@ public class Matriks{
      * @param col
      * @return
      */
-    public float[] getColElements(int col) {
-        float[] M = new float[this.row];
+    public double[] getColElements(int col) {
+        double[] M = new double[this.row];
         for (int i = 0; i < this.row; i++) {
             M[i] = this.Mat[i][col];
         }

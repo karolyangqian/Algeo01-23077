@@ -11,7 +11,7 @@ public class Linalg{
      * @param x nilai skalar
      * @return matriks baru yang sudah dikali dengan skalar x
      */
-    public Matriks kaliXMatriks(Matriks Mat, float x){
+    public Matriks kaliXMatriks(Matriks Mat, double x){
         
         Matriks M = new Matriks(Mat);
         for (int i = 0; i < M.getRow(); i++){
@@ -84,7 +84,7 @@ public class Linalg{
         for (int i = 0; i < Mat.getRow(); i++){
             for (int j = 0; j < Mat.getCol(); j++){
                 Matriks M2 = Mat.removeRowColMatriks(i, j);
-                M.Mat[i][j] = (float) Math.pow(-1, i + j) * this.determinanMatriks(M2, "reduksi");
+                M.Mat[i][j] = (double) Math.pow(-1, i + j) * this.determinanMatriks(M2, "reduksi");
                 
             }
         }
@@ -106,7 +106,7 @@ public class Linalg{
      * @param method metode yang digunakan untuk menghitung determinan
      * @return nilai determinan matriks
      */
-    public float determinanMatriks(Matriks M, String method){
+    public double determinanMatriks(Matriks M, String method){
         
         // ingat cek apakah this.n == this.m
         if (method == "reduksi"){
@@ -123,11 +123,11 @@ public class Linalg{
      * @return invers matriks
      */
     public Matriks inversMatriks(Matriks Mat){
-        float det = this.determinanMatriks(Mat, "reduksi");
+        double det = this.determinanMatriks(Mat, "reduksi");
         Matriks M = this.adjointMatriks(Mat);
         if (det == 0) return null;
 
-        M = this.kaliXMatriks(M, (float)1/det);
+        M = this.kaliXMatriks(M, (double)1/det);
         return M;
     }
     // ------------------------------------------------------------------------------------------------------------------------------------
@@ -152,7 +152,7 @@ public class Linalg{
                 continue;
             }
             M = this.tukarBaris(M, i, notZeroIdx);
-            M = this.kalikanBaris(M, i, (float) 1 / M.Mat[i][j]);
+            M = this.kalikanBaris(M, i, (double) 1 / M.Mat[i][j]);
             M = this.reduksiKolomKeBawah(M, i, j);
             i++;
 
@@ -212,7 +212,7 @@ public class Linalg{
         Matriks M = new Matriks(Mat);
         int col = M.getCol();
         for (int i = 0; i < col; i++) {
-            float temp = M.Mat[row1][i];
+            double temp = M.Mat[row1][i];
             M.Mat[row1][i] = M.Mat[row2][i];
             M.Mat[row2][i] = temp;
         }
@@ -226,7 +226,7 @@ public class Linalg{
      * @param x nilai kelipatan
      * @return matriks baru yang sudah dikalikan barisnya
      */
-    public Matriks kalikanBaris(Matriks Mat, int row, float x) {
+    public Matriks kalikanBaris(Matriks Mat, int row, double x) {
         Matriks M = new Matriks(Mat);
         int col = M.getCol();
         for (int i = 0; i < col; i++) {
@@ -243,7 +243,7 @@ public class Linalg{
      * @param row2 baris yang akan dijumlahkan ke row1
      * @param x nilai kelipatan
      */
-    public Matriks jumlahKelipatanBaris(Matriks Mat, int row1, int row2, float x) {
+    public Matriks jumlahKelipatanBaris(Matriks Mat, int row1, int row2, double x) {
         Matriks M = new Matriks(Mat);
         int col = M.getCol();
         for (int i = 0; i < col; i++) {
@@ -259,10 +259,10 @@ public class Linalg{
      * Menghitung determinan matriks dengan metode kofaktor
      * @return nilai determinan matriks
      */
-    private float detKofaktor(Matriks Mat){
+    private double detKofaktor(Matriks Mat){
         Matriks M = this.kofaktorMatriks(Mat);
         
-        float det = 0;
+        double det = 0;
         for (int i = 0; i < Mat.getRow(); i++){
             det += Mat.Mat[0][i] * M.Mat[0][i];
         }
@@ -273,7 +273,7 @@ public class Linalg{
      * Menghitung determinan matriks dengan metode reduksi baris
      * @return nilai determinan matriks
      */
-    private float detReduksi(Matriks Mat){
+    private double detReduksi(Matriks Mat){
 
         Matriks M = new Matriks(Mat);
         int barisAtas = 0;
@@ -287,7 +287,7 @@ public class Linalg{
         M = this.tukarBaris(M, 0, barisAtas);
 
         for (int j = 0; j < M.getCol(); j++){
-            // M = M.kalikanBaris(j, (float) 1/(float) M.Mat[j][j]);
+            // M = M.kalikanBaris(j, (double) 1/(double) M.Mat[j][j]);
             for (int i = 0; i < M.getRow(); i++){
                 if (i > j){
                     if (M.Mat[i][j] != 0){
@@ -297,7 +297,7 @@ public class Linalg{
             }
         }
 
-        float det = 1;
+        double det = 1;
         for (int i = 0; i < M.getRow(); i++){
             det *= M.Mat[i][i];
         };
