@@ -1,11 +1,11 @@
 package algeo;
 
 interface PolinomialInterface {
-    public void setCoefficients(float[] coefficients);
+    public void setCoefficients(double[] coefficients);
     public void interpolate(Matriks points);
     public int getDegree();
-    public float[] getCoefficients();
-    public float calculate(float x);
+    public double[] getCoefficients();
+    public double calculate(double x);
 }
 
 public class Polinomial implements PolinomialInterface{
@@ -13,7 +13,7 @@ public class Polinomial implements PolinomialInterface{
      * Atribut
      */
     private int degree;
-    private float[] coefficients;
+    private double[] coefficients;
 
     /**
      * Constructor
@@ -21,7 +21,7 @@ public class Polinomial implements PolinomialInterface{
      */
     public Polinomial() {
         this.degree = 0;
-        this.coefficients = new float[1];
+        this.coefficients = new double[1];
         this.coefficients[0] = 0;
     }
 
@@ -31,7 +31,7 @@ public class Polinomial implements PolinomialInterface{
      * Contoh: Polinomial([1, 2, 3]) akan membentuk polinomial 1 + 2x + 3x^2
      * @param coefficients bukan array kosong
      */
-    public Polinomial(float[] coefficients){
+    public Polinomial(double[] coefficients){
         this.coefficients = coefficients;
         this.updateDegree();
     }
@@ -45,7 +45,7 @@ public class Polinomial implements PolinomialInterface{
      */
     public Polinomial(int degree){
         this.degree = degree;
-        this.coefficients = new float[degree + 1];
+        this.coefficients = new double[degree + 1];
         this.coefficients[0] = 0;
         for (int i = 1; i <= degree; i++){
             this.coefficients[i] = 1;
@@ -55,7 +55,7 @@ public class Polinomial implements PolinomialInterface{
     /**
      * Memperbarui koefisien polinomial
      */
-    public void setCoefficients(float[] coefficients){
+    public void setCoefficients(double[] coefficients){
         this.coefficients = coefficients;
         this.updateDegree();
     }
@@ -72,7 +72,7 @@ public class Polinomial implements PolinomialInterface{
         Matriks Augmented = new Matriks(points.getCol(), points.getCol() + 1);
         for (int i = 0; i < Augmented.getRow(); i++){
             for (int j = 0; j < Augmented.getCol() - 1; j++){
-                Augmented.Mat[i][j] = (float) Math.pow(points.Mat[0][i], j);
+                Augmented.Mat[i][j] = (double) Math.pow(points.Mat[0][i], j);
             }
             Augmented.Mat[i][points.getCol()] = points.Mat[1][i];
         }
@@ -92,7 +92,7 @@ public class Polinomial implements PolinomialInterface{
      * Mengembalikan koefisien polinomial
      * Contoh: Polinomial([1, 2, 3]).getCoefficients() akan mengembalikan [1, 2, 3]
      */
-    public float[] getCoefficients(){
+    public double[] getCoefficients(){
         return this.coefficients;
     }
 
@@ -100,8 +100,8 @@ public class Polinomial implements PolinomialInterface{
      * Menghitung nilai polinomial pada titik x
      * Contoh: Polinomial([1, 2, 3]).calculate(2) akan mengembalikan 17
      */
-    public float calculate(float x){
-        float result = 0;
+    public double calculate(double x){
+        double result = 0;
         for (int i = 0; i <= this.degree; i++){
             result += this.coefficients[i] * Math.pow(x, i);
         }
@@ -126,7 +126,7 @@ public class Polinomial implements PolinomialInterface{
                 break;
             }
         }
-        float[] temp = new float[this.degree + 1];
+        double[] temp = new double[this.degree + 1];
         for (int i = 0; i <= this.degree; i++){
             temp[i] = this.coefficients[i];
         }
