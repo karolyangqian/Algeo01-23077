@@ -83,10 +83,20 @@ public class SPLController {
 
         if (selectEliminasiGauss.isSelected()){
             System.out.println("Eliminasi Gauss selected");
-            solution = new Matriks(SPL.metodeGauss(Mat));
+            try {
+                solution = new Matriks(SPL.metodeGauss(Mat));
+            } catch (Exception e) {
+                alertMsg.setText("*Tidak ditemukan solusi menggunakan metode eliminasi Gauss");
+                System.out.println("Tidak ditemukan solusi menggunakan metode eliminasi Gauss");
+            }
         } else if (selectEliminasiGaussJordan.isSelected()){
             System.out.println("Eliminasi Gauss-Jordan selected");
-            solution = new Matriks(SPL.metodeGaussJordan(Mat));
+            try {
+                solution = new Matriks(SPL.metodeGaussJordan(Mat));
+            } catch (Exception e) {
+                alertMsg.setText("*Tidak ditemukan solusi menggunakan metode eliminasi Gauss-Jordan");
+                System.out.println("Tidak ditemukan solusi menggunakan metode eliminasi Gauss-Jordan");
+            }
         } else if (selectMatriksBalikan.isSelected()){
             System.out.println("Matriks balikan selected");
             try {
@@ -111,7 +121,7 @@ public class SPLController {
         // ----------------- OUTPUT SOLUSI SPL DI GUI -----------------
         if (solution != null){
             solution.printMatriks();
-            solution = new Matriks(removeZeroCols(solution));
+            solution = new Matriks(removeZeroCols(solution, 1));
             solution.printMatriks();
             for (int i = 0; i < solution.getRow(); i++) {
                 // Variabel x1, x2, x3, ...
@@ -138,7 +148,7 @@ public class SPLController {
                 }
 
                 // Koefisien variabel lain
-                for (int j = 1; j < solution.getCol() - 1; j++) {
+                for (int j = 1; j < solution.getCol(); j++) {
 
                     if (solution.Mat[i][j] == 0) {
                         continue;
@@ -182,9 +192,15 @@ public class SPLController {
         // }
     }
 
-    private Matriks removeZeroCols(Matriks M){
+    /**
+     * Menghapus kolom-kolom yang berisi nol dimulai dari kolom startCol
+     * @param M
+     * @param startCol
+     * @return
+     */
+    private Matriks removeZeroCols(Matriks M, int startCol){
         int numZeroCols = 0;
-        for (int i = 0; i < M.getCol(); i++){
+        for (int i = startCol; i < M.getCol(); i++){
             if (checkZeroCol(M, i)){
                 numZeroCols++;
             }
@@ -192,8 +208,7 @@ public class SPLController {
         Matriks M2 = new Matriks(M.getRow(), M.getCol() - numZeroCols);
         int colIdx = 0;
         for (int i = 0; i < M.getCol(); i++){
-            if (!checkZeroCol(M, i)){
-                M2 = M2.addColZero(1);
+            if (!checkZeroCol(M, i) || i < startCol){
                 for (int j = 0; j < M.getRow(); j++){
                     M2.Mat[j][colIdx] = M.Mat[j][i];
                 }
