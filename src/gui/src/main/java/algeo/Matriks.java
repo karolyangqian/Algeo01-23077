@@ -6,7 +6,7 @@ public class Matriks{
     /**
      * Atribut
      */
-    double[][] Mat;
+    public double[][] Mat;
     private int row, col;
 
     /**

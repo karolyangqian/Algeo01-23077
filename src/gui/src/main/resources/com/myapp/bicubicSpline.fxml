@@ -15,7 +15,7 @@
    <children>
       <VBox prefHeight="15.0" prefWidth="600.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#switchToMainMenu" text="Main menu" wrapText="true">
+            <Button mnemonicParsing="false" onAction="#switchToMainMenu" text="Menu utama" wrapText="true">
                <VBox.margin>
                   <Insets left="10.0" top="10.0" />
                </VBox.margin>
@@ -25,20 +25,20 @@
       <HBox prefHeight="391.0" prefWidth="600.0">
          <children>
             <LineChart prefHeight="172.0" prefWidth="263.0">
-              <xAxis>
-                <CategoryAxis side="BOTTOM" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis side="LEFT" />
-              </yAxis>
+               <xAxis>
+                  <CategoryAxis side="BOTTOM" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis side="LEFT" />
+               </yAxis>
             </LineChart>
             <BubbleChart prefHeight="172.0" prefWidth="339.0">
-              <xAxis>
-                <NumberAxis side="BOTTOM" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis side="LEFT" />
-              </yAxis>
+               <xAxis>
+                  <NumberAxis side="BOTTOM" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis side="LEFT" />
+               </yAxis>
             </BubbleChart>
          </children>
       </HBox>

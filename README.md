@@ -7,6 +7,7 @@ Keterangan: jalankan perintah di bawah pada workspace directory "ALGEO01-23077"
 Output: bytecode yang disimpan di folder bin
 ```
 javac -d bin src/algeo/*.java src/Main.java
+javac -d bin src/gui/src/main/java/algeo/*.java src/gui/src/main/java/algeo/Main.java
 ```
 
 Menjalankan bytecode 

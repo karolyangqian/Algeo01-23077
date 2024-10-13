@@ -10,7 +10,7 @@
    <children>
       <VBox prefHeight="15.0" prefWidth="600.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#switchToMainMenu" text="Main menu" wrapText="true">
+            <Button mnemonicParsing="false" onAction="#switchToMainMenu" text="Menu utama" wrapText="true">
                <VBox.margin>
                   <Insets left="10.0" top="10.0" />
                </VBox.margin>
