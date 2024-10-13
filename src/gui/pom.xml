@@ -42,7 +42,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <launcher>launcher</launcher>
-                            <mainClass>com.example.App</mainClass>
+                            <mainClass>com.myapp.App</mainClass>
                         </configuration>
                     </execution>
                 </executions>

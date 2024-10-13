@@ -5,7 +5,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<HBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.MainMenuController">
+<HBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myapp.MainMenuController">
    <children>
       <Button fx:id="splNavButton" mnemonicParsing="false" onAction="#switchToSistemPersamaanLinier" prefHeight="64.0" prefWidth="95.0" text="Sistem Persamaan Linier" textAlignment="CENTER" wrapText="true" />
       <Button fx:id="interpolasiPolinomialNavButton" mnemonicParsing="false" onAction="#switchToInterpolasiPolinomial" prefHeight="64.0" prefWidth="95.0" text="Interpolasi Polinomial" textAlignment="CENTER" wrapText="true" />

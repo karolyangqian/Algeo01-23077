@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.InterpolasiPolinomialController">
+<VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myapp.RegresiBergandaController">
    <children>
       <VBox prefHeight="15.0" prefWidth="600.0">
          <children>
@@ -19,7 +19,7 @@
       </VBox>
       <VBox alignment="CENTER" prefHeight="412.0" prefWidth="600.0">
          <children>
-            <Label text="Interpolasi Polinomial" textAlignment="CENTER" wrapText="true" />
+            <Label text="Regresi Berganda" textAlignment="CENTER" wrapText="true" />
          </children>
       </VBox>
    </children>
