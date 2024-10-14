@@ -35,7 +35,7 @@ public class BicubicSplineInterpolation {
         return res;
     }
 
-    private Matriks matriksX(){
+    public Matriks matriksX(){
         Matriks M = new Matriks(16, 16);
         int row = 0;
         for (int k = 0; k < 4; k++){
