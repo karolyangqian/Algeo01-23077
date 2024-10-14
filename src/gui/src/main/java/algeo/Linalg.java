@@ -276,18 +276,23 @@ public class Linalg{
     private double detReduksi(Matriks Mat){
 
         Matriks M = new Matriks(Mat);
-        int barisAtas = 0;
-        for (int i = 0; i < M.getRow(); i++){
-            if (M.Mat[i][0] != 0){
-                barisAtas = i;
-                break;
-            }
-        }
+        double det = 1;
         
-        M = this.tukarBaris(M, 0, barisAtas);
-
         for (int j = 0; j < M.getCol(); j++){
-            // M = M.kalikanBaris(j, (double) 1/(double) M.Mat[j][j]);
+            int barisAtas = -1;
+            for (int i = j; i < M.getRow(); i++){
+                if (M.Mat[i][j] != 0){
+                    barisAtas = i;
+                    break;
+                }
+            }
+            if (barisAtas == -1){
+                return 0;
+            }
+            
+            M = this.tukarBaris(M, j, barisAtas);
+            if (j != barisAtas)
+                det *= -1;
             for (int i = 0; i < M.getRow(); i++){
                 if (i > j){
                     if (M.Mat[i][j] != 0){
@@ -297,7 +302,6 @@ public class Linalg{
             }
         }
 
-        double det = 1;
         for (int i = 0; i < M.getRow(); i++){
             det *= M.Mat[i][i];
         };
