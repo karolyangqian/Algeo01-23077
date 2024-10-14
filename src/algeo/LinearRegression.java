@@ -2,7 +2,7 @@ package algeo;
 
 public class LinearRegression {
     /* untuk menambahkan quadratic features dalam metode Quadratic Linear Regression */
-    public static Matriks addQuadratic(Matriks X) {
+    public Matriks addQuadratic(Matriks X) {
         int row = X.getRow();
         int col = X.getCol();
         Matriks newX = new Matriks(row, col + col + (col * (col - 1)) / 2);
@@ -29,7 +29,7 @@ public class LinearRegression {
         return newX;
     }
     /* perhitungan Miltiple Linear Regression dengan Normal Equation */
-    public static Matriks normalEquation(Matriks X, Matriks Y) {
+    public Matriks normalEquation(Matriks X, Matriks Y) {
         Linalg linalg = new Linalg();
         int row = X.getRow();
         int col = X.getCol();
@@ -56,8 +56,8 @@ public class LinearRegression {
         return b;
     }
     /* prediksi nilai Y berdasarkan perhitungan */
-    public static float predict(Matriks X, Matriks b) {
-        float Y = b.Mat[0][0];
+    public double predict(Matriks X, Matriks b) {
+        double Y = b.Mat[0][0];
         for (int i = 1; i < b.getCol(); i++) {
             Y += b.Mat[0][i] * X.Mat[0][i];
         }
