@@ -6,7 +6,7 @@ public class Matriks{
     /**
      * Atribut
      */
-    double[][] Mat;
+    public double[][] Mat;
     private int row, col;
 
     /**
@@ -166,6 +166,32 @@ public class Matriks{
                 }
             }
         }
+    }
+
+    /**
+     * Menghapus baris terbawah sebanyak numRowRemoved
+    */
+    public Matriks removeRow(int numRowRemoved){
+        Matriks M = new Matriks(this.row - numRowRemoved, this.col);
+        for (int i = 0; i < M.getRow(); i++){
+            for (int j = 0; j < this.col; j++){
+                M.Mat[i][j] = this.Mat[i][j];
+            }
+        }
+        return M;
+    }
+
+    /**
+     * Menghapus kolom terkanan sebanyak numRowRemoved
+    */
+    public Matriks removeCol(int numColRemoved){
+        Matriks M = new Matriks(this.row, this.col - numColRemoved);
+        for (int i = 0; i < this.row; i++){
+            for (int j = 0; j < M.getCol(); j++){
+                M.Mat[i][j] = this.Mat[i][j];
+            }
+        }
+        return M;
     }
 
     /**

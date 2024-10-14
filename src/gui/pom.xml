@@ -13,12 +13,12 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>22.0.1</version>
+            <version>23</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>22.0.1</version>
+            <version>23</version>
         </dependency>
     </dependencies>
     <build>
@@ -42,7 +42,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <launcher>launcher</launcher>
-                            <mainClass>com.example.App</mainClass>
+                            <mainClass>com.myapp.App</mainClass>
                         </configuration>
                     </execution>
                 </executions>
