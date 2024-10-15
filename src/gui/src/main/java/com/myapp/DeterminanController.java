@@ -49,7 +49,7 @@ public class DeterminanController {
      */
     @FXML
     private void findDeterminan() {
-        // ----------------- CLEAR OUTPUT SOLUSI SPL DI GUI -----------------
+        // ----------------- CLEAR OUTPUT SOLUSI DETERMINAN DI GUI -----------------
         solutionTextFlow.getChildren().clear();
 
         // ----------------- VALIDASI INPUT -----------------
