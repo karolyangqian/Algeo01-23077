@@ -9,14 +9,15 @@ public class SistemPersamaanLinier {
     public Matriks metodeGauss(Matriks Mat){
         Linalg linalg = new Linalg();
         Matriks M = new Matriks(Mat);
-        M = M.addRowZero(Math.max(0, (M.getCol()-1) - M.getRow()));
         M = linalg.toEselonBaris(M);
-        M = this.sesuaikanBarisLeadingOne(M);   
-
         Matriks A = M.popCol(M.getCol() - 1);
         double[] B = M.getColElements(M.getCol() - 1);
-        
         if (!this.solutionExist(A, B)) return null;
+        M = M.addRowZero(Math.max(0, (M.getCol()-1) - M.getRow()));
+        M = M.removeRow(Math.max(0, M.getRow() - (M.getCol()-1)));
+        M = this.sesuaikanBarisLeadingOne(M);   
+        A = M.popCol(M.getCol() - 1);
+        B = M.getColElements(M.getCol() - 1);
         
         Matriks solution = this.generateSolution(A, B);
         return solution;
@@ -30,16 +31,19 @@ public class SistemPersamaanLinier {
     public Matriks metodeGaussJordan(Matriks Mat){
         Linalg linalg = new Linalg();
         Matriks M = new Matriks(Mat);
-        M = M.addRowZero(Math.max(0, (M.getCol()-1) - M.getRow()));
         
         M = linalg.toEselonBarisTereduksi(M);
-        M = this.sesuaikanBarisLeadingOne(M);
-
+        
         Matriks A = M.popCol(M.getCol() - 1);
         double[] B = M.getColElements(M.getCol() - 1);
         
         if (!this.solutionExist(A, B)) return null;
-        
+        M = M.addRowZero(Math.max(0, (M.getCol()-1) - M.getRow()));
+        M = M.removeRow(Math.max(0, M.getRow() - (M.getCol()-1)));
+
+        M = this.sesuaikanBarisLeadingOne(M);
+        A = M.popCol(M.getCol() - 1);
+        B = M.getColElements(M.getCol() - 1);
         Matriks solution = this.generateSolution(A, B);
         return solution;
     }
@@ -81,7 +85,6 @@ public class SistemPersamaanLinier {
 
         Matriks A = Mat.popCol(Mat.getCol() - 1);
         double[] B = Mat.getColElements(Mat.getCol() - 1);
-
         Matriks inversA = linalg.inversMatriks(A);
         
         if (inversA == null) return null;
