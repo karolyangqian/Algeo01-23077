@@ -134,12 +134,22 @@ public class SPLController {
                 subscriptText.setTranslateY(5);
                 solutionTextFlow.getChildren().add(subscriptText);
 
-                // Tanda sama dengan dan nilai variabel
+                // Tanda sama dengan
                 Text equalText = new Text(" = ");
                 solutionTextFlow.getChildren().add(equalText);
 
-                Text valueText = new Text(Double.toString(solution.Mat[i][0]));
-                solutionTextFlow.getChildren().add(valueText);
+                // Nilai solusi
+                if (solution.Mat[i][0] != 0) {
+                    if (solution.Mat[i][0] < 0) {
+                        Text minusText = new Text("- ");
+                        solutionTextFlow.getChildren().add(minusText);
+                    }
+                    Text valueText = new Text(String.format("%.2f", Math.abs(solution.Mat[i][0])));
+                    solutionTextFlow.getChildren().add(valueText); 
+                } else if (solution.getCol() == 1) {
+                    Text zeroText = new Text("0");
+                    solutionTextFlow.getChildren().add(zeroText);
+                }
 
                 if (solution.getCol() == 1) {
                     Text newLineText = new Text("\n");
@@ -154,17 +164,21 @@ public class SPLController {
                         continue;
                     }
 
-                    if (solution.Mat[i][j] > 0) {
-                        Text plusText = new Text(" + ");
-                        solutionTextFlow.getChildren().add(plusText);
-                    } else {
-                        Text minusText = new Text(" - ");
-                        solutionTextFlow.getChildren().add(minusText);
+                    if (solution.Mat[i][j-1] != 0) {
+                        if (solution.Mat[i][j] > 0) {
+                            Text plusText = new Text(" + ");
+                            solutionTextFlow.getChildren().add(plusText);
+                        } else {
+                            Text minusText = new Text(" - ");
+                            solutionTextFlow.getChildren().add(minusText);
+                        }
                     }
 
                     // Koefisien variabel
-                    Text coefText = new Text(Double.toString(Math.abs(solution.Mat[i][j])));
-                    solutionTextFlow.getChildren().add(coefText);
+                    if (Math.abs(solution.Mat[i][j]) != 1) {
+                        Text coefText = new Text(String.format("%.2f", Math.abs(solution.Mat[i][j])));
+                        solutionTextFlow.getChildren().add(coefText);
+                    }
 
                     // Variabel k1, k2, k3, ...
                     Text baseText2 = new Text("k");
@@ -179,17 +193,6 @@ public class SPLController {
                 solutionTextFlow.getChildren().add(newLineText);
             }
         }
-
-
-        // Text baseText = new Text("X");
-        // solutionTextFlow.getChildren().add(baseText);
-
-        // for (int i = 0; i <= 5; i++) {
-        //     Text subscriptText = new Text(String.valueOf(i));
-        //     subscriptText.setStyle("-fx-font-size: 8;");  // Reduce font size for subscript
-        //     subscriptText.setTranslateY(5);  // Move subscript down
-        //     solutionTextFlow.getChildren().add(subscriptText);
-        // }
     }
 
     /**
