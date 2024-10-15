@@ -92,7 +92,7 @@ public class SistemPersamaanLinier {
 
         Matriks A = Mat.popCol(Mat.getCol() - 1);
         double[] B = Mat.getColElements(Mat.getCol() - 1);
-        Matriks inversA = linalg.inversMatriks(A);
+        Matriks inversA = linalg.inversMatriks(A, "adjoin");
 
         if (inversA == null)
             return null;
