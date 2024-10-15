@@ -17,7 +17,9 @@ public class Main {
             {1, 1, 1},
         };
         Matriks M = new Matriks(A);
-        double res = bsi.BicubicSplineInterpolate(M, 0, 0);
+        double res = bsi.BicubicSplineInterpolate(M, 0.5, 0.5);
+        Matriks X = linalg.inversMatriks(bsi.matriksX());
+        // X.printMatriks();
         // double det = linalg.determinanMatriks(bsi.matriksX(), "reduksi");
         System.out.println(res);
         // Matriks sol = SPL.metodeGauss(M);
