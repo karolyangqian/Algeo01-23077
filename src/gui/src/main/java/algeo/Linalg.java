@@ -287,12 +287,12 @@ public class Linalg {
 
         Matriks identitas = Mat.identityMatrix();
 
-        Matriks M = identitas.concat(Mat, true);
+        Matriks M = Mat.concat(identitas, true);
         M = this.toEselonBarisTereduksi(M);
 
         for (int i = 0; i < Mat.getRow(); i++) {
             for (int j = Mat.getCol(); j < Mat.getCol() * 2; j++) {
-                M.Mat[i][j - Mat.getCol()] = M.Mat[i][j];
+                Mat.Mat[i][j - Mat.getCol()] = M.Mat[i][j];
             }
         }
         return Mat;
