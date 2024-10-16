@@ -11,18 +11,18 @@ public class LinearRegression {
 
             // variabel linier
             for (int j = 0; j < col; j++) {
-                newX.Mat[i][idx++] = X.Mat[i][j];
+                newX.Mat[i][idx++] = X.Mat[i][j]; // x1, x2, x3, ...
             }
 
             // variabel kuadrat
             for (int j = 0; j < col; j++) {
-                newX.Mat[i][idx++] = (float) Math.pow(X.Mat[i][j], 2);
+                newX.Mat[i][idx++] = newX.Mat[i][j] * newX.Mat[i][j]; // x1^2, x2^2, x3^2, ...
             }
 
             // variabel interaksi
             for (int j = 0; j < col; j++) {
                 for (int k = j + 1; k < col; k++) {
-                    newX.Mat[i][idx++] = X.Mat[i][j] * X.Mat[i][k];
+                    newX.Mat[i][idx++] = X.Mat[i][j] * X.Mat[i][k]; // x1 * x2, x1 * x3, x2 * x3, ...
                 }
             }
         }
@@ -56,10 +56,10 @@ public class LinearRegression {
         return b;
     }
     /* prediksi nilai Y berdasarkan perhitungan */
-    public double predict(Matriks X, Matriks b) {
+    public double predict(Matriks XNew, Matriks b) {
         double Y = b.Mat[0][0];
-        for (int i = 1; i < b.getCol(); i++) {
-            Y += b.Mat[0][i] * X.Mat[0][i];
+        for (int i = 1; i < b.getRow(); i++) {
+            Y += b.Mat[i][0] * XNew.Mat[i-1][0];
         }
         return Y;
     }
