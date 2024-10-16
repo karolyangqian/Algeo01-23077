@@ -28,7 +28,7 @@ public class LinearRegression {
         }
         return newX;
     }
-    /* perhitungan Miltiple Linear Regression dengan Normal Equation */
+    /* perhitungan Multiple Linear Regression dengan Normal Equation */
     public Matriks normalEquation(Matriks X, Matriks Y) {
         Linalg linalg = new Linalg();
         int row = X.getRow();
@@ -47,7 +47,7 @@ public class LinearRegression {
         // X^T * X
         Matriks XTX = linalg.perkalianMatriks(XT, X_bias);
         // XTX inverse
-        Matriks XTX_inv = linalg.inversMatriks(XTX);
+        Matriks XTX_inv = linalg.inversMatriks(XTX, "adjoin");
         // XTX inverse * X^T
         Matriks XTX_inv_XT = linalg.perkalianMatriks(XTX_inv, XT);
         // XTX inverse * X^T * Y

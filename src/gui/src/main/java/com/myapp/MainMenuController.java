@@ -11,6 +11,16 @@ public class MainMenuController {
     }
 
     @FXML
+    private void switchToDeterminan() throws IOException {
+        App.setRoot("determinan");
+    }
+
+    @FXML
+    private void switchToMatriksBalikan() throws IOException {
+        App.setRoot("matriksBalikan");
+    }
+
+    @FXML
     private void switchToInterpolasiPolinomial() throws IOException {
         App.setRoot("interpolasiPolinomial");
     }
@@ -23,5 +33,10 @@ public class MainMenuController {
     @FXML
     private void switchToBicubicSpline() throws IOException {
         App.setRoot("bicubicSpline");
+    }
+
+    @FXML
+    private void keluar() {
+        System.exit(0);
     }
 }
