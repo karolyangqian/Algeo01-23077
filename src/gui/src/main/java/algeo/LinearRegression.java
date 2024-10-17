@@ -71,7 +71,7 @@ public class LinearRegression {
     public double predict(Matriks XNew, Matriks b) {
         double Y = b.Mat[0][0];
         for (int i = 1; i < b.getRow(); i++) {
-            Y += b.Mat[i][0] * XNew.Mat[0][i - 1];
+            Y += b.Mat[i][0] * XNew.Mat[i - 1][0];
         }
         return Y;
     }
