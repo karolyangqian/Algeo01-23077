@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.ScatterChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
@@ -14,7 +11,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<ScrollPane fitToWidth="true" prefHeight="563.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myapp.InterpolasiPolinomialController">
+<ScrollPane fitToWidth="true" prefHeight="435.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myapp.InterpolasiPolinomialController">
    <content>
       <VBox alignment="TOP_CENTER" prefHeight="400.0">
          <children>
@@ -99,17 +96,6 @@
                               <Insets left="10.0" right="10.0" top="10.0" />
                            </VBox.margin>
                         </TextFlow>
-                        <ScatterChart fx:id="scatterPlot" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="104.0" prefWidth="600.0">
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                        </ScatterChart>
                      </children>
                   </VBox>
                </children>

@@ -11,7 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import java.math.*;;
 
 public class DeterminanController {
 
