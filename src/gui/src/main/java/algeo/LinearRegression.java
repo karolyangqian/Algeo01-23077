@@ -65,13 +65,8 @@ public class LinearRegression {
         return newX;
     }
 
-   /**
-     * Menghitung Multiple Linear Regression menggunakan Normal Equation
-     * @param X Matriks fitur
-     * @param Y Matriks target
-     * @return Matriks koefisien b
-     */
-    public Matriks normalEquation() {
+    /* perhitungan Multiple Linear Regression dengan Normal Equation */
+    public Matriks normalEquation(Matriks X, Matriks Y) {
         Linalg linalg = new Linalg();
         SistemPersamaanLinier SPL = new SistemPersamaanLinier();
         int row = X.getRow();

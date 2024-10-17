@@ -1,19 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 
-<HBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myapp.MainMenuController">
-   <children>
-      <Button fx:id="splNavButton" mnemonicParsing="false" onAction="#switchToSistemPersamaanLinier" prefHeight="64.0" prefWidth="95.0" text="Sistem Persamaan Linier" textAlignment="CENTER" wrapText="true" />
-      <Button fx:id="interpolasiPolinomialNavButton" mnemonicParsing="false" onAction="#switchToInterpolasiPolinomial" prefHeight="64.0" prefWidth="95.0" text="Interpolasi Polinomial" textAlignment="CENTER" wrapText="true" />
-      <Button fx:id="regresiBergandaNavButton" mnemonicParsing="false" onAction="#switchToRegresiBerganda" prefHeight="64.0" prefWidth="95.0" text="Regresi Berganda" textAlignment="CENTER" wrapText="true" />
-      <Button fx:id="bicubicSplineNavButton" mnemonicParsing="false" onAction="#switchToBicubicSpline" prefHeight="64.0" prefWidth="95.0" text="Bicubic Spline Interpolation" textAlignment="CENTER" wrapText="true">
-         <font>
-            <Font name="System Italic" size="12.0" />
-         </font>
-      </Button>
-   </children>
-</HBox>
+<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myapp.MainMenuController">
+   <content>
+      <HBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="10.0">
+         <children>
+            <VBox alignment="CENTER" prefHeight="400.0" prefWidth="346.0" spacing="10.0">
+               <children>
+                  <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="10.0" prefHeight="138.0" prefWidth="453.0" vgap="10.0">
+                     <children>
+                        <Button fx:id="splNavButton" mnemonicParsing="false" onAction="#switchToSistemPersamaanLinier" prefHeight="64.0" prefWidth="95.0" text="Sistem Persamaan Linier" textAlignment="CENTER" wrapText="true" />
+                        <Button fx:id="determinanNavButton" layoutX="228.0" layoutY="141.0" mnemonicParsing="false" onAction="#switchToDeterminan" prefHeight="64.0" prefWidth="95.0" text="Determinan" textAlignment="CENTER" wrapText="true" />
+                        <Button fx:id="matriksBalikanNavButton" layoutX="131.0" layoutY="141.0" mnemonicParsing="false" onAction="#switchToMatriksBalikan" prefHeight="64.0" prefWidth="95.0" text="Matriks Balikan" textAlignment="CENTER" wrapText="true" />
+                        <Button fx:id="interpolasiPolinomialNavButton" mnemonicParsing="false" onAction="#switchToInterpolasiPolinomial" prefHeight="64.0" prefWidth="95.0" text="Interpolasi Polinomial" textAlignment="CENTER" wrapText="true" />
+                        <Button fx:id="regresiBergandaNavButton" mnemonicParsing="false" onAction="#switchToRegresiBerganda" prefHeight="64.0" prefWidth="95.0" text="Regresi Berganda" textAlignment="CENTER" wrapText="true" />
+                        <Button fx:id="bicubicSplineNavButton" mnemonicParsing="false" onAction="#switchToBicubicSpline" prefHeight="64.0" prefWidth="95.0" text="Bicubic Spline Interpolation" textAlignment="CENTER" wrapText="true">
+                           <font>
+                              <Font name="System Italic" size="12.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </FlowPane>
+                  <VBox alignment="BOTTOM_CENTER" prefHeight="54.0" prefWidth="346.0">
+                     <children>
+                        <Button fx:id="keluarButton" mnemonicParsing="false" onAction="#keluar" prefHeight="32.0" prefWidth="104.0" text="Keluar">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </content>
+</ScrollPane>

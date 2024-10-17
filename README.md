@@ -3,10 +3,9 @@ Referensi README: https://github.com/jehna/readme-best-practices/blob/master/REA
 
 # Cara Menjalankan Program
 ### Kompilasi
-Keterangan: jalankan perintah di bawah pada workspace directory "ALGEO01-23077"
+Keterangan: jalankan perintah di bawah pada workspace directory "Algeo01-23077"
 Output: bytecode yang disimpan di folder bin
 ```
-javac -d bin src/algeo/*.java src/Main.java
 javac -d bin src/gui/src/main/java/algeo/*.java src/gui/src/main/java/algeo/Main.java
 ```
 

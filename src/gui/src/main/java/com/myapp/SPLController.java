@@ -4,21 +4,14 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Toggle;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.text.TextFlow;
 import javafx.scene.text.Text;
 import algeo.*;
 
 public class SPLController {
     
-    @FXML
-    private void switchToMainMenu() throws IOException {
-        App.setRoot("mainMenu");
-    }
-
     @FXML
     TextArea inputMatriks = new TextArea();
     @FXML
@@ -35,7 +28,11 @@ public class SPLController {
     Text alertMsg = new Text();
     @FXML
     TextFlow solutionTextFlow = new TextFlow();
-
+    @FXML
+    TextField barisInput = new TextField();
+    @FXML
+    TextField kolomInput = new TextField();
+    
     @FXML
     public void initialize() {
         selectEliminasiGauss.setToggleGroup(MetodeSPL);
@@ -44,7 +41,10 @@ public class SPLController {
         selectKaidahCramer.setToggleGroup(MetodeSPL);
     }
     
-
+    @FXML
+    private void switchToMainMenu() throws IOException {
+        App.setRoot("mainMenu");
+    }
 
     /**
      * Menyelesaikan SPL dengan metode yang dipilih pada GUI
@@ -57,20 +57,24 @@ public class SPLController {
 
         // ----------------- INPUT MATRIKS SPL -----------------
         SistemPersamaanLinier SPL = new SistemPersamaanLinier();
-        String matriksString = inputMatriks.getText();
-        String[] lines = matriksString.split("\n");
+        String matriksString = inputMatriks.getText().replaceAll("\n", " ");
+        int row = Integer.parseInt(barisInput.getText());
+        int col = Integer.parseInt(kolomInput.getText());
+        String[] elements = matriksString.split(" ");
 
-        int row = lines.length;
-        int col = lines[0].split(" ").length;
+        if (elements.length != row * col){
+            alertMsg.setText("*Jumlah elemen matriks tidak sesuai dengan input baris dan kolom");
+            return;
+        }
 
         double[][] matriks = new double[row][col];
-        
-        for (int i = 0; i < row; i++) {
-            String[] parsedLine = lines[i].split(" ");
-            for (int j = 0; j < col; j++) {
-                matriks[i][j] = Double.parseDouble(parsedLine[j]);
+
+        for (int i = 0; i < row; i++){
+            for (int j = 0; j < col; j++){
+                matriks[i][j] = Double.parseDouble(elements[i * col + j]);
             }
         }
+
         Matriks Mat = new Matriks(matriks);
         System.out.println("Matriks input:");
         Mat.printMatriks();
@@ -120,7 +124,6 @@ public class SPLController {
 
         // ----------------- OUTPUT SOLUSI SPL DI GUI -----------------
         if (solution != null){
-            solution.printMatriks();
             solution = new Matriks(removeZeroCols(solution, 1));
             solution.printMatriks();
             for (int i = 0; i < solution.getRow(); i++) {
@@ -134,12 +137,22 @@ public class SPLController {
                 subscriptText.setTranslateY(5);
                 solutionTextFlow.getChildren().add(subscriptText);
 
-                // Tanda sama dengan dan nilai variabel
+                // Tanda sama dengan
                 Text equalText = new Text(" = ");
                 solutionTextFlow.getChildren().add(equalText);
 
-                Text valueText = new Text(Double.toString(solution.Mat[i][0]));
-                solutionTextFlow.getChildren().add(valueText);
+                // Nilai solusi
+                if (solution.Mat[i][0] != 0) {
+                    if (solution.Mat[i][0] < 0) {
+                        Text minusText = new Text("- ");
+                        solutionTextFlow.getChildren().add(minusText);
+                    }
+                    Text valueText = new Text(String.format("%.2f", Math.abs(solution.Mat[i][0])));
+                    solutionTextFlow.getChildren().add(valueText); 
+                } else if (solution.getCol() == 1) {
+                    Text zeroText = new Text("0");
+                    solutionTextFlow.getChildren().add(zeroText);
+                }
 
                 if (solution.getCol() == 1) {
                     Text newLineText = new Text("\n");
@@ -154,17 +167,21 @@ public class SPLController {
                         continue;
                     }
 
-                    if (solution.Mat[i][j] > 0) {
-                        Text plusText = new Text(" + ");
-                        solutionTextFlow.getChildren().add(plusText);
-                    } else {
-                        Text minusText = new Text(" - ");
-                        solutionTextFlow.getChildren().add(minusText);
+                    if (solution.Mat[i][j-1] != 0 || solution.Mat[i][j] < 0) {
+                        if (solution.Mat[i][j] > 0) {
+                            Text plusText = new Text(" + ");
+                            solutionTextFlow.getChildren().add(plusText);
+                        } else {
+                            Text minusText = new Text(" - ");
+                            solutionTextFlow.getChildren().add(minusText);
+                        }
                     }
 
                     // Koefisien variabel
-                    Text coefText = new Text(Double.toString(Math.abs(solution.Mat[i][j])));
-                    solutionTextFlow.getChildren().add(coefText);
+                    if (Math.abs(solution.Mat[i][j]) != 1) {
+                        Text coefText = new Text(String.format("%.2f", Math.abs(solution.Mat[i][j])));
+                        solutionTextFlow.getChildren().add(coefText);
+                    }
 
                     // Variabel k1, k2, k3, ...
                     Text baseText2 = new Text("k");
@@ -179,17 +196,6 @@ public class SPLController {
                 solutionTextFlow.getChildren().add(newLineText);
             }
         }
-
-
-        // Text baseText = new Text("X");
-        // solutionTextFlow.getChildren().add(baseText);
-
-        // for (int i = 0; i <= 5; i++) {
-        //     Text subscriptText = new Text(String.valueOf(i));
-        //     subscriptText.setStyle("-fx-font-size: 8;");  // Reduce font size for subscript
-        //     subscriptText.setTranslateY(5);  // Move subscript down
-        //     solutionTextFlow.getChildren().add(subscriptText);
-        // }
     }
 
     /**
