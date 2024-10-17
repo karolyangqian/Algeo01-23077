@@ -74,6 +74,29 @@ public class RegresiBergandaController {
             return;
         }
 
+        if (!selectLinier.isSelected() && !selectKuadratik.isSelected()){
+            alertMsgRegresi.setText("*Pilih jenis regresi terlebih dahulu");
+            return;
+        }
+
+        if (inputX.getText().isBlank() || inputY.getText().isBlank()){
+            alertMsgRegresi.setText("*Masukkan titik terlebih dahulu");
+            return;
+        }
+
+        int nMinLinier = nPeubah + 1;
+
+        if (selectLinier.isSelected() && mSampel < nMinLinier){
+            alertMsgRegresi.setText(String.format("*Jumlah sampel harus minimal %d (n + 1) untuk regresi linier", nMinLinier));
+            return;
+        }
+
+        int nMinKuadratik = 1 + 2*nPeubah + nPeubah*(nPeubah-1)/2;
+        if (selectKuadratik.isSelected() && mSampel < nMinKuadratik){
+            alertMsgRegresi.setText(String.format("*Jumlah sampel harus minimal %d (1 + 2*n + n*(n-1)/2) untuk regresi kuadratik.", nMinKuadratik));
+            return;
+        }
+
         String xString = inputX.getText().replaceAll("\n", " ");
         String yString = inputY.getText().replaceAll("\n", " ");
         String[] xElements = xString.split("\\s+");
@@ -84,7 +107,7 @@ public class RegresiBergandaController {
         System.out.println(xElements.length);
         System.out.println(yElements.length);
         if (xElements.length != nPeubah * mSampel || yElements.length != mSampel){
-            alertMsgRegresi.setText("*Jumlah X dan Y tidak sesuai dengan input jumlah peubah dan sampel");
+            alertMsgRegresi.setText("*Jumlah elemen X dan Y tidak sesuai dengan input jumlah peubah dan sampel");
             return;
         }
 
@@ -108,31 +131,53 @@ public class RegresiBergandaController {
 
         alertMsgRegresi.setText("");
 
+        // ----------------- REGRESI -----------------
+
         if (selectLinier.isSelected()){
             try {
-
                 regresiType = RegresiType.LINIER;
                 b = regressor.normalEquation(inputSampelX, inputSampelY);
-                displayLinearRegression(b);
             } catch (Exception e) {
                 alertMsgRegresi.setText("*Terjadi kesalahan dalam regresi linier");
                 return;
             }
         } else if (selectKuadratik.isSelected()){
-            // try {
+            try {
                 regresiType = RegresiType.KUADRATIK;
                 Matriks kuadratikX = regressor.addQuadratic(inputSampelX);
+                System.out.println("Matriks X kuadratik:");
                 kuadratikX.printMatriks();
                 b = regressor.normalEquation(kuadratikX, inputSampelY);
-                displayQuadraticRegression(b);
-            // } catch (Exception e) {
-            //     System.err.println(e);
-            //     alertMsgRegresi.setText("*Terjadi kesalahan dalam regresi kuadratik");
-            //     return;
-            // }
-        } else {
-            alertMsgRegresi.setText("*Pilih jenis regresi terlebih dahulu");
+            } catch (Exception e) {
+                System.err.println(e);
+                alertMsgRegresi.setText("*Terjadi kesalahan dalam regresi kuadratik");
+                return;
+            }
+        } 
+
+        if (!hasOneSolution(b)){
+            alertMsgRegresi.setText("*Regresi memiliki banyak solusi, coba dengan sampel yang berbeda atau tambah jumlah sampel");
             return;
+        }
+
+        // ----------------- OUTPUT SOLUSI REGRESI DI GUI -----------------
+
+        if (regresiType == RegresiType.LINIER){
+            try {
+                displayLinearRegression(b);
+            } catch (Exception e) {
+                System.err.println(e);
+                alertMsgRegresi.setText("*Terjadi kesalahan dalam menampilkan regresi linier");
+                return;
+            }
+        } else {
+            try {
+                displayQuadraticRegression(b);
+            } catch (Exception e) {
+                System.err.println(e);
+                alertMsgRegresi.setText("*Terjadi kesalahan dalam menampilkan regresi kuadratik");
+                return;
+            }
         }
         regressed = true;
     }
@@ -144,6 +189,7 @@ public class RegresiBergandaController {
             return;
         } else {
             alertMsgTaksiran.setText("");
+            taksiranTextFlow.getChildren().clear();
             
             double[][] xTaksiran = new double[nPeubah][1];
             String[] xTaksiranString = inputVariabelBebas.getText().split("\\s+");
@@ -157,6 +203,18 @@ public class RegresiBergandaController {
             }
 
             Matriks taksiranX = new Matriks(xTaksiran);
+            if (regresiType == RegresiType.KUADRATIK){
+                Linalg linalg = new Linalg();
+                taksiranX = new Matriks(linalg.transposeMatriks(taksiranX));
+                Matriks XKuadratik = regressor.addQuadratic(taksiranX);
+                System.out.println("Matriks X kuadratik:");
+                XKuadratik.printMatriks();
+                taksiranX = new Matriks(linalg.transposeMatriks(XKuadratik));
+            }
+            System.err.println("Matriks taksiran X:");
+            taksiranX.printMatriks();
+            System.out.println("Matriks b:");
+            b.printMatriks();
 
             double y = regressor.predict(taksiranX, b);
 
@@ -184,7 +242,7 @@ public class RegresiBergandaController {
                 text = new Text(" = ");
                 taksiranTextFlow.getChildren().add(text);
 
-                text = new Text(String.format("%.2f", xTaksiran[i][0]));
+                text = new Text(String.format("%.2f", taksiranX.Mat[i][0]));
                 taksiranTextFlow.getChildren().add(text);
                 if (i != nPeubah - 1){
                     text = new Text(", ");
@@ -202,7 +260,7 @@ public class RegresiBergandaController {
     }
 
     private void displayLinearRegression(Matriks b) {
-        b.makePositiveZero();
+        // b.makePositiveZero();
         System.out.println("Matriks regresi:");
         b.printMatriks();
 
@@ -225,9 +283,11 @@ public class RegresiBergandaController {
                     if (b.Mat[i][0] < 0) {
                         text = new Text(" - ");
                         regresiTextFlow.getChildren().add(text);
-                    } else {
+                    } else if (b.Mat[i][0] > 0) {
                         text = new Text(" + ");
                         regresiTextFlow.getChildren().add(text);
+                    } else {
+                        continue;
                     }
 
                     if (Math.abs(b.Mat[i][0]) != 1) {
@@ -250,7 +310,7 @@ public class RegresiBergandaController {
 
     private void displayQuadraticRegression(Matriks b) {
         b.makePositiveZero();
-        System.out.println("Matriks regresi:");
+        System.out.println("Matriks b:");
         b.printMatriks();
 
         Text text = new Text("Fungsi regresi linier:\n");
@@ -264,7 +324,115 @@ public class RegresiBergandaController {
             regresiTextFlow.getChildren().add(text);
         }
         else {
-            // AAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+            // ------------------- KONSTANTA -------------------
+            if (b.Mat[0][0] != 0) {
+                text = new Text(String.format("%.4f", b.Mat[0][0]));
+                regresiTextFlow.getChildren().add(text);
+            }
+
+            // ------------------- VARIABEL LINEAR -------------------
+            for (int i = 1; i <= nPeubah; i++) {
+                if (b.Mat[i][0] < 0) {
+                    text = new Text(" - ");
+                    regresiTextFlow.getChildren().add(text);
+                } else if (b.Mat[i][0] > 0) {
+                    text = new Text(" + ");
+                    regresiTextFlow.getChildren().add(text);
+                } else {
+                    continue;
+                }
+
+                if (Math.abs(b.Mat[i][0]) != 1) {
+                    text = new Text(String.format("%.4f", Math.abs(b.Mat[i][0])));
+                    regresiTextFlow.getChildren().add(text);
+                }
+
+                text = new Text("x");
+                text.setStyle("-fx-font-size: 10pt;");
+                regresiTextFlow.getChildren().add(text);
+
+                Text baseText = new Text(Integer.toString(i));
+                baseText.setStyle("-fx-font-size: 8pt;");
+                baseText.setTranslateY(5);
+                regresiTextFlow.getChildren().add(baseText);
+
+            }
+
+            // ------------------- VARIABEL KUADRATIK -------------------
+            int idxstart = nPeubah+1;
+            for (int i = 0; i < nPeubah; i++) {
+                if (b.Mat[idxstart+i][0] < 0) {
+                    text = new Text(" - ");
+                    regresiTextFlow.getChildren().add(text);
+                } else if (b.Mat[idxstart+i][0] > 0) {
+                    text = new Text(" + ");
+                    regresiTextFlow.getChildren().add(text);
+                } else {
+                    continue;
+                }
+
+                if (Math.abs(b.Mat[idxstart+i][0]) != 1) {
+                    text = new Text(String.format("%.4f", Math.abs(b.Mat[idxstart+i][0])));
+                    regresiTextFlow.getChildren().add(text);
+                }
+
+                text = new Text("x");
+                text.setStyle("-fx-font-size: 10pt;");
+                regresiTextFlow.getChildren().add(text);
+
+                Text baseText = new Text(Integer.toString(i+1));
+                baseText.setStyle("-fx-font-size: 8pt;");
+                baseText.setTranslateY(5);
+                regresiTextFlow.getChildren().add(baseText);
+
+                baseText = new Text("2");
+                baseText.setStyle("-fx-font-size: 8pt;");
+                baseText.setTranslateY(-5);
+                regresiTextFlow.getChildren().add(baseText);
+            }
+
+            // ------------------- VARIABEL INTERAKSI -------------------
+            idxstart = idxstart + nPeubah;
+            for (int i = 0; i < nPeubah; i++) {
+                for (int j = i + 1; j < nPeubah; j++) {
+                    if (b.Mat[idxstart+i][0] < 0) {
+                        text = new Text(" - ");
+                        regresiTextFlow.getChildren().add(text);
+                    } else if (b.Mat[idxstart][0] > 0) {
+                        text = new Text(" + ");
+                        regresiTextFlow.getChildren().add(text);
+                    } else {
+                        continue;
+                    }
+
+                    if (Math.abs(b.Mat[idxstart][0]) != 1) {
+                        text = new Text(String.format("%.4f", Math.abs(b.Mat[idxstart][0])));
+                        regresiTextFlow.getChildren().add(text);
+                    }
+
+                    text = new Text("x");
+                    text.setStyle("-fx-font-size: 10pt;");
+                    regresiTextFlow.getChildren().add(text);
+
+                    Text baseText = new Text(Integer.toString(i+1));
+                    baseText.setStyle("-fx-font-size: 8pt;");
+                    baseText.setTranslateY(5);
+                    regresiTextFlow.getChildren().add(baseText);
+
+                    text = new Text("x");
+                    text.setStyle("-fx-font-size: 10pt;");
+                    regresiTextFlow.getChildren().add(text);
+
+                    baseText = new Text(Integer.toString(j+1));
+                    baseText.setStyle("-fx-font-size: 8pt;");
+                    baseText.setTranslateY(5);
+                    regresiTextFlow.getChildren().add(baseText);
+
+                    idxstart++;
+                }
+            }
+            
         }
     }
 
@@ -272,6 +440,21 @@ public class RegresiBergandaController {
         for (int i = 0; i < M.getRow(); i++){
             if (M.Mat[i][col] != 0){
                 return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean hasOneSolution(Matriks solution) {
+        if (solution.getCol() == 1) {
+            return true;
+        }
+
+        for (int i = 0; i < solution.getRow(); i++) {
+            for (int j = 1; j < solution.getCol(); j++) {
+                if (solution.Mat[i][j] != 0) {
+                    return false;
+                }
             }
         }
         return true;

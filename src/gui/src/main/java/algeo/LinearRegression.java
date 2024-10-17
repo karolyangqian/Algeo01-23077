@@ -33,7 +33,6 @@ public class LinearRegression {
      * Perhitungan Multiple Linear Regression dengan Normal Equation 
      */
     public Matriks normalEquation(Matriks X, Matriks Y) {
-        SistemPersamaanLinier spl = new SistemPersamaanLinier();
         Linalg linalg = new Linalg();
         SistemPersamaanLinier SPL = new SistemPersamaanLinier();
         int row = X.getRow();
