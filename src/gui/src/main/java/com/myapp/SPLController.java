@@ -60,7 +60,7 @@ public class SPLController {
         String matriksString = inputMatriks.getText().replaceAll("\n", " ");
         int row = Integer.parseInt(barisInput.getText());
         int col = Integer.parseInt(kolomInput.getText());
-        String[] elements = matriksString.split(" ");
+        String[] elements = matriksString.split("\\s+");
 
         if (elements.length != row * col){
             alertMsg.setText("*Jumlah elemen matriks tidak sesuai dengan input baris dan kolom");
@@ -149,14 +149,9 @@ public class SPLController {
                     }
                     Text valueText = new Text(String.format("%.2f", Math.abs(solution.Mat[i][0])));
                     solutionTextFlow.getChildren().add(valueText); 
-                } else if (solution.getCol() == 1) {
-                    Text zeroText = new Text("0");
+                } else if (solution.getCol() == 1 || checkZeroRow(solution, i)) {
+                    Text zeroText = new Text("0\n");
                     solutionTextFlow.getChildren().add(zeroText);
-                }
-
-                if (solution.getCol() == 1) {
-                    Text newLineText = new Text("\n");
-                    solutionTextFlow.getChildren().add(newLineText);
                     continue;
                 }
 
@@ -227,6 +222,15 @@ public class SPLController {
     private boolean checkZeroCol(Matriks M, int col){
         for (int i = 0; i < M.getRow(); i++){
             if (M.Mat[i][col] != 0){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkZeroRow(Matriks M, int row){
+        for (int i = 0; i < M.getCol(); i++){
+            if (M.Mat[row][i] != 0){
                 return false;
             }
         }

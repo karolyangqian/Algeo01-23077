@@ -56,7 +56,7 @@ public class DeterminanController {
         String matriksString = inputMatriks.getText().replaceAll("\n", " ");
         int row = Integer.parseInt(barisInput.getText());
         int col = row;
-        String[] elements = matriksString.split(" ");
+        String[] elements = matriksString.split("\\s+");
 
         if (elements.length != row * col){
             alertMsg.setText("*Jumlah elemen matriks tidak sesuai dengan input baris dan kolom");

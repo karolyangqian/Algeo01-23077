@@ -76,7 +76,7 @@ public class Polinomial implements PolinomialInterface{
             }
             Augmented.Mat[i][points.getCol()] = points.Mat[1][i];
         }
-        Matriks Coefficients = SPL.metodeGaussJordan(Augmented);
+        Matriks Coefficients = SPL.metodeGauss(Augmented);
         this.setCoefficients(Coefficients.getColElements(0));
         this.updateDegree();
     }

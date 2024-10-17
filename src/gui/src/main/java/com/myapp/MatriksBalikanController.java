@@ -46,7 +46,7 @@ public class MatriksBalikanController {
         String matriksString = inputMatriks.getText().replaceAll("\n", " ");
         int row = Integer.parseInt(barisInput.getText());
         int col = row;
-        String[] elements = matriksString.split(" ");
+        String[] elements = matriksString.split("\\s+");
 
         if (elements.length != row * col){
             alertMsg.setText("*Jumlah elemen matriks tidak sesuai dengan input baris dan kolom");
@@ -86,6 +86,9 @@ public class MatriksBalikanController {
                 alertMsg.setText("*Matriks tidak memiliki balikan");
                 return;
             }
+        } else {
+            alertMsg.setText("*Pilih metode balikan matriks");
+            return;
         }
 
         // ----------------- OUTPUT SOLUSI BALIKAN DI GUI -----------------

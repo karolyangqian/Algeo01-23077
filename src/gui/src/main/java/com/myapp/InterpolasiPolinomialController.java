@@ -11,8 +11,8 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 public class InterpolasiPolinomialController {
 
-    Polinomial polinomial = new Polinomial();
-    boolean interpolated;
+    private Polinomial polinomial = new Polinomial();
+    private boolean interpolated;
 
     @FXML
     TextField jumlahTitikInput = new TextField();
@@ -55,7 +55,7 @@ public class InterpolasiPolinomialController {
         String titikString = inputTitikList.getText().replaceAll("\n", " ");
         int row = Integer.parseInt(jumlahTitikInput.getText());
         int col = 2;
-        String[] elements = titikString.split(" ");
+        String[] elements = titikString.split("\\s+");
 
         if (titikString.isBlank()){
             alertMsg.setText("*Masukkan titik terlebih dahulu");

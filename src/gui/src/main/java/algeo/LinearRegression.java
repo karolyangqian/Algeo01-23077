@@ -28,8 +28,11 @@ public class LinearRegression {
         }
         return newX;
     }
-    /* perhitungan Multiple Linear Regression dengan Normal Equation */
+    /**
+     * Perhitungan Multiple Linear Regression dengan Normal Equation 
+     */
     public Matriks normalEquation(Matriks X, Matriks Y) {
+        SistemPersamaanLinier spl = new SistemPersamaanLinier();
         Linalg linalg = new Linalg();
         int row = X.getRow();
         int col = X.getCol();
@@ -41,21 +44,31 @@ public class LinearRegression {
                 X_bias.Mat[i][j + 1] = X.Mat[i][j];
             }
         }
-        // b = (X^T * X)^-1 * X^T * Y
-        // X^T
+        // // b = (X^T * X)^-1 * X^T * Y
+        // // X^T
+        // Matriks XT = linalg.transposeMatriks(X_bias);
+        // // X^T * X
+        // Matriks XTX = linalg.perkalianMatriks(XT, X_bias);
+        // // XTX inverse
+        // Matriks XTX_inv = linalg.inversMatriks(XTX, "adjoin");
+        // // XTX inverse * X^T
+        // Matriks XTX_inv_XT = linalg.perkalianMatriks(XTX_inv, XT);
+        // // XTX inverse * X^T * Y
+        // Matriks b = linalg.perkalianMatriks(XTX_inv_XT, Y);
+
         Matriks XT = linalg.transposeMatriks(X_bias);
-        // X^T * X
         Matriks XTX = linalg.perkalianMatriks(XT, X_bias);
-        // XTX inverse
-        Matriks XTX_inv = linalg.inversMatriks(XTX, "adjoin");
-        // XTX inverse * X^T
-        Matriks XTX_inv_XT = linalg.perkalianMatriks(XTX_inv, XT);
-        // XTX inverse * X^T * Y
-        Matriks b = linalg.perkalianMatriks(XTX_inv_XT, Y);
+        Matriks XTy = linalg.perkalianMatriks(XT, Y);
+        Matriks aug = XTX.concat(XTy, true);
+        Matriks b = spl.metodeGauss(aug);
 
         return b;
     }
-    /* prediksi nilai Y berdasarkan perhitungan */
+    /**
+     * Prediksi nilai Y berdasarkan perhitungan 
+     * @param XNew matriks input baru (matriks kolom)
+     * @param b matriks koefisien (matriks kolom)
+     */
     public double predict(Matriks XNew, Matriks b) {
         double Y = b.Mat[0][0];
         for (int i = 1; i < b.getRow(); i++) {
