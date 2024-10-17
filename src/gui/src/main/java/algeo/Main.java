@@ -18,7 +18,7 @@ public class Main {
         };
         Matriks M = new Matriks(A);
         double res = bsi.BicubicSplineInterpolate(M, 0.5, 0.5);
-        Matriks X = linalg.inversMatriks(bsi.matriksX());
+        Matriks X = linalg.inversMatriks(bsi.matriksX(), "adjoin");
         // X.printMatriks();
         // double det = linalg.determinanMatriks(bsi.matriksX(), "reduksi");
         System.out.println(res);

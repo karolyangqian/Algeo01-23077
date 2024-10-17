@@ -11,7 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import java.math.*;;
 
 public class DeterminanController {
 
@@ -38,6 +37,10 @@ public class DeterminanController {
         selectMatriksSegitiga.setToggleGroup(MetodeDeterminan);
     }
     
+    /**
+     * Kembali ke main menu
+     * @throws IOException
+     */
     @FXML
     private void switchToMainMenu() throws IOException {
         App.setRoot("mainMenu");
@@ -56,7 +59,7 @@ public class DeterminanController {
         String matriksString = inputMatriks.getText().replaceAll("\n", " ");
         int row = Integer.parseInt(barisInput.getText());
         int col = row;
-        String[] elements = matriksString.split(" ");
+        String[] elements = matriksString.split("\\s+");
 
         if (elements.length != row * col){
             alertMsg.setText("*Jumlah elemen matriks tidak sesuai dengan input baris dan kolom");

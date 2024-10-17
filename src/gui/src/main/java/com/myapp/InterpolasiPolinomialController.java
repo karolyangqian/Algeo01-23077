@@ -2,17 +2,16 @@ package com.myapp;
 
 import java.io.IOException;
 import javafx.fxml.FXML;
-import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.*;
 import javafx.scene.text.*;
 import algeo.*;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.ScatterChart;
-import javafx.scene.chart.XYChart;
+
 public class InterpolasiPolinomialController {
 
-    Polinomial polinomial = new Polinomial();
-    boolean interpolated;
+    private Polinomial polinomial = new Polinomial();
+    private boolean interpolated;
+    private double xmin;
+    private double xmax;
 
     @FXML
     TextField jumlahTitikInput = new TextField();
@@ -30,19 +29,24 @@ public class InterpolasiPolinomialController {
     Button hitungFungsiButton = new Button();
     @FXML
     TextFlow fungsiTextFlow = new TextFlow();
-    // @FXML
-    // ScatterChart<Number, Number> scatterChart = new ScatterChart<>();
 
     @FXML
     public void initialize() {
         interpolated = false;
     }
     
+    /**
+     * Kembali ke main menu
+     * @throws IOException
+     */
     @FXML
     private void switchToMainMenu() throws IOException {
         App.setRoot("mainMenu");
     }
 
+    /**
+     * Interpolasi polinomial
+     */
     @FXML
     private void interpolasiPolinomial() {
         // ----------------- CLEAR OUTPUT SOLUSI BALIKAN DI GUI -----------------
@@ -55,7 +59,7 @@ public class InterpolasiPolinomialController {
         String titikString = inputTitikList.getText().replaceAll("\n", " ");
         int row = Integer.parseInt(jumlahTitikInput.getText());
         int col = 2;
-        String[] elements = titikString.split(" ");
+        String[] elements = titikString.split("\\s+");
 
         if (titikString.isBlank()){
             alertMsg.setText("*Masukkan titik terlebih dahulu");
@@ -68,10 +72,20 @@ public class InterpolasiPolinomialController {
         }
 
         double[][] matriks = new double[row][col];
+        xmin = Double.parseDouble(elements[0]);
+        xmax = Double.parseDouble(elements[0]);
 
         for (int i = 0; i < row; i++){
             for (int j = 0; j < col; j++){
                 matriks[i][j] = Double.parseDouble(elements[i * col + j]);
+                if (j == 0) {
+                    if (matriks[i][j] < xmin) {
+                        xmin = matriks[i][j];
+                    }
+                    if (matriks[i][j] > xmax) {
+                        xmax = matriks[i][j];
+                    }
+                }
             }
         }
 
@@ -143,6 +157,9 @@ public class InterpolasiPolinomialController {
         interpolated = true;
     }
 
+    /**
+     * Hitung nilai fungsi polinomial pada x
+     */
     @FXML
     private void hitungFungsi() {
         // ----------------- CLEAR OUTPUT SOLUSI BALIKAN DI GUI -----------------
@@ -158,6 +175,11 @@ public class InterpolasiPolinomialController {
 
         if (inputX.getText().isBlank()){
             alertMsg.setText("*Masukkan nilai x terlebih dahulu");
+            return;
+        }
+
+        if (Double.parseDouble(inputX.getText()) < xmin || Double.parseDouble(inputX.getText()) > xmax) {
+            alertMsg.setText("*Nilai x diluar range titik interpolasi");
             return;
         }
 
