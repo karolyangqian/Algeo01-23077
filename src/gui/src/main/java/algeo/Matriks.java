@@ -1,8 +1,9 @@
 package algeo;
+
 /**
  * Kelas Matriks
  */
-public class Matriks{
+public class Matriks {
     /**
      * Atribut
      */
@@ -12,7 +13,7 @@ public class Matriks{
     /**
      * Constructor
      */
-    public Matriks(){
+    public Matriks() {
         this.row = 0;
         this.col = 0;
         this.Mat = new double[0][0];
@@ -20,10 +21,11 @@ public class Matriks{
 
     /**
      * Constructor
+     * 
      * @param row jumlah baris
      * @param col jumlah kolom
      */
-    public Matriks(int row, int col){
+    public Matriks(int row, int col) {
         this.row = row;
         this.col = col;
         this.Mat = new double[row][col];
@@ -31,14 +33,15 @@ public class Matriks{
 
     /**
      * Constructor
+     * 
      * @param M Matriks yang akan di copy
      */
-    public Matriks(Matriks M){
+    public Matriks(Matriks M) {
         this.row = M.row;
         this.col = M.col;
         this.Mat = new double[this.row][this.col];
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < this.col; j++){
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
                 this.Mat[i][j] = M.Mat[i][j];
             }
         }
@@ -46,14 +49,15 @@ public class Matriks{
 
     /**
      * Constructor
+     * 
      * @param arrayOfArrayDouble array of array double yang akan dijadikan matriks
      */
-    public Matriks(double[][] arrayOfArrayDouble){
+    public Matriks(double[][] arrayOfArrayDouble) {
         this.row = arrayOfArrayDouble.length;
         this.col = arrayOfArrayDouble[0].length;
         this.Mat = new double[this.row][this.col];
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < this.col; j++){
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
                 this.Mat[i][j] = arrayOfArrayDouble[i][j];
             }
         }
@@ -61,26 +65,28 @@ public class Matriks{
 
     /**
      * Getter baris
+     * 
      * @return jumlah baris dari matriks
      */
-    public int getRow(){
+    public int getRow() {
         return this.row;
     }
 
     /**
      * Getter kolom
+     * 
      * @return jumlah kolom dari matriks
      */
-    public int getCol(){
+    public int getCol() {
         return this.col;
     }
 
     /**
      * Menampilkan matriks ke terminal
      */
-    public void printMatriks(){
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < this.col; j++){
+    public void printMatriks() {
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
                 System.out.print(this.Mat[i][j] + " ");
             }
             System.out.println();
@@ -115,53 +121,49 @@ public class Matriks{
         return M;
     }
 
-
     /**
      * Mengisi setiap elemen matriks dengan nilai x
      */
-    public void fill(double x){
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < this.col; j++){
+    public void fill(double x) {
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
                 this.Mat[i][j] = x;
             }
         }
     }
 
-
     /**
      * Menghapus baris dan kolom tertentu dari matriks
+     * 
      * @param row baris yang akan dihapus
      * @param col kolom yang akan dihapus
      * @return matriks baru yang sudah dihapus baris dan kolom tertentu
-    */
-    public Matriks removeRowColMatriks(int row, int col){
+     */
+    public Matriks removeRowColMatriks(int row, int col) {
         Matriks M = new Matriks(this.row - 1, this.col - 1);
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < this.col; j++){
-                if (i < row && j < col){
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
+                if (i < row && j < col) {
                     M.Mat[i][j] = this.Mat[i][j];
-                }
-                else if (i < row && j > col){
+                } else if (i < row && j > col) {
                     M.Mat[i][j - 1] = this.Mat[i][j];
-                }
-                else if (i > row && j < col){
+                } else if (i > row && j < col) {
                     M.Mat[i - 1][j] = this.Mat[i][j];
-                }
-                else if (i > row && j > col){
+                } else if (i > row && j > col) {
                     M.Mat[i - 1][j - 1] = this.Mat[i][j];
                 }
             }
         }
         return M;
     }
-  
+
     /**
      * Membuat nilai -0.00 menjadi 0.00
      */
-    public void makePositiveZero(){
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < this.col; j++){
-                if (this.Mat[i][j] == -0){
+    public void makePositiveZero() {
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
+                if (this.Mat[i][j] == -0) {
                     this.Mat[i][j] = 0;
                 }
             }
@@ -170,11 +172,11 @@ public class Matriks{
 
     /**
      * Menghapus baris terbawah sebanyak numRowRemoved
-    */
-    public Matriks removeRow(int numRowRemoved){
+     */
+    public Matriks removeRow(int numRowRemoved) {
         Matriks M = new Matriks(this.row - numRowRemoved, this.col);
-        for (int i = 0; i < M.getRow(); i++){
-            for (int j = 0; j < this.col; j++){
+        for (int i = 0; i < M.getRow(); i++) {
+            for (int j = 0; j < this.col; j++) {
                 M.Mat[i][j] = this.Mat[i][j];
             }
         }
@@ -183,11 +185,11 @@ public class Matriks{
 
     /**
      * Menghapus kolom terkanan sebanyak numRowRemoved
-    */
-    public Matriks removeCol(int numColRemoved){
+     */
+    public Matriks removeCol(int numColRemoved) {
         Matriks M = new Matriks(this.row, this.col - numColRemoved);
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < M.getCol(); j++){
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < M.getCol(); j++) {
                 M.Mat[i][j] = this.Mat[i][j];
             }
         }
@@ -196,16 +198,16 @@ public class Matriks{
 
     /**
      * Menambahkan baris sebanyak numRowAdded dan baris-baris baru diisi dengan 0
-    */
-    public Matriks addRowZero(int numRowAdded){
+     */
+    public Matriks addRowZero(int numRowAdded) {
         Matriks M = new Matriks(this.row + numRowAdded, this.col);
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < this.col; j++){
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
                 M.Mat[i][j] = this.Mat[i][j];
             }
         }
-        for (int i = this.row; i < M.getRow(); i++){
-            for (int j = 0; j < this.col; j++){
+        for (int i = this.row; i < M.getRow(); i++) {
+            for (int j = 0; j < this.col; j++) {
                 M.Mat[i][j] = 0;
             }
         }
@@ -214,26 +216,28 @@ public class Matriks{
 
     /**
      * Menambahkan kolom sebanyak numColAdded dan kolom-kolom baru diisi dengan 0
-    */
-    public Matriks addColZero(int numColAdded){
+     */
+    public Matriks addColZero(int numColAdded) {
         Matriks M = new Matriks(this.row, this.col + numColAdded);
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < this.col; j++){
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
                 M.Mat[i][j] = this.Mat[i][j];
             }
         }
-        for (int i = 0; i < this.row; i++){
-            for (int j = this.col; j < M.getCol(); j++){
+        for (int i = 0; i < this.row; i++) {
+            for (int j = this.col; j < M.getCol(); j++) {
                 M.Mat[i][j] = 0;
             }
         }
         return M;
     }
-    
+
     /**
      * Menggabungkan dua matriks
+     * 
      * @param M
-     * @param isRight jika true, matriks digabungkan ke kanan, jika false, matriks digabungkan ke bawah
+     * @param isRight jika true, matriks digabungkan ke kanan, jika false, matriks
+     *                digabungkan ke bawah
      * @return
      */
     public Matriks concat(Matriks M, boolean isRight) {
@@ -264,8 +268,23 @@ public class Matriks{
         return N;
     }
 
+    public Matriks identityMatrix() {
+        Matriks M = new Matriks(this.row, this.col);
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
+                if (i == j) {
+                    M.Mat[i][j] = 1;
+                } else {
+                    M.Mat[i][j] = 0;
+                }
+            }
+        }
+        return M;
+    }
+
     /**
      * Menghapus baris tertentu dari matriks
+     * 
      * @param row
      * @return
      */
@@ -287,6 +306,7 @@ public class Matriks{
 
     /**
      * Menghapus kolom tertentu dari matriks
+     * 
      * @param col
      * @return
      */
@@ -306,6 +326,7 @@ public class Matriks{
 
     /**
      * Mengambil baris tertentu dari matriks
+     * 
      * @param row
      * @return
      */
@@ -319,6 +340,7 @@ public class Matriks{
 
     /**
      * Mengambil kolom tertentu dari matriks
+     * 
      * @param col
      * @return
      */

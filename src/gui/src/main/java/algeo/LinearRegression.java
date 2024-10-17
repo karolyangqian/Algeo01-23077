@@ -29,7 +29,6 @@ public class LinearRegression {
         }
         return newX;
     }
-
     /* perhitungan Multiple Linear Regression dengan Normal Equation */
     public Matriks normalEquation(Matriks X, Matriks Y) {
         Linalg linalg = new Linalg();

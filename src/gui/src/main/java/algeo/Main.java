@@ -3,20 +3,27 @@ package algeo;
 public class Main {
     public static void main(String[] args) {
         Linalg linalg = new Linalg();
+        BicubicSplineInterpolation bsi = new BicubicSplineInterpolation();
         SistemPersamaanLinier SPL = new SistemPersamaanLinier();
-        // float[][] A = {
-        //     {1, 1, 1, 0},
-        //     {2, 3, 1, 1},
-        //     {3, 1, 2, 1}
-        // };
+        double[][] A = {
+            {1, 2, 3, 4},
+            {5, 6, 7, 8},
+            {9, 10, 11, 12},
+            {13, 14, 15, 16}
+        };
         double[][] cuy = {
             {1, 1, 0},
             {1, -1, 0},
             {1, 1, 1},
         };
-        Matriks M = new Matriks(cuy);
-        Matriks sol = SPL.metodeGauss(M);
-        sol.printMatriks();
+        Matriks M = new Matriks(A);
+        double res = bsi.BicubicSplineInterpolate(M, 0.5, 0.5);
+        Matriks X = linalg.inversMatriks(bsi.matriksX());
+        // X.printMatriks();
+        // double det = linalg.determinanMatriks(bsi.matriksX(), "reduksi");
+        System.out.println(res);
+        // Matriks sol = SPL.metodeGauss(M);
+        // sol.printMatriks();
         // double[][] A = {
         //     {2, 3, -1, 5},
         //     {4, 4, -3, 3}, 
