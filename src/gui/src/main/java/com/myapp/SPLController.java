@@ -41,6 +41,10 @@ public class SPLController {
         selectKaidahCramer.setToggleGroup(MetodeSPL);
     }
     
+    /**
+     * Kembali ke main menu
+     * @throws IOException
+     */
     @FXML
     private void switchToMainMenu() throws IOException {
         App.setRoot("mainMenu");
@@ -197,7 +201,7 @@ public class SPLController {
      * Menghapus kolom-kolom yang berisi nol dimulai dari kolom startCol
      * @param M
      * @param startCol
-     * @return
+     * @return Matriks baru yang telah dihapus kolom-kolom yang berisi nol
      */
     private Matriks removeZeroCols(Matriks M, int startCol){
         int numZeroCols = 0;
@@ -219,6 +223,12 @@ public class SPLController {
         return M2;
     }
 
+    /**
+     * Mengecek apakah kolom matriks M semuanya bernilai 0
+     * @param M
+     * @param row
+     * @return true jika semua elemen kolom col bernilai 0
+     */
     private boolean checkZeroCol(Matriks M, int col){
         for (int i = 0; i < M.getRow(); i++){
             if (M.Mat[i][col] != 0){
@@ -228,6 +238,12 @@ public class SPLController {
         return true;
     }
 
+    /**
+     * Mengecek apakah baris matriks M semuanya bernilai 0
+     * @param M
+     * @param row
+     * @return true jika semua elemen baris row bernilai 0
+     */
     private boolean checkZeroRow(Matriks M, int row){
         for (int i = 0; i < M.getCol(); i++){
             if (M.Mat[row][i] != 0){

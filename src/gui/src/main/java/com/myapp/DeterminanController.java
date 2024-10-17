@@ -37,6 +37,10 @@ public class DeterminanController {
         selectMatriksSegitiga.setToggleGroup(MetodeDeterminan);
     }
     
+    /**
+     * Kembali ke main menu
+     * @throws IOException
+     */
     @FXML
     private void switchToMainMenu() throws IOException {
         App.setRoot("mainMenu");

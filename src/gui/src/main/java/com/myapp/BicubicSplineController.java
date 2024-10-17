@@ -24,12 +24,19 @@ public class BicubicSplineController {
     @FXML
     public void initialize() {
     }
-    
+
+    /**
+     * Kembali ke main menu
+     * @throws IOException
+     */    
     @FXML
     private void switchToMainMenu() throws IOException {
         App.setRoot("mainMenu");
     }
 
+    /**
+     * Interpolasi bicubic spline
+     */
     @FXML
     private void interpolasiBicubicSpline() {
         // ----------------- CLEAR OUTPUT DI GUI -----------------

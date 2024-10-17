@@ -59,6 +59,9 @@ public class RegresiBergandaController {
         App.setRoot("mainMenu");
     }
 
+    /**
+     * Melakukan regresi linier atau kuadratik sesuai pilihan user
+     */
     @FXML
     private void regresi() {
         // ----------------- CLEAR OUTPUT SOLUSI REGRESI DI GUI -----------------
@@ -181,6 +184,9 @@ public class RegresiBergandaController {
         regressed = true;
     }
 
+    /**
+     * Melakukan taksiran nilai Y berdasarkan inputan user
+     */
     @FXML
     private void taksir(){
         if (!regressed){
@@ -258,6 +264,10 @@ public class RegresiBergandaController {
         }
     }
 
+    /**
+     * Menampilkan regresi linier pada text flow
+     * @param b
+     */
     private void displayLinearRegression(Matriks b) {
         // b.makePositiveZero();
         System.out.println("Matriks regresi:");
@@ -307,6 +317,9 @@ public class RegresiBergandaController {
         }
     }
 
+    /**
+     * Menampilkan regresi kuadratik pada text flow
+     */
     private void displayQuadraticRegression(Matriks b) {
         b.makePositiveZero();
         System.out.println("Matriks b:");
@@ -435,6 +448,12 @@ public class RegresiBergandaController {
         }
     }
 
+    /**
+     * Mengecek apakah kolom matriks M semuanya bernilai 0
+     * @param M
+     * @param col
+     * @return true jika semua elemen kolom col bernilai 0
+     */
     private boolean checkZeroCol(Matriks M, int col){
         for (int i = 0; i < M.getRow(); i++){
             if (M.Mat[i][col] != 0){
@@ -444,6 +463,11 @@ public class RegresiBergandaController {
         return true;
     }
 
+    /**
+     * Mengecek apakah matriks memiliki satu solusi
+     * @param solution
+     * @return true jika matriks memiliki satu solusi
+     */
     private boolean hasOneSolution(Matriks solution) {
         if (solution.getCol() == 1) {
             return true;

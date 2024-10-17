@@ -35,11 +35,18 @@ public class InterpolasiPolinomialController {
         interpolated = false;
     }
     
+    /**
+     * Kembali ke main menu
+     * @throws IOException
+     */
     @FXML
     private void switchToMainMenu() throws IOException {
         App.setRoot("mainMenu");
     }
 
+    /**
+     * Interpolasi polinomial
+     */
     @FXML
     private void interpolasiPolinomial() {
         // ----------------- CLEAR OUTPUT SOLUSI BALIKAN DI GUI -----------------
@@ -150,6 +157,9 @@ public class InterpolasiPolinomialController {
         interpolated = true;
     }
 
+    /**
+     * Hitung nilai fungsi polinomial pada x
+     */
     @FXML
     private void hitungFungsi() {
         // ----------------- CLEAR OUTPUT SOLUSI BALIKAN DI GUI -----------------

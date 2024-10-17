@@ -37,6 +37,9 @@ public class MatriksBalikanController {
         App.setRoot("mainMenu");
     }
 
+    /**
+     * Mencari balikan matriks dengan metode yang dipilih pada GUI
+     */
     @FXML
     private void findBalikan() {
         // ----------------- CLEAR OUTPUT SOLUSI BALIKAN DI GUI -----------------
