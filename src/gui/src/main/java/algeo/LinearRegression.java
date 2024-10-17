@@ -1,12 +1,18 @@
 package algeo;
 
 public class LinearRegression {
-    /* untuk menambahkan quadratic features dalam metode Quadratic Linear Regression */
-    /* sebelum diolah dengan Normal Equation */
+
+    /**
+     * Menambahkan quadratic features dalam metode Quadratic Linear Regression
+     * sebelum diolah dengan Normal Equation dan prediksi nilai Y
+     * @param X Matriks input
+     * @return Matriks dengan quadratic features ditambahkan
+     */
     public Matriks addQuadratic(Matriks X) {
         int row = X.getRow();
         int col = X.getCol();
         Matriks newX = new Matriks(row, col + col + (col * (col - 1)) / 2);
+
         for (int i = 0; i < row; i++) {
             int idx = 0;
 
@@ -49,15 +55,10 @@ public class LinearRegression {
         // b = (X^T * X)^-1 * X^T * Y
         // (X^T * X) b = X^T * Y
         // metode Eliminasi Gauss untuk mendapatkan b dengan membentuk matriks augmented [XTX | XTY]
-
-        // X^T
         Matriks XT = linalg.transposeMatriks(X_bias);
         Matriks XTX = linalg.perkalianMatriks(XT, X_bias);
-        // X^T * Y
         Matriks XTY = linalg.perkalianMatriks(XT, Y);
-        // matriks augmented [XTX | XTY]
         Matriks augmented = XTX.concat(XTY, true);
-        // matriks b
         Matriks b = SPL.metodeGauss(augmented);
 
         return b;
@@ -70,7 +71,7 @@ public class LinearRegression {
     public double predict(Matriks XNew, Matriks b) {
         double Y = b.Mat[0][0];
         for (int i = 1; i < b.getRow(); i++) {
-            Y += b.Mat[i][0] * XNew.Mat[i-1][0];
+            Y += b.Mat[i][0] * XNew.Mat[0][i - 1];
         }
         return Y;
     }
