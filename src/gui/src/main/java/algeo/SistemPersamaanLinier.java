@@ -182,7 +182,6 @@ public class SistemPersamaanLinier {
             }
 
         }
-        // solution.printMatriks();
         return solution;
 
     }

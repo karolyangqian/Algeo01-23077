@@ -161,6 +161,7 @@ public class RegresiBergandaController {
             alertMsgRegresi.setText("*Regresi memiliki banyak solusi, coba dengan sampel yang berbeda atau tambah jumlah sampel");
             return;
         }
+        regressed = true;
 
         // ----------------- OUTPUT SOLUSI REGRESI DI GUI -----------------
 
@@ -181,7 +182,6 @@ public class RegresiBergandaController {
                 return;
             }
         }
-        regressed = true;
     }
 
     /**
@@ -408,13 +408,14 @@ public class RegresiBergandaController {
             idxstart = idxstart + nPeubah;
             for (int i = 0; i < nPeubah; i++) {
                 for (int j = i + 1; j < nPeubah; j++) {
-                    if (b.Mat[idxstart+i][0] < 0) {
+                    if (b.Mat[idxstart][0] < 0) {
                         text = new Text(" - ");
                         regresiTextFlow.getChildren().add(text);
                     } else if (b.Mat[idxstart][0] > 0) {
                         text = new Text(" + ");
                         regresiTextFlow.getChildren().add(text);
                     } else {
+                        idxstart++;
                         continue;
                     }
 

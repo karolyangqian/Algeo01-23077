@@ -59,6 +59,8 @@ public class LinearRegression {
         Matriks XTX = linalg.perkalianMatriks(XT, X_bias);
         Matriks XTY = linalg.perkalianMatriks(XT, Y);
         Matriks augmented = XTX.concat(XTY, true);
+        System.out.println("Augmented: ");
+        augmented.printMatriks();
         Matriks b = SPL.metodeGauss(augmented);
 
         return b;

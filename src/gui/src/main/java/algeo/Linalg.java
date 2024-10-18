@@ -158,7 +158,7 @@ public class Linalg {
                 continue;
             }
             M = this.tukarBaris(M, i, notZeroIdx);
-            M = this.kalikanBaris(M, i, (double) 1 / M.Mat[i][j]);
+            M = this.bagikanBaris(M, i, M.Mat[i][j]);
             M = this.reduksiKolomKeBawah(M, i, j);
             i++;
 
@@ -240,6 +240,15 @@ public class Linalg {
         int col = M.getCol();
         for (int i = 0; i < col; i++) {
             M.Mat[row][i] *= x;
+        }
+        return M;
+    }
+
+    public Matriks bagikanBaris(Matriks Mat, int row, double x) {
+        Matriks M = new Matriks(Mat);
+        int col = M.getCol();
+        for (int i = 0; i < col; i++) {
+            M.Mat[row][i] /= x;
         }
         return M;
     }
