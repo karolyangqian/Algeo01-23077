@@ -11,6 +11,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
+import java.io.File;
+import javafx.stage.FileChooser;
+import java.util.Scanner;
 
 public class DeterminanController {
 
@@ -30,11 +34,41 @@ public class DeterminanController {
     Button determinanButton = new Button();
     @FXML
     TextFlow solutionTextFlow = new TextFlow();
+
+    private File inputFile;
+    private Scanner scanner;
+    FileChooser fileChooser = new FileChooser();
     
     @FXML
     public void initialize() {
         selectEkspansiKofaktor.setToggleGroup(MetodeDeterminan);
         selectMatriksSegitiga.setToggleGroup(MetodeDeterminan);
+    }
+
+     /**
+     * Buka file matriks yang akan dicari determinannya dan memasukkan ke text field dan text area
+     * @throws IOException
+     */
+    @FXML
+    private void chooseFile() throws IOException {
+        alertMsg.setText("");
+        inputFile = fileChooser.showOpenDialog(new Stage());
+
+        barisInput.clear();
+        inputMatriks.clear();
+        try {
+            scanner = new Scanner(inputFile);
+            String nString = scanner.nextLine();
+            barisInput.setText(nString);
+            int n = Integer.parseInt(nString);
+            for (int i = 0; i < n; i++) {
+                inputMatriks.appendText(scanner.nextLine() + "\n");
+            }
+            scanner.close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            alertMsg.setText("*File input tidak valid");
+        }
     }
     
     /**
@@ -52,10 +86,16 @@ public class DeterminanController {
      */
     @FXML
     private void findDeterminan() {
-        // ----------------- CLEAR OUTPUT SOLUSI DETERMINAN DI GUI -----------------
+        // ----------------- CLEAR ALERT DAN OUTPUT SOLUSI DETERMINAN DI GUI -----------------
+        alertMsg.setText("");
         solutionTextFlow.getChildren().clear();
 
         // ----------------- VALIDASI INPUT -----------------
+        if (barisInput.getText().isBlank() || inputMatriks.getText().isBlank()){
+            alertMsg.setText("*Masukkan baris/kolom dan matriks yang sesuai terlebih dahulu");
+            return;
+        }
+
         String matriksString = inputMatriks.getText().replaceAll("\n", " ");
         int row = Integer.parseInt(barisInput.getText());
         int col = row;
@@ -79,7 +119,6 @@ public class DeterminanController {
         Mat.printMatriks();
         System.out.println();
         
-        alertMsg.setText("");
 
         // ----------------- HITUNG DETERMINAN -----------------
         Linalg linalg = new Linalg();

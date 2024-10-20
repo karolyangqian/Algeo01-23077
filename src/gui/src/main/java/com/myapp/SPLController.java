@@ -1,5 +1,6 @@
 package com.myapp;
 
+import algeo.*;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
@@ -8,7 +9,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.TextFlow;
 import javafx.scene.text.Text;
-import algeo.*;
+import java.io.File;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import java.util.Scanner;
 
 public class SPLController {
     
@@ -33,12 +37,46 @@ public class SPLController {
     @FXML
     TextField kolomInput = new TextField();
     
+    private File inputFile;
+    private File outputFile;
+    private Scanner scanner;
+    FileChooser fileChooser = new FileChooser();
+    
     @FXML
     public void initialize() {
         selectEliminasiGauss.setToggleGroup(MetodeSPL);
         selectEliminasiGaussJordan.setToggleGroup(MetodeSPL);
         selectMatriksBalikan.setToggleGroup(MetodeSPL);
         selectKaidahCramer.setToggleGroup(MetodeSPL);
+    }
+
+    /**
+     * Buka file matriks SPL dan memasukkan ke text field dan text area
+     * @throws IOException
+     */
+    @FXML
+    private void chooseFile() throws IOException {
+        alertMsg.setText("");
+        inputFile = fileChooser.showOpenDialog(new Stage());
+
+        kolomInput.clear();
+        barisInput.clear();
+        inputMatriks.clear();
+        try {
+            scanner = new Scanner(inputFile);
+            String mn = scanner.nextLine();
+            String[] mnSplit = mn.split("\\s+");
+            barisInput.setText(mnSplit[0]);
+            kolomInput.setText(mnSplit[1]);
+            int m = Integer.parseInt(mnSplit[0]);
+            for (int i = 0; i < m; i++) {
+                inputMatriks.appendText(scanner.nextLine() + "\n");
+            }
+            scanner.close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            alertMsg.setText("*File input tidak valid");
+        }
     }
     
     /**
@@ -56,15 +94,24 @@ public class SPLController {
      */
     @FXML
     private void solveSPL() throws IOException {
-        // ----------------- CLEAR OUTPUT SOLUSI SPL DI GUI -----------------
+        // ----------------- CLEAR ALERT DAN OUTPUT SOLUSI SPL DI GUI -----------------
+        alertMsg.setText("");
         solutionTextFlow.getChildren().clear();
 
         // ----------------- INPUT MATRIKS SPL -----------------
         SistemPersamaanLinier SPL = new SistemPersamaanLinier();
+        
+        if (barisInput.getText().isBlank() || kolomInput.getText().isBlank() || inputMatriks.getText().isBlank()){
+            alertMsg.setText("*Masukkan baris, kolom, dan matriks yang sesuai terlebih dahulu");
+            return;
+        }
+
+
         String matriksString = inputMatriks.getText().replaceAll("\n", " ");
         int row = Integer.parseInt(barisInput.getText());
         int col = Integer.parseInt(kolomInput.getText());
         String[] elements = matriksString.split("\\s+");
+
 
         if (elements.length != row * col){
             alertMsg.setText("*Jumlah elemen matriks tidak sesuai dengan input baris dan kolom");
@@ -84,7 +131,6 @@ public class SPLController {
         Mat.printMatriks();
         System.out.println();
         
-        alertMsg.setText("");
         
         // ----------------- SOLVE SPL -----------------
         Matriks solution = new Matriks();

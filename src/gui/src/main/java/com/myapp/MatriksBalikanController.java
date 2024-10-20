@@ -5,6 +5,10 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.*;
+import javafx.stage.Stage;
+import java.io.File;
+import javafx.stage.FileChooser;
+import java.util.Scanner;
 
 public class MatriksBalikanController {
 
@@ -25,27 +29,63 @@ public class MatriksBalikanController {
     @FXML
     Text alertMsg = new Text();
 
+    private File inputFile;
+    private Scanner scanner;
+    FileChooser fileChooser = new FileChooser();
+
 
     @FXML
     public void initialize() {
         selectOBE.setToggleGroup(MetodeBalikan);
         selectMatriksAdjoin.setToggleGroup(MetodeBalikan);
     }
+
+    /**
+     * Buka file matriks yang akan dicari balikannya dan memasukkan ke text field dan text area
+     * @throws IOException
+     */
+    @FXML
+    private void chooseFile() throws IOException {
+        alertMsg.setText("");
+        inputFile = fileChooser.showOpenDialog(new Stage());
+
+        barisInput.clear();
+        inputMatriks.clear();
+        try {
+            scanner = new Scanner(inputFile);
+            String nString = scanner.nextLine();
+            barisInput.setText(nString);
+            int n = Integer.parseInt(nString);
+            for (int i = 0; i < n; i++){
+                inputMatriks.appendText(scanner.nextLine() + "\n");
+            }
+            scanner.close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            alertMsg.setText("*File input tidak valid");
+        }
+    }
     
     @FXML
     private void switchToMainMenu() throws IOException {
         App.setRoot("mainMenu");
     }
-
+    
     /**
      * Mencari balikan matriks dengan metode yang dipilih pada GUI
      */
     @FXML
     private void findBalikan() {
-        // ----------------- CLEAR OUTPUT SOLUSI BALIKAN DI GUI -----------------
+        // ----------------- CLEAR ALERT DAN OUTPUT SOLUSI BALIKAN DI GUI -----------------
+        alertMsg.setText("");
         solutionTextFlow.getChildren().clear();
 
         // ----------------- VALIDASI INPUT -----------------
+        if (barisInput.getText().isBlank() || inputMatriks.getText().isBlank()){
+            alertMsg.setText("*Masukkan baris/kolom dan matriks yang sesuai terlebih dahulu");
+            return;
+        }
+
         String matriksString = inputMatriks.getText().replaceAll("\n", " ");
         int row = Integer.parseInt(barisInput.getText());
         int col = row;
@@ -69,8 +109,7 @@ public class MatriksBalikanController {
         Mat.printMatriks();
         System.out.println();
         
-        alertMsg.setText("");
-
+        
         // ----------------- HITUNG BALIKAN -----------------
         Linalg linalg = new Linalg();
         Matriks balikan = new Matriks();

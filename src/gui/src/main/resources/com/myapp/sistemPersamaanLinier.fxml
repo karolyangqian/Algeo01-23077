@@ -13,7 +13,6 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-
 <ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myapp.SPLController">
    <content>
       <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0">
@@ -88,6 +87,8 @@
                                     <RadioButton fx:id="selectEliminasiGaussJordan" layoutX="10.0" layoutY="37.0" mnemonicParsing="false" text="Eliminasi Gauss-Jordan" toggleGroup="$MetodeSPL" />
                                     <RadioButton fx:id="selectMatriksBalikan" layoutX="10.0" layoutY="64.0" mnemonicParsing="false" text="Matriks Balikan" toggleGroup="$MetodeSPL" />
                                     <RadioButton fx:id="selectKaidahCramer" mnemonicParsing="false" text="Kaidah Cramer" toggleGroup="$MetodeSPL" />
+                                    <Button mnemonicParsing="false" onAction="#chooseFile" text="Choose file" />
+                                    <Button mnemonicParsing="false" text="Export result" />
                                     <Text fx:id="alertMsg" fill="#be0000" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="160.0" />
                                  </children>
                               </VBox>

@@ -5,6 +5,10 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.*;
+import javafx.stage.Stage;
+import java.io.File;
+import javafx.stage.FileChooser;
+import java.util.Scanner;
 
 public class RegresiBergandaController {
 
@@ -20,7 +24,7 @@ public class RegresiBergandaController {
     private RegresiType regresiType;
 
     @FXML
-    TextField jumlahTitikInput = new TextField();
+    TextField jumlahPeubahInput = new TextField();
     @FXML
     TextField jumlahSampelInput = new TextField();
     @FXML
@@ -48,28 +52,78 @@ public class RegresiBergandaController {
     @FXML
     TextFlow taksiranTextFlow = new TextFlow();
 
+    private File inputFile;
+    private Scanner scanner;
+    FileChooser fileChooser = new FileChooser();
+
     public void initialize() {
         selectLinier.setToggleGroup(jenisRegresi);
         selectKuadratik.setToggleGroup(jenisRegresi);
         regressed = false;
+    }
+
+     /**
+     * Buka file sampel regresi dan memasukkan ke text field dan text area
+     * @throws IOException
+     */
+    @FXML
+    private void chooseFile() throws IOException {
+        alertMsgRegresi.setText("");
+        alertMsgTaksiran.setText("");
+        inputFile = fileChooser.showOpenDialog(new Stage());
+
+        jumlahPeubahInput.clear();
+        jumlahSampelInput.clear();
+        inputX.clear();
+        inputY.clear();
+        inputVariabelBebas.clear();
+        try {
+            scanner = new Scanner(inputFile);
+            String nm = scanner.nextLine();
+            String[] nmSplit = nm.split("\\s+");
+            jumlahPeubahInput.setText(nmSplit[0]);
+            jumlahSampelInput.setText(nmSplit[1]);
+            int n = Integer.parseInt(nmSplit[0]);
+            int m = Integer.parseInt(nmSplit[1]);
+            for (int i = 0; i < m; i++) {
+                String[] xy = scanner.nextLine().split("\\s+");
+                for (int j = 0; j < n; j++) {
+                    inputX.appendText(xy[j] + " ");
+                }
+                inputX.appendText("\n");
+                inputY.appendText(xy[n] + "\n");
+            }
+            inputVariabelBebas.appendText(scanner.nextLine());
+            scanner.close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            alertMsgRegresi.setText("*File input tidak valid");
+        }
     }
     
     @FXML
     private void switchToMainMenu() throws IOException {
         App.setRoot("mainMenu");
     }
-
+    
     /**
      * Melakukan regresi linier atau kuadratik sesuai pilihan user
      */
     @FXML
     private void regresi() {
-        // ----------------- CLEAR OUTPUT SOLUSI REGRESI DI GUI -----------------
+        // ----------------- CLEAR ALERT DAN OUTPUT SOLUSI REGRESI DI GUI -----------------
+        alertMsgRegresi.setText("");
         regresiTextFlow.getChildren().clear();
         taksiranTextFlow.getChildren().clear();
 
         // ----------------- VALIDASI INPUT -----------------
-        nPeubah = Integer.parseInt(jumlahTitikInput.getText());
+
+        if (jumlahPeubahInput.getText().isBlank() || jumlahSampelInput.getText().isBlank() || inputX.getText().isBlank() || inputY.getText().isBlank()){
+            alertMsgRegresi.setText("*Masukkan jumlah peubah dan sampel, X, dan Y yang sesuai terlebih dahulu");
+            return;
+        }
+
+        nPeubah = Integer.parseInt(jumlahPeubahInput.getText());
         mSampel = Integer.parseInt(jumlahSampelInput.getText());
         if (nPeubah < 1 || mSampel < 1){
             alertMsgRegresi.setText("*Jumlah titik dan sampel harus lebih dari 0");
@@ -131,7 +185,6 @@ public class RegresiBergandaController {
         System.out.println("Matriks Y:");
         inputSampelY.printMatriks();
 
-        alertMsgRegresi.setText("");
 
         // ----------------- REGRESI -----------------
 
@@ -195,6 +248,11 @@ public class RegresiBergandaController {
         } else {
             alertMsgTaksiran.setText("");
             taksiranTextFlow.getChildren().clear();
+
+            if (inputVariabelBebas.getText().isBlank()){
+                alertMsgTaksiran.setText("*Masukkan nilai variabel bebas yang akan ditaksir");
+                return;
+            }
             
             double[][] xTaksiran = new double[nPeubah][1];
             String[] xTaksiranString = inputVariabelBebas.getText().split("\\s+");
