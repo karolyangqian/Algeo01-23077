@@ -76,6 +76,8 @@
                                     </RadioButton>
                                     <RadioButton fx:id="selectMatriksAdjoin" layoutX="10.0" layoutY="37.0" mnemonicParsing="false" text="Matriks Adjoin" toggleGroup="$MetodeBalikan" />
                                     <Text fx:id="alertMsg" fill="#be0000" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="160.0" />
+                                    <Button mnemonicParsing="false" onAction="#chooseFile" text="Choose file" />
+                                    <Button mnemonicParsing="false" text="Export result" />
                                  </children>
                               </VBox>
                            </children>

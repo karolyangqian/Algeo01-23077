@@ -1,10 +1,14 @@
 package com.myapp;
 
+import algeo.*;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.*;
-import algeo.*;
+import javafx.stage.Stage;
+import java.util.Scanner;
+import java.io.File;
+import javafx.stage.FileChooser;
 
 public class InterpolasiPolinomialController {
 
@@ -30,9 +34,41 @@ public class InterpolasiPolinomialController {
     @FXML
     TextFlow fungsiTextFlow = new TextFlow();
 
+    private File inputFile;
+    private Scanner scanner;
+    FileChooser fileChooser = new FileChooser();
+
     @FXML
     public void initialize() {
         interpolated = false;
+    }
+
+    /**
+     * Buka file input interpolasi dan memasukkan ke text field dan text area
+     * @throws IOException
+     */
+    @FXML
+    private void chooseFile() throws IOException {
+        alertMsg.setText("");
+        inputFile = fileChooser.showOpenDialog(new Stage());
+
+        jumlahTitikInput.clear();
+        inputTitikList.clear();
+        try {
+            scanner = new Scanner(inputFile);
+            String nString = scanner.nextLine();
+            jumlahTitikInput.setText(nString);
+            int n = Integer.parseInt(nString);
+            for (int i = 0; i < n; i++) {
+                inputTitikList.appendText(scanner.nextLine() + "\n");
+            }
+            String x = scanner.nextLine();
+            inputX.setText(x);
+            scanner.close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            alertMsg.setText("*File input tidak valid");
+        }
     }
     
     /**
@@ -49,22 +85,22 @@ public class InterpolasiPolinomialController {
      */
     @FXML
     private void interpolasiPolinomial() {
-        // ----------------- CLEAR OUTPUT SOLUSI BALIKAN DI GUI -----------------
-        
+        // ----------------- CLEAR ALERT DAN OUTPUT SOLUSI BALIKAN DI GUI -----------------
+        alertMsg.setText("");
         polinomTextFlow.getChildren().clear();
 
 
         // ----------------- VALIDASI INPUT -----------------
 
+        if (jumlahTitikInput.getText().isBlank() || inputTitikList.getText().isBlank()){
+            alertMsg.setText("*Masukkan jumlah titik dan sampel titik yang sesuai terlebih dahulu");
+            return;
+        }
+
         String titikString = inputTitikList.getText().replaceAll("\n", " ");
         int row = Integer.parseInt(jumlahTitikInput.getText());
         int col = 2;
         String[] elements = titikString.split("\\s+");
-
-        if (titikString.isBlank()){
-            alertMsg.setText("*Masukkan titik terlebih dahulu");
-            return;
-        }
 
         if (elements.length != row * col){
             alertMsg.setText("*Jumlah titik tidak sesuai dengan yang diinputkan");
@@ -94,12 +130,17 @@ public class InterpolasiPolinomialController {
         Points.printMatriks();
         System.out.println();
         
-        alertMsg.setText("");
 
 
         // ----------------- INTERPOLASI POLINOMIAL -----------------
-
-        polinomial.interpolate(Points);
+        try {
+            polinomial.interpolate(Points);
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            alertMsg.setText("*Polinomial tidak dapat diinterpolasi");
+            return;
+        }
+        
         System.out.println("Polinomial:");
         polinomial.printCoefficients();
 
@@ -162,9 +203,9 @@ public class InterpolasiPolinomialController {
      */
     @FXML
     private void hitungFungsi() {
-        // ----------------- CLEAR OUTPUT SOLUSI BALIKAN DI GUI -----------------
+        // ----------------- CLEAR ALERT DAN OUTPUT SOLUSI BALIKAN DI GUI -----------------
+        alertMsg.setText("");
         fungsiTextFlow.getChildren().clear();
-
 
         // ----------------- VALIDASI INPUT -----------------
 
@@ -179,7 +220,7 @@ public class InterpolasiPolinomialController {
         }
 
         if (Double.parseDouble(inputX.getText()) < xmin || Double.parseDouble(inputX.getText()) > xmax) {
-            alertMsg.setText("*Nilai x diluar range titik interpolasi");
+            alertMsg.setText(String.format("*Nilai x diluar range titik interpolasi [%.2f, %.2f]", xmin, xmax));
             return;
         }
 

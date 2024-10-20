@@ -5,6 +5,10 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.*;
+import javafx.stage.Stage;
+import java.io.File;
+import javafx.stage.FileChooser;
+import java.util.Scanner;
 
 public class BicubicSplineController {
 
@@ -21,6 +25,10 @@ public class BicubicSplineController {
     @FXML
     TextFlow bicubicSplineTextFlow = new TextFlow();
 
+    private File inputFile;
+    private Scanner scanner;
+    FileChooser fileChooser = new FileChooser();
+
     @FXML
     public void initialize() {
     }
@@ -32,6 +40,33 @@ public class BicubicSplineController {
     @FXML
     private void switchToMainMenu() throws IOException {
         App.setRoot("mainMenu");
+    }
+
+    /**
+     * Buka file matriks konfigurasi dan input x y bicubic spline dan memasukkan ke text field dan text area
+     * @throws IOException
+     */
+    @FXML
+    private void chooseFile() throws IOException {
+        alertMsg.setText("");
+        inputFile = fileChooser.showOpenDialog(new Stage());
+
+        inputKonfigurasi.clear();
+        inputXBebas.clear();
+        inputYBebas.clear();
+        try {
+            scanner = new Scanner(inputFile);
+            for (int i = 0; i < 4; i++) {
+                inputKonfigurasi.appendText(scanner.nextLine() + "\n");
+            }
+            String[] xy = scanner.nextLine().split("\\s+");
+            inputXBebas.setText(xy[0]);
+            inputYBebas.setText(xy[1]);
+            scanner.close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            alertMsg.setText("*File input tidak valid");
+        }
     }
 
     /**
