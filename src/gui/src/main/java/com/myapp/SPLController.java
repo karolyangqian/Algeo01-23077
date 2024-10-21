@@ -41,6 +41,8 @@ public class SPLController {
     private File outputFile;
     private Scanner scanner;
     FileChooser fileChooser = new FileChooser();
+    private String outputString;
+    private boolean splSolved;
     
     @FXML
     public void initialize() {
@@ -48,6 +50,33 @@ public class SPLController {
         selectEliminasiGaussJordan.setToggleGroup(MetodeSPL);
         selectMatriksBalikan.setToggleGroup(MetodeSPL);
         selectKaidahCramer.setToggleGroup(MetodeSPL);
+        splSolved = false;
+    }
+
+    /**
+    * Export text file pada lokasi sesuai input pengguna
+    * @throws IOException
+    */
+    @FXML
+    private void exportFile() throws IOException {
+        FileHandler fh = new FileHandler();
+        if (!splSolved) {
+            alertMsg.setText("*Hitung solusi SPL terlebih dahulu");
+            return;
+        }
+
+        fileChooser.setTitle("Save Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        outputFile = fileChooser.showSaveDialog(new Stage());
+
+        if (outputFile == null) {
+            return;
+        }
+
+        alertMsg.setText("");
+
+        fh.saveTextToFile(outputString, outputFile);
     }
 
     /**
@@ -147,6 +176,7 @@ public class SPLController {
             } catch (Exception e) {
                 alertMsg.setText("*Tidak ditemukan solusi menggunakan metode eliminasi Gauss");
                 System.out.println("Tidak ditemukan solusi menggunakan metode eliminasi Gauss");
+                return;
             }
         } else if (selectEliminasiGaussJordan.isSelected()){
             System.out.println("Eliminasi Gauss-Jordan selected");
@@ -155,6 +185,7 @@ public class SPLController {
             } catch (Exception e) {
                 alertMsg.setText("*Tidak ditemukan solusi menggunakan metode eliminasi Gauss-Jordan");
                 System.out.println("Tidak ditemukan solusi menggunakan metode eliminasi Gauss-Jordan");
+                return;
             }
         } else if (selectMatriksBalikan.isSelected()){
             System.out.println("Matriks balikan selected");
@@ -163,6 +194,7 @@ public class SPLController {
             } catch (Exception e) {
                 alertMsg.setText("*Tidak ditemukan solusi menggunakan metode invers");
                 System.out.println("Tidak ditemukan solusi menggunakan metode invers");
+                return;
             }
         } else if (selectKaidahCramer.isSelected()){
             System.out.println("Cramer selected");
@@ -171,10 +203,12 @@ public class SPLController {
             } catch (Exception e) {
                 alertMsg.setText("*Tidak ditemukan solusi menggunakan metode Cramer");
                 System.out.println("Tidak ditemukan solusi menggunakan metode Cramer");
+                return;
             }
         } else {
             alertMsg.setText("*Pilih metode terlebih dahulu");
             System.out.println("No method selected");
+            return;
         }
 
         // ----------------- OUTPUT SOLUSI SPL DI GUI -----------------
@@ -248,7 +282,14 @@ public class SPLController {
                 solutionTextFlow.getChildren().add(newLineText);
             }
         }
+
+        TextFlowHandler tfh = new TextFlowHandler();
+        outputString = tfh.textFlowToString(solutionTextFlow);
+
+        splSolved = true;
     }
+
+    
 
     /**
      * Menghapus kolom-kolom yang berisi nol dimulai dari kolom startCol

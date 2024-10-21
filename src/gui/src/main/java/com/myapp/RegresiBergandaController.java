@@ -12,17 +12,6 @@ import java.util.Scanner;
 
 public class RegresiBergandaController {
 
-    enum RegresiType {
-        LINIER, KUADRATIK
-    }
-
-    private LinearRegression regressor = new LinearRegression();
-    private Matriks b;
-    private boolean regressed;
-    private int nPeubah;
-    private int mSampel;
-    private RegresiType regresiType;
-
     @FXML
     TextField jumlahPeubahInput = new TextField();
     @FXML
@@ -51,18 +40,62 @@ public class RegresiBergandaController {
     TextFlow regresiTextFlow = new TextFlow();
     @FXML
     TextFlow taksiranTextFlow = new TextFlow();
+    
+    enum RegresiType {
+        LINIER, KUADRATIK
+    }
 
+    private LinearRegression regressor = new LinearRegression();
+    private Matriks b;
+    private boolean regressed;
+    private boolean predicted;
+    private int nPeubah;
+    private int mSampel;
+    private RegresiType regresiType;
     private File inputFile;
+    private File outputFile;
     private Scanner scanner;
     FileChooser fileChooser = new FileChooser();
+    private String outputRegresiString;
+    private String outputTaksirString;
 
     public void initialize() {
         selectLinier.setToggleGroup(jenisRegresi);
         selectKuadratik.setToggleGroup(jenisRegresi);
         regressed = false;
+        predicted = false;
     }
 
-     /**
+    /**
+    * Export text file pada lokasi sesuai input pengguna
+    * @throws IOException
+    */
+    @FXML
+    private void exportFile() throws IOException {
+        FileHandler fh = new FileHandler();
+        if (!(regressed && predicted)) {
+            alertMsgRegresi.setText("*Lakukan regresi dan hitung nilai terikatnya terlebih dahulu");
+            return;
+        }
+
+        fileChooser.setTitle("Save Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        outputFile = fileChooser.showSaveDialog(new Stage());
+
+        if (outputFile == null) {
+            return;
+        }
+
+        alertMsgRegresi.setText("");
+        alertMsgTaksiran.setText("");
+
+        String out = String.join("", outputRegresiString, "\n\n", outputTaksirString);
+
+        fh.saveTextToFile(out, outputFile);
+    }
+
+    /**
      * Buka file sampel regresi dan memasukkan ke text field dan text area
      * @throws IOException
      */
@@ -219,10 +252,9 @@ public class RegresiBergandaController {
             alertMsgRegresi.setText("*Regresi memiliki banyak solusi, coba dengan sampel yang berbeda atau tambah jumlah sampel");
             return;
         }
-        regressed = true;
-
+        
         // ----------------- OUTPUT SOLUSI REGRESI DI GUI -----------------
-
+        
         if (regresiType == RegresiType.LINIER){
             try {
                 displayLinearRegression(b);
@@ -240,6 +272,11 @@ public class RegresiBergandaController {
                 return;
             }
         }
+        
+        TextFlowHandler tfh = new TextFlowHandler();
+        outputRegresiString = tfh.textFlowToString(regresiTextFlow);
+        regressed = true;
+        predicted = false;
     }
 
     /**
@@ -323,8 +360,11 @@ public class RegresiBergandaController {
 
             text = new Text(String.format("Y = %.4f", y));
             taksiranTextFlow.getChildren().add(text);
-
         }
+
+        TextFlowHandler tfh = new TextFlowHandler();
+        outputTaksirString = tfh.textFlowToString(taksiranTextFlow);
+        predicted = true;
     }
 
     /**

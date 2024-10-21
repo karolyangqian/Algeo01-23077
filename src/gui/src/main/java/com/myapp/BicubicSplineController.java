@@ -28,9 +28,13 @@ public class BicubicSplineController {
     private File inputFile;
     private Scanner scanner;
     FileChooser fileChooser = new FileChooser();
+    private boolean bicubicSolved;
+    private String outputString;
+    private File outputFile;
 
     @FXML
     public void initialize() {
+        bicubicSolved = false;
     }
 
     /**
@@ -40,6 +44,32 @@ public class BicubicSplineController {
     @FXML
     private void switchToMainMenu() throws IOException {
         App.setRoot("mainMenu");
+    }
+
+    /**
+    * Export text file pada lokasi sesuai input pengguna
+    * @throws IOException
+    */
+    @FXML
+    private void exportFile() throws IOException {
+        FileHandler fh = new FileHandler();
+        if (!bicubicSolved) {
+            alertMsg.setText("*Lakukan interpolasi bicubic spline terlebih dahulu");
+            return;
+        }
+
+        fileChooser.setTitle("Save Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        outputFile = fileChooser.showSaveDialog(new Stage());
+
+        if (outputFile == null) {
+            return;
+        }
+
+        alertMsg.setText("");
+
+        fh.saveTextToFile(outputString, outputFile);
     }
 
     /**
@@ -124,5 +154,9 @@ public class BicubicSplineController {
         Text resultText = new Text(String.format("f(%.6f, %.6f) = %.6f", x, y, result));
         bicubicSplineTextFlow.getChildren().add(resultText);
 
+        TextFlowHandler tfh = new TextFlowHandler();
+        outputString = tfh.textFlowToString(bicubicSplineTextFlow);
+
+        bicubicSolved = true;
     }
 }

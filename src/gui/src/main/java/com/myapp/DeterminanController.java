@@ -12,7 +12,11 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+
 import javafx.stage.FileChooser;
 import java.util.Scanner;
 
@@ -36,13 +40,44 @@ public class DeterminanController {
     TextFlow solutionTextFlow = new TextFlow();
 
     private File inputFile;
+    private File outputFile;
     private Scanner scanner;
     FileChooser fileChooser = new FileChooser();
+    private boolean determinanSolved;
+    private String outputString;
     
     @FXML
     public void initialize() {
         selectEkspansiKofaktor.setToggleGroup(MetodeDeterminan);
         selectMatriksSegitiga.setToggleGroup(MetodeDeterminan);
+        determinanSolved = false;
+    }
+
+    /**
+     * Export text file pada lokasi sesuai input pengguna
+     * @throws IOException
+     */
+    @FXML
+    private void exportFile() throws IOException {
+        if (!determinanSolved) {
+            alertMsg.setText("*Hitung determinan terlebih dahulu");
+            return;
+        }
+
+        FileHandler fh = new FileHandler();
+
+        fileChooser.setTitle("Save Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        outputFile = fileChooser.showSaveDialog(new Stage());
+
+        if (outputFile == null) {
+            return;
+        }
+
+        alertMsg.setText("");
+
+        fh.saveTextToFile(outputString, outputFile);
     }
 
      /**
@@ -58,7 +93,7 @@ public class DeterminanController {
         }
         
         alertMsg.setText("");
-        
+
         barisInput.clear();
         inputMatriks.clear();
         try {
@@ -157,9 +192,13 @@ public class DeterminanController {
 
         Text text = new Text("Determinan matriks: " + String.format("%.2f", det));
         solutionTextFlow.getChildren().add(text);
-
+        
         System.out.println("Determinan matriks: " + det);
 
+        TextFlowHandler tfh = new TextFlowHandler();
+        outputString = tfh.textFlowToString(solutionTextFlow);
+        determinanSolved = true;
     }
 
+    
 }

@@ -12,11 +12,7 @@ import javafx.stage.FileChooser;
 
 public class InterpolasiPolinomialController {
 
-    private Polinomial polinomial = new Polinomial();
-    private boolean interpolated;
-    private double xmin;
-    private double xmax;
-
+    
     @FXML
     TextField jumlahTitikInput = new TextField();
     @FXML
@@ -33,14 +29,51 @@ public class InterpolasiPolinomialController {
     Button hitungFungsiButton = new Button();
     @FXML
     TextFlow fungsiTextFlow = new TextFlow();
-
+    
+    private Polinomial polinomial = new Polinomial();
+    private boolean interpolated;
+    private boolean calculated;
+    private double xmin;
+    private double xmax;
     private File inputFile;
+    private File outputFile;
     private Scanner scanner;
     FileChooser fileChooser = new FileChooser();
+    private String outputPolinomString;
+    private String outputFungsiString;
 
     @FXML
     public void initialize() {
         interpolated = false;
+        calculated = false;
+    }
+
+    /**
+    * Export text file pada lokasi sesuai input pengguna
+    * @throws IOException
+    */
+    @FXML
+    private void exportFile() throws IOException {
+        FileHandler fh = new FileHandler();
+        if (!(interpolated && calculated)) {
+            alertMsg.setText("*Lakukan interpolasi dan hitung nilai terikatnya terlebih dahulu");
+            return;
+        }
+
+        fileChooser.setTitle("Save Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        outputFile = fileChooser.showSaveDialog(new Stage());
+
+        if (outputFile == null) {
+            return;
+        }
+
+        alertMsg.setText("");
+
+        String out = String.join("", outputPolinomString, "\n\n", outputFungsiString);
+
+        fh.saveTextToFile(out, outputFile);
     }
 
     /**
@@ -181,7 +214,7 @@ public class InterpolasiPolinomialController {
             if (polinomial.getCoefficients()[i] > 0 && printed) {
                 Text plusText = new Text(" + ");
                 polinomTextFlow.getChildren().add(plusText);
-            } else {
+            } else if (polinomial.getCoefficients()[i] < 0) {
                 Text minusText = new Text(" - ");
                 polinomTextFlow.getChildren().add(minusText);
             }
@@ -203,7 +236,13 @@ public class InterpolasiPolinomialController {
             polinomTextFlow.getChildren().add(baseText);
             printed = true;
         }
+
+        TextFlowHandler tfh = new TextFlowHandler();
+
+        outputPolinomString = tfh.textFlowToString(polinomTextFlow);
+
         interpolated = true;
+        calculated = false;
     }
 
     /**
@@ -240,5 +279,10 @@ public class InterpolasiPolinomialController {
         // ----------------- OUTPUT NILAI FUNGSI -----------------
         Text text = new Text("P(" + x + ") = " + String.format("%.4f", result));
         fungsiTextFlow.getChildren().add(text);
+
+        TextFlowHandler tfh = new TextFlowHandler();
+        outputFungsiString = tfh.textFlowToString(fungsiTextFlow);
+
+        calculated = true;
     }
 }
