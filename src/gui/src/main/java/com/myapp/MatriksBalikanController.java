@@ -30,14 +30,43 @@ public class MatriksBalikanController {
     Text alertMsg = new Text();
 
     private File inputFile;
+    private File outputFile;
     private Scanner scanner;
     FileChooser fileChooser = new FileChooser();
-
+    private boolean balikanSolved;
+    private String outputString;
 
     @FXML
     public void initialize() {
         selectOBE.setToggleGroup(MetodeBalikan);
         selectMatriksAdjoin.setToggleGroup(MetodeBalikan);
+        balikanSolved = false;
+    }
+    
+    /**
+    * Export text file pada lokasi sesuai input pengguna
+    * @throws IOException
+    */
+    @FXML
+    private void exportFile() throws IOException {
+        FileHandler fh = new FileHandler();
+        if (!balikanSolved) {
+            alertMsg.setText("*Hitung balikan terlebih dahulu");
+            return;
+        }
+
+        fileChooser.setTitle("Save Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        outputFile = fileChooser.showSaveDialog(new Stage());
+
+        if (outputFile == null) {
+            return;
+        }
+
+        alertMsg.setText("");
+
+        fh.saveTextToFile(outputString, outputFile);
     }
 
     /**
@@ -46,8 +75,13 @@ public class MatriksBalikanController {
      */
     @FXML
     private void chooseFile() throws IOException {
-        alertMsg.setText("");
         inputFile = fileChooser.showOpenDialog(new Stage());
+        
+        if (inputFile == null) {
+            return;
+        }
+        
+        alertMsg.setText("");
 
         barisInput.clear();
         inputMatriks.clear();
@@ -153,6 +187,12 @@ public class MatriksBalikanController {
             solutionTextFlow.getChildren().add(newline);
         }
 
+        TextFlowHandler tfh = new TextFlowHandler();
+
+        outputString = tfh.textFlowToString(solutionTextFlow);
+        System.out.println("Balikan matriks:");
         balikan.printMatriks();
+
+        balikanSolved = true;
     }
 }

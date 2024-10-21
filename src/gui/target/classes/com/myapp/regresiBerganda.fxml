@@ -135,7 +135,7 @@
                                           <Text fx:id="alertMsgTaksiran" fill="#be0000" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="160.0" />
                                           <Button fx:id="taksirButton" mnemonicParsing="false" onAction="#taksir" text="Taksir" />
                                           <Button mnemonicParsing="false" onAction="#chooseFile" text="Choose file" />
-                                          <Button mnemonicParsing="false" text="Export result" />
+                                          <Button mnemonicParsing="false" onAction="#exportFile" text="Export result" />
                                        </children>
                                     </VBox>
                                  </children>
