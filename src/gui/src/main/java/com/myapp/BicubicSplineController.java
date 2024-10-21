@@ -48,8 +48,13 @@ public class BicubicSplineController {
      */
     @FXML
     private void chooseFile() throws IOException {
-        alertMsg.setText("");
         inputFile = fileChooser.showOpenDialog(new Stage());
+
+        if (inputFile == null) {
+            return;
+        }
+        
+        alertMsg.setText("");
 
         inputKonfigurasi.clear();
         inputXBebas.clear();

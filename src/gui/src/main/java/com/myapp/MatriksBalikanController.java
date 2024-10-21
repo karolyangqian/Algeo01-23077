@@ -46,9 +46,14 @@ public class MatriksBalikanController {
      */
     @FXML
     private void chooseFile() throws IOException {
-        alertMsg.setText("");
         inputFile = fileChooser.showOpenDialog(new Stage());
-
+        
+        if (inputFile == null) {
+            return;
+        }
+        
+        alertMsg.setText("");
+        
         barisInput.clear();
         inputMatriks.clear();
         try {

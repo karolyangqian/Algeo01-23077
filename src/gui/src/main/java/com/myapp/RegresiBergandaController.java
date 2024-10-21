@@ -68,9 +68,14 @@ public class RegresiBergandaController {
      */
     @FXML
     private void chooseFile() throws IOException {
+        inputFile = fileChooser.showOpenDialog(new Stage());
+        
+        if (inputFile == null) {
+            return;
+        }
+        
         alertMsgRegresi.setText("");
         alertMsgTaksiran.setText("");
-        inputFile = fileChooser.showOpenDialog(new Stage());
 
         jumlahPeubahInput.clear();
         jumlahSampelInput.clear();
@@ -331,47 +336,52 @@ public class RegresiBergandaController {
         System.out.println("Matriks regresi:");
         b.printMatriks();
 
-        Text text = new Text("Fungsi regresi linier:\n");
+        Text text = new Text("Persamaan regresi linier:\n");
         regresiTextFlow.getChildren().add(text);
 
         text = new Text("Y = ");
         regresiTextFlow.getChildren().add(text);
 
-        if (checkZeroCol(b, 0)) {
-            text = new Text(String.format("%.4f", 0));
+        boolean printed = false;
+
+        if (b.getRow() == 1) {
+            text = new Text(String.format("%.4f", b.Mat[0][0]));
             regresiTextFlow.getChildren().add(text);
+            return;
         }
-        else {
-            for (int i = 0; i < b.getRow(); i++) {
-                if (i == 0) {
-                    text = new Text(String.format("%.4f", b.Mat[i][0]));
-                    regresiTextFlow.getChildren().add(text);
-                } else {
-                    if (b.Mat[i][0] < 0) {
-                        text = new Text(" - ");
-                        regresiTextFlow.getChildren().add(text);
-                    } else if (b.Mat[i][0] > 0) {
-                        text = new Text(" + ");
-                        regresiTextFlow.getChildren().add(text);
-                    } else {
-                        continue;
-                    }
 
-                    if (Math.abs(b.Mat[i][0]) != 1) {
-                        text = new Text(String.format("%.4f", Math.abs(b.Mat[i][0])));
-                        regresiTextFlow.getChildren().add(text);
-                    }
+        if (b.Mat[0][0] != 0) {
+            text = new Text(String.format("%.4f", b.Mat[0][0]));
+            regresiTextFlow.getChildren().add(text);
+            printed = true;
+        }
 
-                    text = new Text("x");
-                    text.setStyle("-fx-font-size: 10pt;");
-                    regresiTextFlow.getChildren().add(text);
-
-                    Text baseText = new Text(Integer.toString(i));
-                    baseText.setStyle("-fx-font-size: 8pt;");
-                    baseText.setTranslateY(5);
-                    regresiTextFlow.getChildren().add(baseText);
-                }
+        for (int i = 1; i < b.getRow(); i++) {
+            if (b.Mat[i][0] == 0) {
+                continue;
             }
+
+            if (b.Mat[i][0] < 0) {
+                text = new Text(" - ");
+                regresiTextFlow.getChildren().add(text);
+            } else if (b.Mat[i][0] > 0 && printed) {
+                text = new Text(" + ");
+                regresiTextFlow.getChildren().add(text);
+            }
+
+            if (Math.abs(b.Mat[i][0]) != 1) {
+                text = new Text(String.format("%.4f", Math.abs(b.Mat[i][0])));
+                regresiTextFlow.getChildren().add(text);
+            }
+
+            text = new Text("x");
+            text.setStyle("-fx-font-size: 10pt;");
+            regresiTextFlow.getChildren().add(text);
+
+            Text baseText = new Text(Integer.toString(i));
+            baseText.setStyle("-fx-font-size: 8pt;");
+            baseText.setTranslateY(5);
+            regresiTextFlow.getChildren().add(baseText);
         }
     }
 
@@ -383,67 +393,105 @@ public class RegresiBergandaController {
         System.out.println("Matriks b:");
         b.printMatriks();
 
-        Text text = new Text("Fungsi regresi linier:\n");
+        Text text = new Text("Persamaan regresi kuadratik:\n");
         regresiTextFlow.getChildren().add(text);
 
         text = new Text("Y = ");
         regresiTextFlow.getChildren().add(text);
 
-        if (checkZeroCol(b, 0)) {
-            text = new Text(String.format("%.4f", 0));
+        boolean printed = false;
+
+        if (b.getRow() == 1) {
+            text = new Text(String.format("%.4f", b.Mat[0][0]));
             regresiTextFlow.getChildren().add(text);
+            return;
         }
-        else {
 
-            // ------------------- KONSTANTA -------------------
-            if (b.Mat[0][0] != 0) {
-                text = new Text(String.format("%.4f", b.Mat[0][0]));
+        if (b.Mat[0][0] != 0) {
+            text = new Text(String.format("%.4f", b.Mat[0][0]));
+            regresiTextFlow.getChildren().add(text);
+            printed = true;
+        }
+        
+        // ------------------- VARIABEL LINEAR -------------------
+        for (int i = 1; i <= nPeubah; i++) {
+            if (b.Mat[i][0] < 0) {
+                text = new Text(" - ");
+                regresiTextFlow.getChildren().add(text);
+            } else if (b.Mat[i][0] > 0 && printed) {
+                text = new Text(" + ");
+                regresiTextFlow.getChildren().add(text);
+            } else {
+                continue;
+            }
+
+            if (Math.abs(b.Mat[i][0]) != 1) {
+                text = new Text(String.format("%.4f", Math.abs(b.Mat[i][0])));
                 regresiTextFlow.getChildren().add(text);
             }
 
-            // ------------------- VARIABEL LINEAR -------------------
-            for (int i = 1; i <= nPeubah; i++) {
-                if (b.Mat[i][0] < 0) {
-                    text = new Text(" - ");
-                    regresiTextFlow.getChildren().add(text);
-                } else if (b.Mat[i][0] > 0) {
-                    text = new Text(" + ");
-                    regresiTextFlow.getChildren().add(text);
-                } else {
-                    continue;
-                }
+            text = new Text("x");
+            text.setStyle("-fx-font-size: 10pt;");
+            regresiTextFlow.getChildren().add(text);
 
-                if (Math.abs(b.Mat[i][0]) != 1) {
-                    text = new Text(String.format("%.4f", Math.abs(b.Mat[i][0])));
-                    regresiTextFlow.getChildren().add(text);
-                }
+            Text baseText = new Text(Integer.toString(i));
+            baseText.setStyle("-fx-font-size: 8pt;");
+            baseText.setTranslateY(5);
+            regresiTextFlow.getChildren().add(baseText);
+            printed = true;
+        }
 
-                text = new Text("x");
-                text.setStyle("-fx-font-size: 10pt;");
+        // ------------------- VARIABEL KUADRATIK -------------------
+        int idxstart = nPeubah+1;
+        for (int i = 0; i < nPeubah; i++) {
+            if (b.Mat[idxstart+i][0] < 0) {
+                text = new Text(" - ");
                 regresiTextFlow.getChildren().add(text);
-
-                Text baseText = new Text(Integer.toString(i));
-                baseText.setStyle("-fx-font-size: 8pt;");
-                baseText.setTranslateY(5);
-                regresiTextFlow.getChildren().add(baseText);
-
+            } else if (b.Mat[idxstart+i][0] > 0 && printed) {
+                text = new Text(" + ");
+                regresiTextFlow.getChildren().add(text);
+            } else {
+                continue;
             }
 
-            // ------------------- VARIABEL KUADRATIK -------------------
-            int idxstart = nPeubah+1;
-            for (int i = 0; i < nPeubah; i++) {
-                if (b.Mat[idxstart+i][0] < 0) {
+            if (Math.abs(b.Mat[idxstart+i][0]) != 1) {
+                text = new Text(String.format("%.4f", Math.abs(b.Mat[idxstart+i][0])));
+                regresiTextFlow.getChildren().add(text);
+            }
+
+            text = new Text("x");
+            text.setStyle("-fx-font-size: 10pt;");
+            regresiTextFlow.getChildren().add(text);
+
+            Text baseText = new Text(Integer.toString(i+1));
+            baseText.setStyle("-fx-font-size: 8pt;");
+            baseText.setTranslateY(5);
+            regresiTextFlow.getChildren().add(baseText);
+
+            baseText = new Text("2");
+            baseText.setStyle("-fx-font-size: 8pt;");
+            baseText.setTranslateY(-5);
+            regresiTextFlow.getChildren().add(baseText);
+            printed = true;
+        }
+
+        // ------------------- VARIABEL INTERAKSI -------------------
+        idxstart = idxstart + nPeubah;
+        for (int i = 0; i < nPeubah; i++) {
+            for (int j = i + 1; j < nPeubah; j++) {
+                if (b.Mat[idxstart][0] < 0) {
                     text = new Text(" - ");
                     regresiTextFlow.getChildren().add(text);
-                } else if (b.Mat[idxstart+i][0] > 0) {
+                } else if (b.Mat[idxstart][0] > 0 && printed) {
                     text = new Text(" + ");
                     regresiTextFlow.getChildren().add(text);
                 } else {
+                    idxstart++;
                     continue;
                 }
 
-                if (Math.abs(b.Mat[idxstart+i][0]) != 1) {
-                    text = new Text(String.format("%.4f", Math.abs(b.Mat[idxstart+i][0])));
+                if (Math.abs(b.Mat[idxstart][0]) != 1) {
+                    text = new Text(String.format("%.4f", Math.abs(b.Mat[idxstart][0])));
                     regresiTextFlow.getChildren().add(text);
                 }
 
@@ -456,70 +504,19 @@ public class RegresiBergandaController {
                 baseText.setTranslateY(5);
                 regresiTextFlow.getChildren().add(baseText);
 
-                baseText = new Text("2");
+                text = new Text("x");
+                text.setStyle("-fx-font-size: 10pt;");
+                regresiTextFlow.getChildren().add(text);
+
+                baseText = new Text(Integer.toString(j+1));
                 baseText.setStyle("-fx-font-size: 8pt;");
-                baseText.setTranslateY(-5);
+                baseText.setTranslateY(5);
                 regresiTextFlow.getChildren().add(baseText);
-            }
 
-            // ------------------- VARIABEL INTERAKSI -------------------
-            idxstart = idxstart + nPeubah;
-            for (int i = 0; i < nPeubah; i++) {
-                for (int j = i + 1; j < nPeubah; j++) {
-                    if (b.Mat[idxstart][0] < 0) {
-                        text = new Text(" - ");
-                        regresiTextFlow.getChildren().add(text);
-                    } else if (b.Mat[idxstart][0] > 0) {
-                        text = new Text(" + ");
-                        regresiTextFlow.getChildren().add(text);
-                    } else {
-                        idxstart++;
-                        continue;
-                    }
-
-                    if (Math.abs(b.Mat[idxstart][0]) != 1) {
-                        text = new Text(String.format("%.4f", Math.abs(b.Mat[idxstart][0])));
-                        regresiTextFlow.getChildren().add(text);
-                    }
-
-                    text = new Text("x");
-                    text.setStyle("-fx-font-size: 10pt;");
-                    regresiTextFlow.getChildren().add(text);
-
-                    Text baseText = new Text(Integer.toString(i+1));
-                    baseText.setStyle("-fx-font-size: 8pt;");
-                    baseText.setTranslateY(5);
-                    regresiTextFlow.getChildren().add(baseText);
-
-                    text = new Text("x");
-                    text.setStyle("-fx-font-size: 10pt;");
-                    regresiTextFlow.getChildren().add(text);
-
-                    baseText = new Text(Integer.toString(j+1));
-                    baseText.setStyle("-fx-font-size: 8pt;");
-                    baseText.setTranslateY(5);
-                    regresiTextFlow.getChildren().add(baseText);
-
-                    idxstart++;
-                }
-            }
-            
+                printed = true;
+                idxstart++;
+            }   
         }
-    }
-
-    /**
-     * Mengecek apakah kolom matriks M semuanya bernilai 0
-     * @param M
-     * @param col
-     * @return true jika semua elemen kolom col bernilai 0
-     */
-    private boolean checkZeroCol(Matriks M, int col){
-        for (int i = 0; i < M.getRow(); i++){
-            if (M.Mat[i][col] != 0){
-                return false;
-            }
-        }
-        return true;
     }
 
     /**

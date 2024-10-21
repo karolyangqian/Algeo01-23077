@@ -18,8 +18,22 @@ public class Linalg {
 
         Matriks M = new Matriks(Mat);
         for (int i = 0; i < M.getRow(); i++) {
-            // M.printMatriks();
             M = this.kalikanBaris(M, i, x);
+        }
+        return M;
+    }
+
+    /**
+     * Pembagian matriks dengan skalar x
+     * @param Mat
+     * @param x
+     * @return
+     */
+    public Matriks bagiXMatriks(Matriks Mat, double x) {
+
+        Matriks M = new Matriks(Mat);
+        for (int i = 0; i < M.getRow(); i++) {
+            M = this.bagikanBaris(M, i, x);
         }
         return M;
     }
@@ -282,7 +296,7 @@ public class Linalg {
         if (det == 0)
             return null;
 
-        M = this.kaliXMatriks(M, (double) 1 / det);
+        M = this.bagiXMatriks(M, det);
         return M;
     }
 
