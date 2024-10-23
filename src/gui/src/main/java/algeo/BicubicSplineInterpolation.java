@@ -3,7 +3,13 @@ package algeo;
 import java.awt.image.BufferedImage;
 
 public class BicubicSplineInterpolation {
-
+    /**
+     * Menghasilkan interpolasi bicubic spline dari nilai-nilai f pada titik (x, y)
+     * 
+     * @param x absis titik yang akan diinterpolasi
+     * @param y ordinat titik yang akan diinterpolasi
+     * @return nilai interpolasi bicubic spline pada titik (x, y)
+     */
     public double BicubicSplineInterpolate(Matriks fValue, double x, double y){
         double[] a = this.findAMatriks(fValue);
         double res = 0;
@@ -17,13 +23,24 @@ public class BicubicSplineInterpolation {
         return res;
     }
 
+    /**
+     * Menghasilkan gambar yang telah diresize dengan skala x dan skala y dengan metode bicubic spline interpolation
+     * 
+     * @param image gambar yang akan diresize
+     * @param scale_x pengali lebar gambar
+     * @param scale_y pengali tinggi gambar
+     * @return gambar yang telah diresize
+     */
     public BufferedImage resizeImage(BufferedImage image, double scale_x, double scale_y){
         int width = image.getWidth();
         int height = image.getHeight();
+
+        // buat matriks untuk setiap  warna
         Matriks imageMatriksRed = new Matriks(height, width);
         Matriks imageMatriksGreen = new Matriks(height, width);
         Matriks imageMatriksBlue = new Matriks(height, width);
         Matriks imageMatriksAlpha = new Matriks(height, width);
+
         for (int i = 0; i < height; i++){
             for (int j = 0; j < width; j++){
                 imageMatriksAlpha.Mat[i][j] = (image.getRGB(j, i) >> 24) & 0xff;
@@ -33,13 +50,14 @@ public class BicubicSplineInterpolation {
             }
         }
 
+        // lakukan interpolasi untuk setiap warna
         Matriks newImageMatriksRed = this.imageInterpolate(imageMatriksRed, scale_x, scale_y);
         Matriks newImageMatriksGreen = this.imageInterpolate(imageMatriksGreen, scale_x, scale_y);
         Matriks newImageMatriksBlue = this.imageInterpolate(imageMatriksBlue, scale_x, scale_y);
         Matriks newImageMatriksAlpha = this.imageInterpolate(imageMatriksAlpha, scale_x, scale_y);
 
-
         BufferedImage newImage = new BufferedImage(newImageMatriksRed.getCol(), newImageMatriksRed.getRow(), BufferedImage.TYPE_INT_ARGB);
+
         for (int i = 0; i < newImageMatriksRed.getRow(); i++){
             for (int j = 0; j < newImageMatriksRed.getCol(); j++){
                 int alpha = (int)newImageMatriksAlpha.Mat[i][j];
@@ -54,11 +72,24 @@ public class BicubicSplineInterpolation {
         return newImage;
     }
 
+    /**
+     * Mencari nilai f pada titik (x, y) dengan interpolasi bicubic spline
+     * 
+     * @param imageMatriks matriks gambar original
+     * @param row baris ujung kiri atas dari blok 4x4
+     * @param col kolom ujung kiri atas dari blok 4x4
+     * @param x absis titik yang akan diinterpolasi
+     * @param x ordinat titik yang akan diinterpolasi
+     * @param XD matriks hasil kali invers X dan D
+     * @return nilai f pada titik (x, y)
+     */
+
     private int findFValue(Matriks imageMatriks, int row, int col, double x, double y, Matriks XD){
         Matriks fValue = new Matriks(16,1);
         int idx = 0;
         for (int j = col; j < col + 4; j++){
             for (int i = row; i < row + 4; i++){
+                // jika di luar gambar, ambil nilai paling ujung
                 if (j >= imageMatriks.getCol() && i >= imageMatriks.getRow()){
                     fValue.Mat[idx][0] = imageMatriks.Mat[imageMatriks.getRow()-1][imageMatriks.getCol()-1];
                 }
@@ -68,13 +99,18 @@ public class BicubicSplineInterpolation {
                 else if (i >= imageMatriks.getRow()){
                     fValue.Mat[idx][0] = imageMatriks.Mat[imageMatriks.getRow()-1][j];
                 }
+
+                // jika di dalam gambar, ambil nilai sesuai koordinat
                 else{
                     fValue.Mat[idx][0] = imageMatriks.Mat[i][j];
                 }
                 idx++;
             }
         }
-        Matriks a = this.findImprovedaValue(fValue, XD);
+        
+        Matriks a = this.findImprovedAMatrix(fValue, XD);
+
+        // hitung nilai f pada titik (x, y)
         double res = 0;
         idx = 0;
         for (int j = 0; j < 4; j++){
@@ -83,18 +119,21 @@ public class BicubicSplineInterpolation {
                 idx++;
             }
         }
-        if (res < 0) return 0;
+        if (res < 0) return 0;          // batas warna rgb adalah 0-255
         if (res > 255) return 255;
         return (int)res;
     }
 
-    private Matriks findImprovedaValue(Matriks fValue, Matriks XD){
-        Linalg linalg = new Linalg();
-        Matriks a = linalg.perkalianMatriks(XD, fValue);
-        a = linalg.bagiXMatriks(a, 4);
-        return a;
-    }
-
+    
+    /**
+     * Melakukan interpolasi bicubic spline pada gambar yang akan diresize
+     * 
+     * @param imageMatriks matriks gambar original
+     * @param scale_x pengali lebar gambar
+     * @param scale_y pengali tinggi gambar
+     * 
+     * @return matriks gambar hasil interpolasi
+     */
     private Matriks imageInterpolate(Matriks imageMatriks, double scale_x, double scale_y){
         int height = imageMatriks.getRow();
         int width = imageMatriks.getCol();
@@ -103,14 +142,17 @@ public class BicubicSplineInterpolation {
 
         double ratio_height = (double)height/newheight;
         double ratio_width = (double)width/newwidth;
-
+        
         Matriks expandedMatriks = new Matriks(newheight, newwidth);
-
+        
         Linalg linalg = new Linalg();
         Matriks inversX = linalg.inversMatriks(this.matriksX(), "adjoin");
         Matriks D = this.matriksD();
+        
+        // melakukan precomputing untuk mempercepat proses interpolasi
         Matriks XD = linalg.perkalianMatriks(inversX, D);
-
+        
+        // mencari nilai interpolasi pada setiap titik
         for (int i = 0; i < newheight; i++){
             for (int j = 0; j < newwidth; j++){
                 int actual_i = (int)(i*ratio_height);
@@ -120,10 +162,30 @@ public class BicubicSplineInterpolation {
                 expandedMatriks.Mat[i][j] = this.findFValue(imageMatriks, actual_i, actual_j, x, y, XD);
             }
         }
-
+        
         return expandedMatriks;
     }
 
+    /**
+     * Mencari nilai koefisien interpolasi a yang lebih akurat dengan matriks D
+     * 
+     * @param fValue matriks nilai f pada blok 4x4
+     * @param XD matriks hasil kali invers X dan D
+     * @return nilai f pada titik (x, y)
+     */
+    private Matriks findImprovedAMatrix(Matriks fValue, Matriks XD){
+        Linalg linalg = new Linalg();
+        Matriks a = linalg.perkalianMatriks(XD, fValue);
+        a = linalg.bagiXMatriks(a, 4);
+        return a;
+    }
+    
+    /**
+     * Mencari nilai koefisien interpolasi a dengan matriks X
+     * 
+     * @param fValue matriks nilai f pada blok 4x4
+     * @return koefisien interpolasi a dalam bentuk array
+     */
     private double[] findAMatriks(Matriks fValue){
         SistemPersamaanLinier spl = new SistemPersamaanLinier();
         Matriks X = this.matriksX();
@@ -144,6 +206,9 @@ public class BicubicSplineInterpolation {
         return res;
     }
 
+    /**
+     * Membuat matriks X untuk interpolasi bicubic spline
+     */
     private Matriks matriksX(){
         Matriks M = new Matriks(16, 16);
         int row = 0;
@@ -194,7 +259,10 @@ public class BicubicSplineInterpolation {
         return M;
     }
 
-    public Matriks matriksD(){
+    /**
+     * Membuat matriks D untuk interpolasi bicubic spline
+     */
+    private Matriks matriksD(){
         Matriks nilaiI = new Matriks(16, 2);
         int row = 0;
         for (int j = -1; j < 3; j++){
@@ -277,8 +345,6 @@ public class BicubicSplineInterpolation {
                 row++;
             }
         }
-
-        // D.printMatriks();
 
         return D;
     }
