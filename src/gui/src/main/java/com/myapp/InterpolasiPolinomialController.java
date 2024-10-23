@@ -12,7 +12,6 @@ import javafx.stage.FileChooser;
 
 public class InterpolasiPolinomialController {
 
-    
     @FXML
     TextField jumlahTitikInput = new TextField();
     @FXML
@@ -60,6 +59,11 @@ public class InterpolasiPolinomialController {
             return;
         }
 
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+
         fileChooser.setTitle("Save Text File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
@@ -82,6 +86,13 @@ public class InterpolasiPolinomialController {
      */
     @FXML
     private void chooseFile() throws IOException {
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+        fileChooser.setTitle("Open Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        
         inputFile = fileChooser.showOpenDialog(new Stage());
         
         if (inputFile == null) {

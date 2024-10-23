@@ -65,6 +65,11 @@ public class SPLController {
             return;
         }
 
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+
         fileChooser.setTitle("Save Text File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
@@ -85,6 +90,13 @@ public class SPLController {
      */
     @FXML
     private void chooseFile() throws IOException {
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+        fileChooser.setTitle("Open Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
         inputFile = fileChooser.showOpenDialog(new Stage());
         
         if (inputFile == null) {
@@ -174,8 +186,8 @@ public class SPLController {
             try {
                 solution = new Matriks(SPL.metodeGauss(Mat));
             } catch (Exception e) {
-                alertMsg.setText("*Tidak ditemukan solusi menggunakan metode eliminasi Gauss");
-                System.out.println("Tidak ditemukan solusi menggunakan metode eliminasi Gauss");
+                alertMsg.setText("*Sistem persamaan linier tidak memiliki solusi");
+                System.out.println("Sistem persamaan linier tidak memiliki solusi");
                 return;
             }
         } else if (selectEliminasiGaussJordan.isSelected()){
@@ -183,8 +195,8 @@ public class SPLController {
             try {
                 solution = new Matriks(SPL.metodeGaussJordan(Mat));
             } catch (Exception e) {
-                alertMsg.setText("*Tidak ditemukan solusi menggunakan metode eliminasi Gauss-Jordan");
-                System.out.println("Tidak ditemukan solusi menggunakan metode eliminasi Gauss-Jordan");
+                alertMsg.setText("*Sistem persamaan linier tidak memiliki solusi");
+                System.out.println("Sistem persamaan linier tidak memiliki solusi");
                 return;
             }
         } else if (selectMatriksBalikan.isSelected()){
