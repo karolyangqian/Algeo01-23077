@@ -1,13 +1,8 @@
 package algeo;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 public class Main {
     public static void main(String[] args) {
         BicubicSplineInterpolation bsi = new BicubicSplineInterpolation();
@@ -19,15 +14,15 @@ public class Main {
 			System.out.println(e);
 			return;
 		}
-        BufferedImage newImg = bsi.resizeImage(img, 10, 1);
+        BufferedImage newImg = bsi.resizeImage(img, 5, 2);
         
-        // try {
-        //     File outputFile = new File("test/tes2.jpg");
-        //     ImageIO.write(newImg, "jpg", outputFile);
-		// }
-		// catch(IOException e) {
-		// 	System.out.println(e);
-		// }
+        try {
+            File outputFile = new File("test/out.png");
+            ImageIO.write(newImg, "png", outputFile);
+		}
+		catch(IOException e) {
+			System.out.println(e);
+		}
 
         // Linalg linalg = new Linalg();
         // BicubicSplineInterpolation bsi = new BicubicSplineInterpolation();

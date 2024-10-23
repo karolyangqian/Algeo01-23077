@@ -1,12 +1,6 @@
 package algeo;
 
-import javax.imageio.ImageIO;
-
-
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 
 public class BicubicSplineInterpolation {
 
@@ -40,17 +34,9 @@ public class BicubicSplineInterpolation {
         }
 
         Matriks newImageMatriksRed = this.imageInterpolate(imageMatriksRed, scale_x, scale_y);
-        // System.out.println("Red");
-        // newImageMatriksRed.printMatriks();
         Matriks newImageMatriksGreen = this.imageInterpolate(imageMatriksGreen, scale_x, scale_y);
-        // System.out.println("Green");
-        // newImageMatriksGreen.printMatriks();
         Matriks newImageMatriksBlue = this.imageInterpolate(imageMatriksBlue, scale_x, scale_y);
-        // System.out.println("Blue");
-        // newImageMatriksBlue.printMatriks();
         Matriks newImageMatriksAlpha = this.imageInterpolate(imageMatriksAlpha, scale_x, scale_y);
-        // System.out.println("Alpha");
-        // newImageMatriksAlpha.printMatriks();
 
 
         BufferedImage newImage = new BufferedImage(newImageMatriksRed.getCol(), newImageMatriksRed.getRow(), BufferedImage.TYPE_INT_ARGB);
@@ -61,18 +47,10 @@ public class BicubicSplineInterpolation {
                 int green = (int)newImageMatriksGreen.Mat[i][j];
                 int blue = (int)newImageMatriksBlue.Mat[i][j];
                 int rgb = (alpha << 24) | (red << 16) | (green << 8) | blue;
-                // System.out.println(rgb);
                 newImage.setRGB(j, i, rgb);
             }
         }
 
-        try {
-            File outputFile = new File("test/output.png");
-            ImageIO.write(newImage, "png", outputFile);
-		}
-		catch(IOException e) {
-			System.out.println(e);
-		}
         return newImage;
     }
 
