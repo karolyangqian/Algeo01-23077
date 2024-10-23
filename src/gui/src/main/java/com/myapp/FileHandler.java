@@ -1,6 +1,7 @@
-package algeo;
+package com.myapp;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -42,6 +43,14 @@ public class FileHandler {
         }
         catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void saveTextToFile(String content, File file) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(content);
+        } catch (IOException e) {
+            System.out.println("Error saving file: " + e.getMessage());
         }
     }
 }

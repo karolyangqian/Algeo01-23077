@@ -87,7 +87,7 @@
                                           <Insets top="10.0" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button mnemonicParsing="false" text="Export result" />
+                                    <Button mnemonicParsing="false" onAction="#exportFile" text="Export result" />
                                  </children>
                               </VBox>
                            </children>
