@@ -58,6 +58,11 @@ public class BicubicSplineController {
             return;
         }
 
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+
         fileChooser.setTitle("Save Text File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
@@ -78,6 +83,13 @@ public class BicubicSplineController {
      */
     @FXML
     private void chooseFile() throws IOException {
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+        fileChooser.setTitle("Open Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        
         inputFile = fileChooser.showOpenDialog(new Stage());
 
         if (inputFile == null) {

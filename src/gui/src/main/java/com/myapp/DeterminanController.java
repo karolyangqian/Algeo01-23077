@@ -12,10 +12,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 
 import javafx.stage.FileChooser;
 import java.util.Scanner;
@@ -66,6 +63,11 @@ public class DeterminanController {
 
         FileHandler fh = new FileHandler();
 
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+
         fileChooser.setTitle("Save Text File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
@@ -86,6 +88,13 @@ public class DeterminanController {
      */
     @FXML
     private void chooseFile() throws IOException {
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+        fileChooser.setTitle("Open Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        
         inputFile = fileChooser.showOpenDialog(new Stage());
         
         if (inputFile == null) {
