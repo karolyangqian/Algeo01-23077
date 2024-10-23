@@ -24,6 +24,16 @@ public class Linalg {
         return M;
     }
 
+    public Matriks bagiXMatriks(Matriks Mat, double x) {
+
+        Matriks M = new Matriks(Mat);
+        for (int i = 0; i < M.getRow(); i++) {
+            // M.printMatriks();
+            M = this.bagikanBaris(M, i, x);
+        }
+        return M;
+    }
+
     /**
      * Melakukan operasi perkalian matriks (instance * M2)
      * 

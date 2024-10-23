@@ -1,27 +1,54 @@
 package algeo;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.File;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 public class Main {
     public static void main(String[] args) {
-        Linalg linalg = new Linalg();
         BicubicSplineInterpolation bsi = new BicubicSplineInterpolation();
-        SistemPersamaanLinier SPL = new SistemPersamaanLinier();
-        double[][] A = {
-            {1, 2, 3, 4},
-            {5, 6, 7, 8},
-            {9, 10, 11, 12},
-            {13, 14, 15, 16}
-        };
-        double[][] cuy = {
-            {1, 1, 0},
-            {1, -1, 0},
-            {1, 1, 1},
-        };
-        Matriks M = new Matriks(A);
-        double res = bsi.BicubicSplineInterpolate(M, 0.5, 0.5);
-        Matriks X = linalg.inversMatriks(bsi.matriksX(), "adjoin");
-        // X.printMatriks();
-        // double det = linalg.determinanMatriks(bsi.matriksX(), "reduksi");
-        System.out.println(res);
+        BufferedImage img = null;
+        try {
+            File file = new File("src/gui/src/main/java/algeo/tes.jpg");
+            img = ImageIO.read(file);
+		} catch (IOException e) {
+			System.out.println(e);
+			return;
+		}
+        BufferedImage newImg = bsi.resizeImage(img, 10, 1);
+        
+        // try {
+        //     File outputFile = new File("test/tes2.jpg");
+        //     ImageIO.write(newImg, "jpg", outputFile);
+		// }
+		// catch(IOException e) {
+		// 	System.out.println(e);
+		// }
+
+        // Linalg linalg = new Linalg();
+        // BicubicSplineInterpolation bsi = new BicubicSplineInterpolation();
+        // SistemPersamaanLinier SPL = new SistemPersamaanLinier();
+        // double[][] A = {
+        //     {1, 2, 3, 4},
+        //     {5, 6, 7, 8},
+        //     {9, 10, 11, 12},
+        //     {13, 14, 15, 16}
+        // };
+        // double[][] cuy = {
+        //     {1, 1, 0},
+        //     {1, -1, 0},
+        //     {1, 1, 1},
+        // };
+        // Matriks M = new Matriks(A);
+        // double res = bsi.BicubicSplineInterpolate(M, 0.5, 0.5);
+        // Matriks X = linalg.inversMatriks(bsi.matriksX(), "adjoin");
+        // // X.printMatriks();
+        // // double det = linalg.determinanMatriks(bsi.matriksX(), "reduksi");
+        // System.out.println(res);
         // Matriks sol = SPL.metodeGauss(M);
         // sol.printMatriks();
         // double[][] A = {
