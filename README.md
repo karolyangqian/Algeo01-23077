@@ -19,9 +19,9 @@ java -classpath bin algeo/<NAMA_BYTECODE>
 ```
 
 # Cara Menjalankan GUI
-1. Jika Java Development Kit telah terinstall, lakukan *clone* repository lalu double click executable file `Algeo01-23077.jar` yang berada pada root directory, atau klik link berikut untuk melakukan proses [download](https://github.com/karolyangqian/Algeo01-23077/raw/refs/heads/main/Algeo01-23077.jar) file executable.
-
-2. 
+1. Pastikan Java Development Kit (JDK) telah terinstall.
+2. Lakukan *clone* repository atau klik link berikut untuk melakukan proses [download](https://github.com/karolyangqian/Algeo01-23077/raw/refs/heads/main/Algeo01-23077.jar) file executable `Algeo01-23077.jar`.
+3. _Double click_ file executable `Algeo01-23077.jar` untuk menjalankan GUI program.
 
 
 # Alternatif Cara Menjalankan GUI
