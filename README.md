@@ -1,6 +1,17 @@
-# Algeo01-23077
-Referensi README: https://github.com/jehna/readme-best-practices/blob/master/README-default.md
 
+
+# Algeo01-23077
+Albertus Christian Poandy | 13523077 </br>
+Grace Evelyn Simon | 13523087 </br>
+Karol Yangqian Poetracahaya | 13523093
+
+# Deskripsi Program
+Program ini merupakan aplikasi kalkulator matriks yang memiliki 7 menu utama, yakni perhitungan Sistem Persamaan Linier, Determinan, Matriks Balikan, Interpolasi Polinomial, Regresi Berganda, *Bicubic Spline Interpolation*, dan *Image Resizer*.
+# Cara Clone Repo
+
+```
+git clone https://github.com/karolyangqian/Algeo01-23077.git
+```
 # Cara Menjalankan Program
 ### Kompilasi
 Keterangan: jalankan perintah di bawah pada workspace directory "Algeo01-23077"
@@ -9,7 +20,7 @@ Output: bytecode yang disimpan di folder bin
 javac -d bin src/gui/src/main/java/algeo/*.java src/gui/src/main/java/algeo/Main.java
 ```
 
-Menjalankan bytecode dalam sebuah module (e.g. algeo)
+Menjalankan bytecode dalam sebuah module (e.g. algeo) </br>
 *Dilakukan untuk testing class implementation dengan driver main pada class itu sendiri.
 ```
 java -classpath bin <NAMA_MODULE>/<NAMA_BYTECODE>
@@ -20,8 +31,6 @@ java -classpath bin algeo/<NAMA_BYTECODE>
 
 # Cara Menjalankan GUI
 1. Jika Java Development Kit telah terinstall, lakukan *clone* repository lalu double click executable file `Algeo01-23077.jar` yang berada pada root directory, atau klik link berikut untuk melakukan proses [download](https://github.com/karolyangqian/Algeo01-23077/raw/refs/heads/main/Algeo01-23077.jar) file executable.
-
-2. 
 
 
 # Alternatif Cara Menjalankan GUI
@@ -40,3 +49,6 @@ Setelah melakukan setup Maven, ada 2 cara untuk menjalankan GUI
 1. Buka Maven explorer.
 2. Tekan gui -> Plugins -> javafx -> javafx:jlink
 3. Jalankan `.\src\gui\target\image\bin\launcher` pada terminal.
+
+</br></br>
+![alt text](icon.jpg)
