@@ -205,6 +205,7 @@ public class RegresiBergandaController {
 
         String xString = inputX.getText().replaceAll("\n", " ");
         String yString = inputY.getText().replaceAll("\n", " ");
+
         String[] xElements = xString.split("\\s+");
         String[] yElements = yString.split("\\s+");
         for (int i = 0; i < yElements.length; i++){
@@ -220,12 +221,18 @@ public class RegresiBergandaController {
         double[][] x = new double[mSampel][nPeubah];
         double[][] y = new double[mSampel][1];
 
-        for (int i = 0; i < mSampel; i++){
-            for (int j = 0; j < nPeubah; j++){
-                x[i][j] = Double.parseDouble(xElements[i * nPeubah + j]);
+        try {
+            for (int i = 0; i < mSampel; i++){
+                for (int j = 0; j < nPeubah; j++){
+                    x[i][j] = Double.parseDouble(xElements[i * nPeubah + j]);
+                }
+                y[i][0] = Double.parseDouble(yElements[i]);
             }
-            y[i][0] = Double.parseDouble(yElements[i]);
+        } catch (Exception e) {
+            alertMsgRegresi.setText("*Masukkan sampel yang valid");
+            return;
         }
+
 
         Matriks inputSampelX = new Matriks(x);
         Matriks inputSampelY = new Matriks(y);
@@ -309,14 +316,21 @@ public class RegresiBergandaController {
             }
             
             double[][] xTaksiran = new double[nPeubah][1];
+            
             String[] xTaksiranString = inputVariabelBebas.getText().split("\\s+");
+
             if (xTaksiranString.length != nPeubah){
                 alertMsgTaksiran.setText("*Jumlah variabel bebas tidak sesuai dengan jumlah peubah");
                 return;
             }
 
-            for (int i = 0; i < nPeubah; i++){
-                xTaksiran[i][0] = Double.parseDouble(xTaksiranString[i]);
+            try {
+                for (int i = 0; i < nPeubah; i++){
+                    xTaksiran[i][0] = Double.parseDouble(xTaksiranString[i]);
+                }
+            } catch (Exception e) {
+                alertMsgTaksiran.setText("*Masukkan nilai variabel bebas yang valid");
+                return;
             }
 
             Matriks taksiranX = new Matriks(xTaksiran);

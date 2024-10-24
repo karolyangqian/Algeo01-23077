@@ -110,11 +110,18 @@ public class ImageResizerController {
         resizedImageView.setImage(null);
         resizedImageView.setFitWidth(0);
         resizedImageView.setFitHeight(0);
-
+        
         BicubicSplineInterpolation bsi = new BicubicSplineInterpolation();
 
-        double scale_x = Double.parseDouble(scaleWidthInput.getText());
-        double scale_y = Double.parseDouble(scaleHeightInput.getText());
+        double scale_x;
+        double scale_y;
+        try {
+            scale_x = Double.parseDouble(scaleWidthInput.getText());
+            scale_y = Double.parseDouble(scaleHeightInput.getText());
+        } catch (NumberFormatException e) {
+            resizeAlertMsg.setText("*Skala harus berupa angka");
+            return;
+        }
 
         Task<Void> resizeTask = new Task<Void>() {
             @Override

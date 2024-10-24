@@ -144,10 +144,16 @@ public class DeterminanController {
             alertMsg.setText("*Masukkan baris/kolom dan matriks yang sesuai terlebih dahulu");
             return;
         }
+        int row, col;
+        try {
+            row = Integer.parseInt(barisInput.getText());
+            col = row;
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan baris dan kolom yang valid");
+            return;
+        }
 
         String matriksString = inputMatriks.getText().replaceAll("\n", " ");
-        int row = Integer.parseInt(barisInput.getText());
-        int col = row;
         String[] elements = matriksString.split("\\s+");
 
         if (elements.length != row * col){
@@ -157,10 +163,15 @@ public class DeterminanController {
 
         double[][] matriks = new double[row][col];
 
-        for (int i = 0; i < row; i++){
-            for (int j = 0; j < col; j++){
-                matriks[i][j] = Double.parseDouble(elements[i * col + j]);
+        try {
+            for (int i = 0; i < row; i++){
+                for (int j = 0; j < col; j++){
+                    matriks[i][j] = Double.parseDouble(elements[i * col + j]);
+                }
             }
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan elemen matriks yang valid");
+            return;
         }
 
         Matriks Mat = new Matriks(matriks);

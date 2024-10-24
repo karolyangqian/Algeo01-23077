@@ -152,10 +152,17 @@ public class SPLController {
             return;
         }
 
+        int row, col;
+        try {
+            row = Integer.parseInt(barisInput.getText());
+            col = Integer.parseInt(kolomInput.getText());
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan baris dan kolom yang valid");
+            return;
+        }
+
 
         String matriksString = inputMatriks.getText().replaceAll("\n", " ");
-        int row = Integer.parseInt(barisInput.getText());
-        int col = Integer.parseInt(kolomInput.getText());
         String[] elements = matriksString.split("\\s+");
 
 
@@ -166,10 +173,15 @@ public class SPLController {
 
         double[][] matriks = new double[row][col];
 
-        for (int i = 0; i < row; i++){
-            for (int j = 0; j < col; j++){
-                matriks[i][j] = Double.parseDouble(elements[i * col + j]);
+        try {
+            for (int i = 0; i < row; i++){
+                for (int j = 0; j < col; j++){
+                    matriks[i][j] = Double.parseDouble(elements[i * col + j]);
+                }
             }
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan elemen matriks yang valid");
+            return;
         }
 
         Matriks Mat = new Matriks(matriks);
