@@ -53,4 +53,4 @@ Setelah melakukan setup Maven, ada 2 cara untuk menjalankan GUI
 3. Jalankan `.\src\gui\target\image\bin\launcher` pada terminal.
 
 </br></br>
-![alt text](icon.jpg)
+![alt text](image.jpg)
