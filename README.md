@@ -9,15 +9,6 @@ Output: bytecode yang disimpan di folder bin
 javac -d bin src/gui/src/main/java/algeo/*.java src/gui/src/main/java/algeo/Main.java
 ```
 
-Menjalankan bytecode 
-```
-java -classpath bin <NAMA_BYTECODE>
-```
-```
-java -classpath bin Main
-
-```
-
 Menjalankan bytecode dalam sebuah module (e.g. algeo)
 *Dilakukan untuk testing class implementation dengan driver main pada class itu sendiri.
 ```
@@ -28,6 +19,10 @@ java -classpath bin algeo/<NAMA_BYTECODE>
 ```
 
 # Cara Menjalankan GUI
+Lakukan *clone* repository lalu double click executable file `Algeo01-23077.jar` yang berada pada root directory.
+
+
+# Alternatif Cara Menjalankan GUI
 GUI proyek ini di-*build* menggunakan Maven (sebuah *build tool* untuk JavaFX). Berikut adalah langkah-langkah untuk melakukan *setup* Maven.
 1. Pastikan Java Development Kit (JDK) sudah terinstall.
 2. Download zip binary Maven (version 3.9.9 saat proyek ini dibuat) untuk windows dari tautan https://maven.apache.org/download.cgi. 
