@@ -11,6 +11,7 @@ import java.io.File;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.concurrent.*;
 
 public class ImageResizerController {
 
@@ -30,6 +31,8 @@ public class ImageResizerController {
     TextField scaleWidthInput = new TextField();
     @FXML
     TextField scaleHeightInput = new TextField();
+    @FXML
+    ProgressBar resizeProgressBar = new ProgressBar();
 
     private BufferedImage oldImage;
     private BufferedImage resizedImage;
@@ -47,6 +50,7 @@ public class ImageResizerController {
         newSizeText.setText("");
         imageLoaded = false;
         imageResized = false;
+        resizeProgressBar.setVisible(false);
     }
 
     /**
@@ -103,19 +107,49 @@ public class ImageResizerController {
 
         resizeAlertMsg.setText("");
         exportAlertMsg.setText("");
+        resizedImageView.setImage(null);
+        resizedImageView.setFitWidth(0);
+        resizedImageView.setFitHeight(0);
 
         BicubicSplineInterpolation bsi = new BicubicSplineInterpolation();
 
         double scale_x = Double.parseDouble(scaleWidthInput.getText());
         double scale_y = Double.parseDouble(scaleHeightInput.getText());
 
-        BufferedImage newImage = bsi.resizeImage(oldImage, scale_x, scale_y);
+        Task<Void> resizeTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                BufferedImage newImage = bsi.resizeImage(oldImage, scale_x, scale_y);
+        
+                displayResizedImage(SwingFXUtils.toFXImage(newImage, null), scale_x*oldImageView.getFitWidth(), scale_y*oldImageView.getFitHeight());
+                newSizeText.setText("Ukuran baru: " + newImage.getWidth() + " x " + newImage.getHeight());
+                resizeProgressBar.setVisible(false);
+                resizedImage = newImage;
+                imageResized = true;
+                return null;
+            }
+        };
 
-        displayResizedImage(SwingFXUtils.toFXImage(newImage, null), scale_x*oldImageView.getFitWidth(), scale_y*oldImageView.getFitHeight());
-        newSizeText.setText("Ukuran baru: " + newImage.getWidth() + " x " + newImage.getHeight());
-        resizedImage = newImage;
+        Task<Void> updateProgressTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                while (!resizeTask.isDone()) {
+                    // updateProgress(BicubicSplineInterpolation.getResizeProgress(), 1);
+                    resizeProgressBar.setProgress(BicubicSplineInterpolation.getResizeProgress());
+                }
+                return null;
+            }
+        };
 
-        imageResized = true;
+        resizeProgressBar.setProgress(0);
+        resizeProgressBar.setVisible(true);
+        // resizeProgressBar.progressProperty().bind(resizeTask.progressProperty());
+
+        new Thread(resizeTask).start();
+        new Thread(updateProgressTask).start();
+
+
+        // imageResized = true;
     }
 
     @FXML
