@@ -18,8 +18,8 @@ public class BicubicSplineInterpolation {
         double[] a = this.findAMatriks(fValue);
         double res = 0;
         int idx = 0;
-        for (int i = 0; i < 4; i++){
-            for (int j = 0; j < 4; j++){
+        for (int j = 0; j < 4; j++){
+            for (int i = 0; i < 4; i++){
                 res += a[idx]*Math.pow(x, i)*Math.pow(y, j);
                 idx++;
             }
