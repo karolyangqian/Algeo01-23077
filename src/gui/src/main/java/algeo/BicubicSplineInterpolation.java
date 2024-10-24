@@ -72,6 +72,40 @@ public class BicubicSplineInterpolation {
         return newImage;
     }
 
+    private double[][][] preprocessAMatriks(Matriks imageMatriks, Matriks XD){
+        double [][][] precalculatedA = new double[imageMatriks.getRow()][imageMatriks.getCol()][16];
+        for (int i = 0; i < imageMatriks.getRow(); i++){
+            for (int j = 0; j < imageMatriks.getCol(); j++){
+                Matriks fValue = new Matriks(16, 1);
+                for (int l = i; l < i + 4; l++){
+                    for (int k = j; k < j + 4; k++){
+                        // jika di luar gambar, ambil nilai paling ujung
+                        if (k >= imageMatriks.getCol() && l >= imageMatriks.getRow()){
+                            fValue.Mat[(k-j)*4 + (l-i)][0] = imageMatriks.Mat[imageMatriks.getRow()-1][imageMatriks.getCol()-1];
+                        }
+                        else if (k >= imageMatriks.getCol()){
+                            fValue.Mat[(k-j)*4 + (l-i)][0] = imageMatriks.Mat[l][imageMatriks.getCol()-1];
+                        }
+                        else if (l >= imageMatriks.getRow()){
+                            fValue.Mat[(k-j)*4 + (l-i)][0] = imageMatriks.Mat[imageMatriks.getRow()-1][k];
+                        }
+
+                        // jika di dalam gambar, ambil nilai sesuai koordinat
+                        else{
+                            fValue.Mat[(k-j)*4 + (l-i)][0] = imageMatriks.Mat[l][k];
+                        }
+                    }
+                }
+                Matriks a = this.findImprovedAMatrix(fValue, XD);
+                for (int k = 0; k < 16; k++){
+                    precalculatedA[i][j][k] = a.Mat[k][0];
+                }
+            }
+        } 
+        return precalculatedA;
+        
+    }
+
     /**
      * Mencari nilai f pada titik (x, y) dengan interpolasi bicubic spline
      * 
@@ -84,38 +118,13 @@ public class BicubicSplineInterpolation {
      * @return nilai f pada titik (x, y)
      */
 
-    private int findFValue(Matriks imageMatriks, int row, int col, double x, double y, Matriks XD){
-        Matriks fValue = new Matriks(16,1);
-        int idx = 0;
-        for (int j = col; j < col + 4; j++){
-            for (int i = row; i < row + 4; i++){
-                // jika di luar gambar, ambil nilai paling ujung
-                if (j >= imageMatriks.getCol() && i >= imageMatriks.getRow()){
-                    fValue.Mat[idx][0] = imageMatriks.Mat[imageMatriks.getRow()-1][imageMatriks.getCol()-1];
-                }
-                else if (j >= imageMatriks.getCol()){
-                    fValue.Mat[idx][0] = imageMatriks.Mat[i][imageMatriks.getCol()-1];
-                }
-                else if (i >= imageMatriks.getRow()){
-                    fValue.Mat[idx][0] = imageMatriks.Mat[imageMatriks.getRow()-1][j];
-                }
-
-                // jika di dalam gambar, ambil nilai sesuai koordinat
-                else{
-                    fValue.Mat[idx][0] = imageMatriks.Mat[i][j];
-                }
-                idx++;
-            }
-        }
-        
-        Matriks a = this.findImprovedAMatrix(fValue, XD);
-
+    private int findFValue(Matriks imageMatriks, int row, int col, double x, double y, Matriks XD, double[][][] a){
         // hitung nilai f pada titik (x, y)
         double res = 0;
-        idx = 0;
+        int idx = 0;
         for (int j = 0; j < 4; j++){
             for (int i = 0; i < 4; i++){
-                res += a.Mat[idx][0]*Math.pow(x, i)*Math.pow(y, j);
+                res += a[row][col][idx]*Math.pow(x, i)*Math.pow(y, j);
                 idx++;
             }
         }
@@ -151,15 +160,22 @@ public class BicubicSplineInterpolation {
         
         // melakukan precomputing untuk mempercepat proses interpolasi
         Matriks XD = linalg.perkalianMatriks(inversX, D);
+
+        // melakukan precomputing nilai a untuk setiap blok 4x4
+        // complexity: O(n*m*16*16)
+        // butuh waktu sekitar 25 detik untuk gambar 1000x1000
+        double [][][] a = this.preprocessAMatriks(imageMatriks, XD);
         
         // mencari nilai interpolasi pada setiap titik
+        // complexity: O(n*m*scale_x*scale_y*16)
+        // butuh waktu sekitar 6.5 detik untuk gambar 1000x1000 dengan scale_x = 2, scale_y = 2
         for (int i = 0; i < newheight; i++){
             for (int j = 0; j < newwidth; j++){
                 int actual_i = (int)(i*ratio_height);
                 int actual_j = (int)(j*ratio_width);
                 double x = (i*ratio_height) - actual_i;
                 double y = (j*ratio_width) - actual_j;
-                expandedMatriks.Mat[i][j] = this.findFValue(imageMatriks, actual_i, actual_j, x, y, XD);
+                expandedMatriks.Mat[i][j] = this.findFValue(imageMatriks, actual_i, actual_j, x, y, XD, a);
             }
         }
         
