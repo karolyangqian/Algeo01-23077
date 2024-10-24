@@ -80,7 +80,25 @@ public class BicubicSplineInterpolation {
                 for (int l = i; l < i + 4; l++){
                     for (int k = j; k < j + 4; k++){
                         // jika di luar gambar, ambil nilai paling ujung
-                        if (k >= imageMatriks.getCol() && l >= imageMatriks.getRow()){
+                        if (j == 0 || i == 0){
+                            if (j == 0){
+                                if (l >= imageMatriks.getRow()){
+                                    fValue.Mat[(k-j)*4 + (l-i)][0] = imageMatriks.Mat[imageMatriks.getRow()-1][0];
+                                }
+                                else{
+                                    fValue.Mat[(k-j)*4 + (l-i)][0] = imageMatriks.Mat[l][0];
+                                }
+                            }
+                            else{
+                                if (k >= imageMatriks.getCol()){
+                                    fValue.Mat[(k-j)*4 + (l-i)][0] = imageMatriks.Mat[0][imageMatriks.getCol()-1];
+                                }
+                                else{
+                                    fValue.Mat[(k-j)*4 + (l-i)][0] = imageMatriks.Mat[0][k];
+                                }
+                            }
+                        }
+                        else if (k >= imageMatriks.getCol() && l >= imageMatriks.getRow()){
                             fValue.Mat[(k-j)*4 + (l-i)][0] = imageMatriks.Mat[imageMatriks.getRow()-1][imageMatriks.getCol()-1];
                         }
                         else if (k >= imageMatriks.getCol()){
