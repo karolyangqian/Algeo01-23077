@@ -145,15 +145,28 @@ public class BicubicSplineController {
         }
 
         double[][] konfigurasi = new double[4][4];
-        for (int i = 0; i < 4; i++){
-            for (int j = 0; j < 4; j++){
-                konfigurasi[i][j] = Double.parseDouble(elements[i * 4 + j]);
+
+        try {
+            for (int i = 0; i < 4; i++){
+                for (int j = 0; j < 4; j++){
+                    konfigurasi[i][j] = Double.parseDouble(elements[i * 4 + j]);
+                }
             }
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan konfigurasi yang valid");
+            return;
         }
 
         Matriks fValue = new Matriks(konfigurasi);
-        double x = Double.parseDouble(inputXBebas.getText());
-        double y = Double.parseDouble(inputYBebas.getText());
+
+        double x, y;
+        try {
+            x = Double.parseDouble(inputXBebas.getText());
+            y = Double.parseDouble(inputYBebas.getText());
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan nilai x dan y bebas yang valid");
+            return;
+        }
 
         // ----------------------- INTERPOLATE -----------------------
 

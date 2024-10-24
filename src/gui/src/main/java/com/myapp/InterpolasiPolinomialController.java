@@ -146,9 +146,17 @@ public class InterpolasiPolinomialController {
             return;
         }
 
+        int row, col;
+
+        try {
+            row = Integer.parseInt(jumlahTitikInput.getText());
+            col = 2;
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan jumlah titik yang valid");
+            return;
+        }
+        
         String titikString = inputTitikList.getText().replaceAll("\n", " ");
-        int row = Integer.parseInt(jumlahTitikInput.getText());
-        int col = 2;
         String[] elements = titikString.split("\\s+");
 
         if (elements.length != row * col){
@@ -157,21 +165,27 @@ public class InterpolasiPolinomialController {
         }
 
         double[][] matriks = new double[row][col];
-        xmin = Double.parseDouble(elements[0]);
-        xmax = Double.parseDouble(elements[0]);
 
-        for (int i = 0; i < row; i++){
-            for (int j = 0; j < col; j++){
-                matriks[i][j] = Double.parseDouble(elements[i * col + j]);
-                if (j == 0) {
-                    if (matriks[i][j] < xmin) {
-                        xmin = matriks[i][j];
-                    }
-                    if (matriks[i][j] > xmax) {
-                        xmax = matriks[i][j];
+        try {
+            xmin = Double.parseDouble(elements[0]);
+            xmax = Double.parseDouble(elements[0]);
+    
+            for (int i = 0; i < row; i++){
+                for (int j = 0; j < col; j++){
+                    matriks[i][j] = Double.parseDouble(elements[i * col + j]);
+                    if (j == 0) {
+                        if (matriks[i][j] < xmin) {
+                            xmin = matriks[i][j];
+                        }
+                        if (matriks[i][j] > xmax) {
+                            xmax = matriks[i][j];
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan titik yang valid");
+            return;
         }
 
         Matriks Points = new Matriks(matriks);
@@ -276,13 +290,22 @@ public class InterpolasiPolinomialController {
             alertMsg.setText("*Masukkan nilai x terlebih dahulu");
             return;
         }
+        
+        double x;
 
-        if (Double.parseDouble(inputX.getText()) < xmin || Double.parseDouble(inputX.getText()) > xmax) {
+        try {
+            x = Double.parseDouble(inputX.getText());
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan nilai x yang valid");
+            return;
+        }
+
+        if (x < xmin || x > xmax) {
             alertMsg.setText(String.format("*Nilai x diluar range titik interpolasi [%.2f, %.2f]", xmin, xmax));
             return;
         }
 
-        double x = Double.parseDouble(inputX.getText());
+
 
         // ----------------- HITUNG NILAI FUNGSI -----------------
         double result = polinomial.calculate(x);
