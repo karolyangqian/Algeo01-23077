@@ -3,6 +3,10 @@ package algeo;
 import java.awt.image.BufferedImage;
 
 public class BicubicSplineInterpolation {
+
+    private static double resizeProgress = 0.0;
+    private final double resizeProgressIncrement = 0.1;
+
     /**
      * Menghasilkan interpolasi bicubic spline dari nilai-nilai f pada titik (x, y)
      * 
@@ -32,6 +36,7 @@ public class BicubicSplineInterpolation {
      * @return gambar yang telah diresize
      */
     public BufferedImage resizeImage(BufferedImage image, double scale_x, double scale_y){
+        setResizeProgress(0);
         int width = image.getWidth();
         int height = image.getHeight();
 
@@ -52,9 +57,13 @@ public class BicubicSplineInterpolation {
 
         // lakukan interpolasi untuk setiap warna
         Matriks newImageMatriksRed = this.imageInterpolate(imageMatriksRed, scale_x, scale_y);
+        // setResizeProgress(getResizeProgress() + resizeProgressIncrement);
         Matriks newImageMatriksGreen = this.imageInterpolate(imageMatriksGreen, scale_x, scale_y);
+        // setResizeProgress(getResizeProgress() + resizeProgressIncrement);
         Matriks newImageMatriksBlue = this.imageInterpolate(imageMatriksBlue, scale_x, scale_y);
+        // setResizeProgress(getResizeProgress() + resizeProgressIncrement);
         Matriks newImageMatriksAlpha = this.imageInterpolate(imageMatriksAlpha, scale_x, scale_y);
+        // setResizeProgress(getResizeProgress() + resizeProgressIncrement);
 
         BufferedImage newImage = new BufferedImage(newImageMatriksRed.getCol(), newImageMatriksRed.getRow(), BufferedImage.TYPE_INT_ARGB);
 
@@ -67,7 +76,11 @@ public class BicubicSplineInterpolation {
                 int rgb = (alpha << 24) | (red << 16) | (green << 8) | blue;
                 newImage.setRGB(j, i, rgb);
             }
+            setResizeProgress(getResizeProgress() + 0.2/(double)newImageMatriksRed.getRow());
         }
+
+        setResizeProgress(1.0);
+
 
         return newImage;
     }
@@ -75,6 +88,7 @@ public class BicubicSplineInterpolation {
     private double[][][] preprocessAMatriks(Matriks imageMatriks, Matriks XD){
         double [][][] precalculatedA = new double[imageMatriks.getRow()][imageMatriks.getCol()][16];
         for (int i = 0; i < imageMatriks.getRow(); i++){
+            setResizeProgress(resizeProgress + 0.1/(double)imageMatriks.getRow());
             for (int j = 0; j < imageMatriks.getCol(); j++){
                 Matriks fValue = new Matriks(16, 1);
                 for (int l = i; l < i + 4; l++){
@@ -183,6 +197,7 @@ public class BicubicSplineInterpolation {
         // complexity: O(n*m*16*16)
         // butuh waktu sekitar 25 detik untuk gambar 1000x1000
         double [][][] a = this.preprocessAMatriks(imageMatriks, XD);
+        // setResizeProgress(getResizeProgress() + resizeProgressIncrement);
         
         // mencari nilai interpolasi pada setiap titik
         // complexity: O(n*m*scale_x*scale_y*16)
@@ -195,8 +210,9 @@ public class BicubicSplineInterpolation {
                 double y = (j*ratio_width) - actual_j;
                 expandedMatriks.Mat[i][j] = this.findFValue(imageMatriks, actual_i, actual_j, x, y, XD, a);
             }
+            setResizeProgress(resizeProgress + 0.1/(double)newheight);
         }
-        
+        // setResizeProgress(getResizeProgress() + resizeProgressIncrement);
         return expandedMatriks;
     }
 
@@ -381,5 +397,23 @@ public class BicubicSplineInterpolation {
         }
 
         return D;
+    }
+
+    /**
+     * Mengembalikan nilai progress resize
+     * 
+     * @return nilai progress resize
+     */
+    public static double getResizeProgress(){
+        return resizeProgress;
+    }
+
+    /**
+     * Mengeset nilai progress resize
+     * 
+     * @param progress nilai progress resize
+     */
+    public static void setResizeProgress(double progress){
+        resizeProgress = progress;
     }
 }
