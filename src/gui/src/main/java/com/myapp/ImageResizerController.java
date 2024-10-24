@@ -67,7 +67,7 @@ public class ImageResizerController {
         }
         fileChooser.setTitle("Open Image File");
         fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("PNG Files", "*.png")
+            new FileChooser.ExtensionFilter("All Image Files", "*.png", "*.jpg", "*.jpeg")
             );
 
         File file = fileChooser.showOpenDialog(new Stage());

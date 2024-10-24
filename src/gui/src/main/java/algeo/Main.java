@@ -5,24 +5,33 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 public class Main {
     public static void main(String[] args) {
-        BicubicSplineInterpolation bsi = new BicubicSplineInterpolation();
-        BufferedImage img = null;
-        try {
-            File file = new File("src/gui/src/main/java/algeo/tes.jpg");
-            img = ImageIO.read(file);
-		} catch (IOException e) {
-			System.out.println(e);
-			return;
-		}
-        BufferedImage newImg = bsi.resizeImage(img, 5, 2);
+        long operations = 0;
+        long startTime = System.nanoTime();
+        long endTime = startTime + 1000000000L; // 1 second in nanoseconds
+
+        while (System.nanoTime() < endTime) {
+            operations++;
+        }
+
+        System.out.println("Operations in 1 second: " + operations);
+        // BicubicSplineInterpolation bsi = new BicubicSplineInterpolation();
+        // BufferedImage img = null;
+        // try {
+        //     File file = new File("src/gui/src/main/java/algeo/tes.jpg");
+        //     img = ImageIO.read(file);
+		// } catch (IOException e) {
+		// 	System.out.println(e);
+		// 	return;
+		// }
+        // BufferedImage newImg = bsi.resizeImage(img, 5, 2);
         
-        try {
-            File outputFile = new File("test/out.png");
-            ImageIO.write(newImg, "png", outputFile);
-		}
-		catch(IOException e) {
-			System.out.println(e);
-		}
+        // try {
+        //     File outputFile = new File("test/out.png");
+        //     ImageIO.write(newImg, "png", outputFile);
+		// }
+		// catch(IOException e) {
+		// 	System.out.println(e);
+		// }
 
         // Linalg linalg = new Linalg();
         // BicubicSplineInterpolation bsi = new BicubicSplineInterpolation();
