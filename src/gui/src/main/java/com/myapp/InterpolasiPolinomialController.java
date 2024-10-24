@@ -1,17 +1,16 @@
 package com.myapp;
 
+import algeo.*;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.*;
-import algeo.*;
+import javafx.stage.Stage;
+import java.util.Scanner;
+import java.io.File;
+import javafx.stage.FileChooser;
 
 public class InterpolasiPolinomialController {
-
-    private Polinomial polinomial = new Polinomial();
-    private boolean interpolated;
-    private double xmin;
-    private double xmax;
 
     @FXML
     TextField jumlahTitikInput = new TextField();
@@ -29,10 +28,96 @@ public class InterpolasiPolinomialController {
     Button hitungFungsiButton = new Button();
     @FXML
     TextFlow fungsiTextFlow = new TextFlow();
+    
+    private Polinomial polinomial = new Polinomial();
+    private boolean interpolated;
+    private boolean calculated;
+    private double xmin;
+    private double xmax;
+    private File inputFile;
+    private File outputFile;
+    private Scanner scanner;
+    FileChooser fileChooser = new FileChooser();
+    private String outputPolinomString;
+    private String outputFungsiString;
 
     @FXML
     public void initialize() {
         interpolated = false;
+        calculated = false;
+    }
+
+    /**
+    * Export text file pada lokasi sesuai input pengguna
+    * @throws IOException
+    */
+    @FXML
+    private void exportFile() throws IOException {
+        FileHandler fh = new FileHandler();
+        if (!(interpolated && calculated)) {
+            alertMsg.setText("*Lakukan interpolasi dan hitung nilai terikatnya terlebih dahulu");
+            return;
+        }
+
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+
+        fileChooser.setTitle("Save Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        outputFile = fileChooser.showSaveDialog(new Stage());
+
+        if (outputFile == null) {
+            return;
+        }
+
+        alertMsg.setText("");
+
+        String out = String.join("", outputPolinomString, "\n\n", outputFungsiString);
+
+        fh.saveTextToFile(out, outputFile);
+    }
+
+    /**
+     * Buka file input interpolasi dan memasukkan ke text field dan text area
+     * @throws IOException
+     */
+    @FXML
+    private void chooseFile() throws IOException {
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+        fileChooser.setTitle("Open Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        
+        inputFile = fileChooser.showOpenDialog(new Stage());
+        
+        if (inputFile == null) {
+            return;
+        }
+        
+        alertMsg.setText("");
+        
+        jumlahTitikInput.clear();
+        inputTitikList.clear();
+        try {
+            scanner = new Scanner(inputFile);
+            String nString = scanner.nextLine();
+            jumlahTitikInput.setText(nString);
+            int n = Integer.parseInt(nString);
+            for (int i = 0; i < n; i++) {
+                inputTitikList.appendText(scanner.nextLine() + "\n");
+            }
+            String x = scanner.nextLine();
+            inputX.setText(x);
+            scanner.close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            alertMsg.setText("*File input tidak valid");
+        }
     }
     
     /**
@@ -49,22 +134,30 @@ public class InterpolasiPolinomialController {
      */
     @FXML
     private void interpolasiPolinomial() {
-        // ----------------- CLEAR OUTPUT SOLUSI BALIKAN DI GUI -----------------
-        
+        // ----------------- CLEAR ALERT DAN OUTPUT SOLUSI BALIKAN DI GUI -----------------
+        alertMsg.setText("");
         polinomTextFlow.getChildren().clear();
 
 
         // ----------------- VALIDASI INPUT -----------------
 
-        String titikString = inputTitikList.getText().replaceAll("\n", " ");
-        int row = Integer.parseInt(jumlahTitikInput.getText());
-        int col = 2;
-        String[] elements = titikString.split("\\s+");
-
-        if (titikString.isBlank()){
-            alertMsg.setText("*Masukkan titik terlebih dahulu");
+        if (jumlahTitikInput.getText().isBlank() || inputTitikList.getText().isBlank()){
+            alertMsg.setText("*Masukkan jumlah titik dan sampel titik yang sesuai terlebih dahulu");
             return;
         }
+
+        int row, col;
+
+        try {
+            row = Integer.parseInt(jumlahTitikInput.getText());
+            col = 2;
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan jumlah titik yang valid");
+            return;
+        }
+        
+        String titikString = inputTitikList.getText().replaceAll("\n", " ");
+        String[] elements = titikString.split("\\s+");
 
         if (elements.length != row * col){
             alertMsg.setText("*Jumlah titik tidak sesuai dengan yang diinputkan");
@@ -72,21 +165,27 @@ public class InterpolasiPolinomialController {
         }
 
         double[][] matriks = new double[row][col];
-        xmin = Double.parseDouble(elements[0]);
-        xmax = Double.parseDouble(elements[0]);
 
-        for (int i = 0; i < row; i++){
-            for (int j = 0; j < col; j++){
-                matriks[i][j] = Double.parseDouble(elements[i * col + j]);
-                if (j == 0) {
-                    if (matriks[i][j] < xmin) {
-                        xmin = matriks[i][j];
-                    }
-                    if (matriks[i][j] > xmax) {
-                        xmax = matriks[i][j];
+        try {
+            xmin = Double.parseDouble(elements[0]);
+            xmax = Double.parseDouble(elements[0]);
+    
+            for (int i = 0; i < row; i++){
+                for (int j = 0; j < col; j++){
+                    matriks[i][j] = Double.parseDouble(elements[i * col + j]);
+                    if (j == 0) {
+                        if (matriks[i][j] < xmin) {
+                            xmin = matriks[i][j];
+                        }
+                        if (matriks[i][j] > xmax) {
+                            xmax = matriks[i][j];
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan titik yang valid");
+            return;
         }
 
         Matriks Points = new Matriks(matriks);
@@ -94,12 +193,17 @@ public class InterpolasiPolinomialController {
         Points.printMatriks();
         System.out.println();
         
-        alertMsg.setText("");
 
 
         // ----------------- INTERPOLASI POLINOMIAL -----------------
-
-        polinomial.interpolate(Points);
+        try {
+            polinomial.interpolate(Points);
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            alertMsg.setText("*Polinomial tidak dapat diinterpolasi");
+            return;
+        }
+        
         System.out.println("Polinomial:");
         polinomial.printCoefficients();
 
@@ -112,6 +216,8 @@ public class InterpolasiPolinomialController {
         text = new Text("P(x) = ");
         polinomTextFlow.getChildren().add(text);
 
+        boolean printed = false;
+
         if (polinomial.getCoefficients().length == 1) {
             text = new Text(String.format("%.2f", polinomial.getCoefficients()[0]));
             polinomTextFlow.getChildren().add(text);
@@ -122,39 +228,46 @@ public class InterpolasiPolinomialController {
         if (polinomial.getCoefficients()[0] != 0) {
             text = new Text(String.format("%.2f", polinomial.getCoefficients()[0]));
             polinomTextFlow.getChildren().add(text);
+            printed = true;
         }
 
         for (int i = 1; i < polinomial.getCoefficients().length; i++) {
             if (polinomial.getCoefficients()[i] == 0) {
                 continue;
-            } else {
-                if (polinomial.getCoefficients()[i-1] != 0 || polinomial.getCoefficients()[i-1] < 0) {
-                    if (polinomial.getCoefficients()[i-1] > 0) {
-                        Text plusText = new Text(" + ");
-                        polinomTextFlow.getChildren().add(plusText);
-                    } else {
-                        Text minusText = new Text(" - ");
-                        polinomTextFlow.getChildren().add(minusText);
-                    }
-                }
+            } 
 
-                if (Math.abs(polinomial.getCoefficients()[i]) != 1) {
-                    text = new Text(String.format("%.2f", Math.abs(polinomial.getCoefficients()[i])));
-                    polinomTextFlow.getChildren().add(text);
-                }
-
-                text = new Text("x");
-                text.setStyle("-fx-font-size: 10pt;");
-                polinomTextFlow.getChildren().add(text);
-
-                // Supercript
-                Text baseText = new Text(Integer.toString(i));
-                baseText.setStyle("-fx-font-size: 8pt;");
-                baseText.setTranslateY(-5);
-                polinomTextFlow.getChildren().add(baseText);
+            if (polinomial.getCoefficients()[i] > 0 && printed) {
+                Text plusText = new Text(" + ");
+                polinomTextFlow.getChildren().add(plusText);
+            } else if (polinomial.getCoefficients()[i] < 0) {
+                Text minusText = new Text(" - ");
+                polinomTextFlow.getChildren().add(minusText);
             }
+        
+
+            if (Math.abs(polinomial.getCoefficients()[i]) != 1) {
+                text = new Text(String.format("%.2f", Math.abs(polinomial.getCoefficients()[i])));
+                polinomTextFlow.getChildren().add(text);
+            }
+
+            text = new Text("x");
+            text.setStyle("-fx-font-size: 10pt;");
+            polinomTextFlow.getChildren().add(text);
+
+            // Supercript
+            Text baseText = new Text(Integer.toString(i));
+            baseText.setStyle("-fx-font-size: 8pt;");
+            baseText.setTranslateY(-5);
+            polinomTextFlow.getChildren().add(baseText);
+            printed = true;
         }
+
+        TextFlowHandler tfh = new TextFlowHandler();
+
+        outputPolinomString = tfh.textFlowToString(polinomTextFlow);
+
         interpolated = true;
+        calculated = false;
     }
 
     /**
@@ -162,9 +275,9 @@ public class InterpolasiPolinomialController {
      */
     @FXML
     private void hitungFungsi() {
-        // ----------------- CLEAR OUTPUT SOLUSI BALIKAN DI GUI -----------------
+        // ----------------- CLEAR ALERT DAN OUTPUT SOLUSI BALIKAN DI GUI -----------------
+        alertMsg.setText("");
         fungsiTextFlow.getChildren().clear();
-
 
         // ----------------- VALIDASI INPUT -----------------
 
@@ -177,19 +290,33 @@ public class InterpolasiPolinomialController {
             alertMsg.setText("*Masukkan nilai x terlebih dahulu");
             return;
         }
+        
+        double x;
 
-        if (Double.parseDouble(inputX.getText()) < xmin || Double.parseDouble(inputX.getText()) > xmax) {
-            alertMsg.setText("*Nilai x diluar range titik interpolasi");
+        try {
+            x = Double.parseDouble(inputX.getText());
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan nilai x yang valid");
             return;
         }
 
-        double x = Double.parseDouble(inputX.getText());
+        if (x < xmin || x > xmax) {
+            alertMsg.setText(String.format("*Nilai x diluar range titik interpolasi [%.2f, %.2f]", xmin, xmax));
+            return;
+        }
+
+
 
         // ----------------- HITUNG NILAI FUNGSI -----------------
         double result = polinomial.calculate(x);
 
         // ----------------- OUTPUT NILAI FUNGSI -----------------
-        Text text = new Text("P(" + x + ") = " + String.format("%.2f", result));
+        Text text = new Text("P(" + x + ") = " + String.format("%.4f", result));
         fungsiTextFlow.getChildren().add(text);
+
+        TextFlowHandler tfh = new TextFlowHandler();
+        outputFungsiString = tfh.textFlowToString(fungsiTextFlow);
+
+        calculated = true;
     }
 }

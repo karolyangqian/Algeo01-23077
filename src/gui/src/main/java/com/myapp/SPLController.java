@@ -1,5 +1,6 @@
 package com.myapp;
 
+import algeo.*;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
@@ -8,7 +9,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.TextFlow;
 import javafx.scene.text.Text;
-import algeo.*;
+import java.io.File;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import java.util.Scanner;
 
 public class SPLController {
     
@@ -33,12 +37,92 @@ public class SPLController {
     @FXML
     TextField kolomInput = new TextField();
     
+    private File inputFile;
+    private File outputFile;
+    private Scanner scanner;
+    FileChooser fileChooser = new FileChooser();
+    private String outputString;
+    private boolean splSolved;
+    
     @FXML
     public void initialize() {
         selectEliminasiGauss.setToggleGroup(MetodeSPL);
         selectEliminasiGaussJordan.setToggleGroup(MetodeSPL);
         selectMatriksBalikan.setToggleGroup(MetodeSPL);
         selectKaidahCramer.setToggleGroup(MetodeSPL);
+        splSolved = false;
+    }
+
+    /**
+    * Export text file pada lokasi sesuai input pengguna
+    * @throws IOException
+    */
+    @FXML
+    private void exportFile() throws IOException {
+        FileHandler fh = new FileHandler();
+        if (!splSolved) {
+            alertMsg.setText("*Hitung solusi SPL terlebih dahulu");
+            return;
+        }
+
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+
+        fileChooser.setTitle("Save Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        outputFile = fileChooser.showSaveDialog(new Stage());
+
+        if (outputFile == null) {
+            return;
+        }
+
+        alertMsg.setText("");
+
+        fh.saveTextToFile(outputString, outputFile);
+    }
+
+    /**
+     * Buka file matriks SPL dan memasukkan ke text field dan text area
+     * @throws IOException
+     */
+    @FXML
+    private void chooseFile() throws IOException {
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+        fileChooser.setTitle("Open Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        inputFile = fileChooser.showOpenDialog(new Stage());
+        
+        if (inputFile == null) {
+            return;
+        }
+        
+        alertMsg.setText("");
+
+        kolomInput.clear();
+        barisInput.clear();
+        inputMatriks.clear();
+        try {
+            scanner = new Scanner(inputFile);
+            String mn = scanner.nextLine();
+            String[] mnSplit = mn.split("\\s+");
+            barisInput.setText(mnSplit[0]);
+            kolomInput.setText(mnSplit[1]);
+            int m = Integer.parseInt(mnSplit[0]);
+            for (int i = 0; i < m; i++) {
+                inputMatriks.appendText(scanner.nextLine() + "\n");
+            }
+            scanner.close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            alertMsg.setText("*File input tidak valid");
+        }
     }
     
     /**
@@ -56,15 +140,31 @@ public class SPLController {
      */
     @FXML
     private void solveSPL() throws IOException {
-        // ----------------- CLEAR OUTPUT SOLUSI SPL DI GUI -----------------
+        // ----------------- CLEAR ALERT DAN OUTPUT SOLUSI SPL DI GUI -----------------
+        alertMsg.setText("");
         solutionTextFlow.getChildren().clear();
 
         // ----------------- INPUT MATRIKS SPL -----------------
         SistemPersamaanLinier SPL = new SistemPersamaanLinier();
+        
+        if (barisInput.getText().isBlank() || kolomInput.getText().isBlank() || inputMatriks.getText().isBlank()){
+            alertMsg.setText("*Masukkan baris, kolom, dan matriks yang sesuai terlebih dahulu");
+            return;
+        }
+
+        int row, col;
+        try {
+            row = Integer.parseInt(barisInput.getText());
+            col = Integer.parseInt(kolomInput.getText());
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan baris dan kolom yang valid");
+            return;
+        }
+
+
         String matriksString = inputMatriks.getText().replaceAll("\n", " ");
-        int row = Integer.parseInt(barisInput.getText());
-        int col = Integer.parseInt(kolomInput.getText());
         String[] elements = matriksString.split("\\s+");
+
 
         if (elements.length != row * col){
             alertMsg.setText("*Jumlah elemen matriks tidak sesuai dengan input baris dan kolom");
@@ -73,10 +173,15 @@ public class SPLController {
 
         double[][] matriks = new double[row][col];
 
-        for (int i = 0; i < row; i++){
-            for (int j = 0; j < col; j++){
-                matriks[i][j] = Double.parseDouble(elements[i * col + j]);
+        try {
+            for (int i = 0; i < row; i++){
+                for (int j = 0; j < col; j++){
+                    matriks[i][j] = Double.parseDouble(elements[i * col + j]);
+                }
             }
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan elemen matriks yang valid");
+            return;
         }
 
         Matriks Mat = new Matriks(matriks);
@@ -84,7 +189,6 @@ public class SPLController {
         Mat.printMatriks();
         System.out.println();
         
-        alertMsg.setText("");
         
         // ----------------- SOLVE SPL -----------------
         Matriks solution = new Matriks();
@@ -94,16 +198,18 @@ public class SPLController {
             try {
                 solution = new Matriks(SPL.metodeGauss(Mat));
             } catch (Exception e) {
-                alertMsg.setText("*Tidak ditemukan solusi menggunakan metode eliminasi Gauss");
-                System.out.println("Tidak ditemukan solusi menggunakan metode eliminasi Gauss");
+                alertMsg.setText("*Sistem persamaan linier tidak memiliki solusi");
+                System.out.println("Sistem persamaan linier tidak memiliki solusi");
+                return;
             }
         } else if (selectEliminasiGaussJordan.isSelected()){
             System.out.println("Eliminasi Gauss-Jordan selected");
             try {
                 solution = new Matriks(SPL.metodeGaussJordan(Mat));
             } catch (Exception e) {
-                alertMsg.setText("*Tidak ditemukan solusi menggunakan metode eliminasi Gauss-Jordan");
-                System.out.println("Tidak ditemukan solusi menggunakan metode eliminasi Gauss-Jordan");
+                alertMsg.setText("*Sistem persamaan linier tidak memiliki solusi");
+                System.out.println("Sistem persamaan linier tidak memiliki solusi");
+                return;
             }
         } else if (selectMatriksBalikan.isSelected()){
             System.out.println("Matriks balikan selected");
@@ -112,6 +218,7 @@ public class SPLController {
             } catch (Exception e) {
                 alertMsg.setText("*Tidak ditemukan solusi menggunakan metode invers");
                 System.out.println("Tidak ditemukan solusi menggunakan metode invers");
+                return;
             }
         } else if (selectKaidahCramer.isSelected()){
             System.out.println("Cramer selected");
@@ -120,10 +227,12 @@ public class SPLController {
             } catch (Exception e) {
                 alertMsg.setText("*Tidak ditemukan solusi menggunakan metode Cramer");
                 System.out.println("Tidak ditemukan solusi menggunakan metode Cramer");
+                return;
             }
         } else {
             alertMsg.setText("*Pilih metode terlebih dahulu");
             System.out.println("No method selected");
+            return;
         }
 
         // ----------------- OUTPUT SOLUSI SPL DI GUI -----------------
@@ -144,7 +253,8 @@ public class SPLController {
                 // Tanda sama dengan
                 Text equalText = new Text(" = ");
                 solutionTextFlow.getChildren().add(equalText);
-
+                
+                boolean printed = false;
                 // Nilai solusi
                 if (solution.Mat[i][0] != 0) {
                     if (solution.Mat[i][0] < 0) {
@@ -153,11 +263,13 @@ public class SPLController {
                     }
                     Text valueText = new Text(String.format("%.2f", Math.abs(solution.Mat[i][0])));
                     solutionTextFlow.getChildren().add(valueText); 
+                    printed = true;
                 } else if (solution.getCol() == 1 || checkZeroRow(solution, i)) {
                     Text zeroText = new Text("0\n");
                     solutionTextFlow.getChildren().add(zeroText);
                     continue;
                 }
+
 
                 // Koefisien variabel lain
                 for (int j = 1; j < solution.getCol(); j++) {
@@ -166,14 +278,12 @@ public class SPLController {
                         continue;
                     }
 
-                    if (solution.Mat[i][j-1] != 0 || solution.Mat[i][j] < 0) {
-                        if (solution.Mat[i][j] > 0) {
-                            Text plusText = new Text(" + ");
-                            solutionTextFlow.getChildren().add(plusText);
-                        } else {
-                            Text minusText = new Text(" - ");
-                            solutionTextFlow.getChildren().add(minusText);
-                        }
+                    if (solution.Mat[i][j] > 0 && printed) {
+                        Text plusText = new Text(" + ");
+                        solutionTextFlow.getChildren().add(plusText);
+                    } else if (solution.Mat[i][j] < 0) {
+                        Text minusText = new Text(" - ");
+                        solutionTextFlow.getChildren().add(minusText);
                     }
 
                     // Koefisien variabel
@@ -190,12 +300,20 @@ public class SPLController {
                     subscriptText.setStyle("-fx-font-size: 8;"); 
                     subscriptText.setTranslateY(5);
                     solutionTextFlow.getChildren().add(subscriptText);
+                    printed = true;
                 }
                 Text newLineText = new Text("\n");
                 solutionTextFlow.getChildren().add(newLineText);
             }
         }
+
+        TextFlowHandler tfh = new TextFlowHandler();
+        outputString = tfh.textFlowToString(solutionTextFlow);
+
+        splSolved = true;
     }
+
+    
 
     /**
      * Menghapus kolom-kolom yang berisi nol dimulai dari kolom startCol
@@ -251,6 +369,5 @@ public class SPLController {
             }
         }
         return true;
-    }
-        
+    }        
 }

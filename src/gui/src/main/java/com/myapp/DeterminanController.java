@@ -11,6 +11,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
+import java.io.File;
+
+import javafx.stage.FileChooser;
+import java.util.Scanner;
 
 public class DeterminanController {
 
@@ -30,11 +35,89 @@ public class DeterminanController {
     Button determinanButton = new Button();
     @FXML
     TextFlow solutionTextFlow = new TextFlow();
+
+    private File inputFile;
+    private File outputFile;
+    private Scanner scanner;
+    FileChooser fileChooser = new FileChooser();
+    private boolean determinanSolved;
+    private String outputString;
     
     @FXML
     public void initialize() {
         selectEkspansiKofaktor.setToggleGroup(MetodeDeterminan);
         selectMatriksSegitiga.setToggleGroup(MetodeDeterminan);
+        determinanSolved = false;
+    }
+
+    /**
+     * Export text file pada lokasi sesuai input pengguna
+     * @throws IOException
+     */
+    @FXML
+    private void exportFile() throws IOException {
+        if (!determinanSolved) {
+            alertMsg.setText("*Hitung determinan terlebih dahulu");
+            return;
+        }
+
+        FileHandler fh = new FileHandler();
+
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+
+        fileChooser.setTitle("Save Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        outputFile = fileChooser.showSaveDialog(new Stage());
+
+        if (outputFile == null) {
+            return;
+        }
+
+        alertMsg.setText("");
+
+        fh.saveTextToFile(outputString, outputFile);
+    }
+
+     /**
+     * Buka file matriks yang akan dicari determinannya dan memasukkan ke text field dan text area
+     * @throws IOException
+     */
+    @FXML
+    private void chooseFile() throws IOException {
+        File initialDirectory = new File("./../../test");
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+        fileChooser.setTitle("Open Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        
+        inputFile = fileChooser.showOpenDialog(new Stage());
+        
+        if (inputFile == null) {
+            return;
+        }
+        
+        alertMsg.setText("");
+
+        barisInput.clear();
+        inputMatriks.clear();
+        try {
+            scanner = new Scanner(inputFile);
+            String nString = scanner.nextLine();
+            barisInput.setText(nString);
+            int n = Integer.parseInt(nString);
+            for (int i = 0; i < n; i++) {
+                inputMatriks.appendText(scanner.nextLine() + "\n");
+            }
+            scanner.close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            alertMsg.setText("*File input tidak valid");
+        }
     }
     
     /**
@@ -52,13 +135,25 @@ public class DeterminanController {
      */
     @FXML
     private void findDeterminan() {
-        // ----------------- CLEAR OUTPUT SOLUSI DETERMINAN DI GUI -----------------
+        // ----------------- CLEAR ALERT DAN OUTPUT SOLUSI DETERMINAN DI GUI -----------------
+        alertMsg.setText("");
         solutionTextFlow.getChildren().clear();
 
         // ----------------- VALIDASI INPUT -----------------
+        if (barisInput.getText().isBlank() || inputMatriks.getText().isBlank()){
+            alertMsg.setText("*Masukkan baris/kolom dan matriks yang sesuai terlebih dahulu");
+            return;
+        }
+        int row, col;
+        try {
+            row = Integer.parseInt(barisInput.getText());
+            col = row;
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan baris dan kolom yang valid");
+            return;
+        }
+
         String matriksString = inputMatriks.getText().replaceAll("\n", " ");
-        int row = Integer.parseInt(barisInput.getText());
-        int col = row;
         String[] elements = matriksString.split("\\s+");
 
         if (elements.length != row * col){
@@ -68,10 +163,15 @@ public class DeterminanController {
 
         double[][] matriks = new double[row][col];
 
-        for (int i = 0; i < row; i++){
-            for (int j = 0; j < col; j++){
-                matriks[i][j] = Double.parseDouble(elements[i * col + j]);
+        try {
+            for (int i = 0; i < row; i++){
+                for (int j = 0; j < col; j++){
+                    matriks[i][j] = Double.parseDouble(elements[i * col + j]);
+                }
             }
+        } catch (Exception e) {
+            alertMsg.setText("*Masukkan elemen matriks yang valid");
+            return;
         }
 
         Matriks Mat = new Matriks(matriks);
@@ -79,7 +179,6 @@ public class DeterminanController {
         Mat.printMatriks();
         System.out.println();
         
-        alertMsg.setText("");
 
         // ----------------- HITUNG DETERMINAN -----------------
         Linalg linalg = new Linalg();
@@ -113,9 +212,13 @@ public class DeterminanController {
 
         Text text = new Text("Determinan matriks: " + String.format("%.2f", det));
         solutionTextFlow.getChildren().add(text);
-
+        
         System.out.println("Determinan matriks: " + det);
 
+        TextFlowHandler tfh = new TextFlowHandler();
+        outputString = tfh.textFlowToString(solutionTextFlow);
+        determinanSolved = true;
     }
 
+    
 }

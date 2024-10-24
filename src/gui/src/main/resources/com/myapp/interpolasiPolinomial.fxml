@@ -82,6 +82,12 @@
                                        </children>
                                     </HBox>
                                     <Button fx:id="hitungFungsiButton" mnemonicParsing="false" onAction="#hitungFungsi" text="Hitung" />
+                                    <Button mnemonicParsing="false" onAction="#chooseFile" text="Choose file">
+                                       <VBox.margin>
+                                          <Insets top="10.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <Button mnemonicParsing="false" onAction="#exportFile" text="Export result" />
                                  </children>
                               </VBox>
                            </children>

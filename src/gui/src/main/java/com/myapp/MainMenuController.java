@@ -36,6 +36,11 @@ public class MainMenuController {
     }
 
     @FXML
+    private void switchToImageResizer() throws IOException {
+        App.setRoot("imageResizer");
+    }
+
+    @FXML
     private void keluar() {
         System.exit(0);
     }

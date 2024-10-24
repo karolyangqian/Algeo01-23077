@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myapp.MainMenuController">
    <content>
       <HBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="10.0">
@@ -23,6 +22,11 @@
                         <Button fx:id="interpolasiPolinomialNavButton" mnemonicParsing="false" onAction="#switchToInterpolasiPolinomial" prefHeight="64.0" prefWidth="95.0" text="Interpolasi Polinomial" textAlignment="CENTER" wrapText="true" />
                         <Button fx:id="regresiBergandaNavButton" mnemonicParsing="false" onAction="#switchToRegresiBerganda" prefHeight="64.0" prefWidth="95.0" text="Regresi Berganda" textAlignment="CENTER" wrapText="true" />
                         <Button fx:id="bicubicSplineNavButton" mnemonicParsing="false" onAction="#switchToBicubicSpline" prefHeight="64.0" prefWidth="95.0" text="Bicubic Spline Interpolation" textAlignment="CENTER" wrapText="true">
+                           <font>
+                              <Font name="System Italic" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="imageResizerNavButton" mnemonicParsing="false" onAction="#switchToImageResizer" prefHeight="64.0" prefWidth="95.0" text="Image Resizer" textAlignment="CENTER" wrapText="true">
                            <font>
                               <Font name="System Italic" size="12.0" />
                            </font>

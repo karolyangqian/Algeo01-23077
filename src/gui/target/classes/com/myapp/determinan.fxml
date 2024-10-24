@@ -13,9 +13,9 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myapp.DeterminanController">
+<ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myapp.DeterminanController">
    <content>
-      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+      <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="929.0">
          <children>
             <VBox prefHeight="15.0" prefWidth="600.0">
                <children>
@@ -80,6 +80,8 @@
                                        </toggleGroup>
                                     </RadioButton>
                                     <Text fx:id="alertMsg" fill="#be0000" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="160.0" />
+                                    <Button mnemonicParsing="false" onAction="#chooseFile" text="Choose file" />
+                                    <Button mnemonicParsing="false" onAction="#exportFile" text="Export result" />
                                  </children>
                               </VBox>
                            </children>
